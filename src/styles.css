@@ -1,0 +1,72 @@
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  background-color: #4051b5;
+  height: 10%;
+  padding: 10px;
+  color: white;
+}
+
+.middle {
+  display: flex;
+  flex-direction: row;
+  height: 92vh;
+}
+
+.middleLeft {
+  width: 15%;
+  background-color: lightgray;
+}
+
+.middleRight {
+  width: 85%;
+}
+
+.canvas {
+  display: flex;
+}
+
+.footer {
+  display: flex;
+  background-color: #4051b5;
+  color: white;
+  font-size: 12px;
+}
+
+.systemNode {
+  background-color: #3066B7;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  border: 0px solid #1a192b;
+  font-size: 12px;
+  text-align: center;
+  min-width: 60px;
+}
+
+.handleSystemNodeTarget {
+  background-color: 'red';
+  width: '5px';
+  height: '5px';
+  border: '0px';
+}
+
+.handleSystemNodeSource {
+  background-color: 'black';
+  width: '5px';
+  height: '5px';
+  border: '0px';
+}
