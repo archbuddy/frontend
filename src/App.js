@@ -75,10 +75,11 @@ function Flow() {
       <Header/>
       <div className='middle'>
         <div className='middleLeft'>
-          Buttons and actions to interact with canvas<br/>
-          <button onClick={onClickNewSystem}>Add System</button>
-          <button onClick={onClickReadEdges}>Read Edges</button>
-          <button onClick={onClickReadNodes}>Read Nodes</button>
+          <p>Buttons and actions to interact with canvas</p>
+          <button onClick={onClickNewSystem}>Add System</button><br/>
+          <p>Console outputs</p>
+          <button onClick={onClickReadEdges}>Read Edges</button><br/>
+          <button onClick={onClickReadNodes}>Read Nodes</button><br/>
         </div>
         <div className='middleRight'>
           <ReactFlow
