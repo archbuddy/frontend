@@ -36,7 +36,7 @@ function Flow() {
   );
 
   //custom code to generate elements
-  const onClick = useCallback(
+  const onClickNewSystem = useCallback(
     () => {
       console.log('click')
       setNodes((nds) => {
@@ -55,13 +55,23 @@ function Flow() {
     []
   )
 
+  const onClickReadEdges = () => {
+    console.log(edges)
+  }
+
+  const onClickReadNodes = () => {
+    console.log(nodes)
+  }
+
   return (
     <div className='main'>
       <Header/>
       <div className='middle'>
         <div className='middleLeft'>
-          Buttons and actions for interact with the canvas<br/>
-          <button onClick={onClick}>teste</button>
+          Buttons and actions to interact with canvas<br/>
+          <button onClick={onClickNewSystem}>Add System</button>
+          <button onClick={onClickReadEdges}>Read Edges</button>
+          <button onClick={onClickReadNodes}>Read Nodes</button>
         </div>
         <div className='middleRight'>
           <ReactFlow
