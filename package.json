@@ -1,5 +1,5 @@
 {
-  "name": "poc-react-flow",
+  "name": "archbuddy-frontend",
   "main": "/index.js",
   "scripts": {
     "start": "react-scripts start",
