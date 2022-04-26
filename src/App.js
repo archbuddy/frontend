@@ -18,10 +18,6 @@ import initialEdges from './tmp/edges.js';
 
 const nodeTypes = { system: SystemNode };
 
-const rfStyle = {
-  backgroundColor: '#FFFFFF',
-};
-
 function Flow() {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
@@ -75,7 +71,6 @@ function Flow() {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             fitView
-            style={rfStyle}
             attributionPosition="top-right"
             nodeTypes={nodeTypes}
           >
