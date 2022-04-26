@@ -1,10 +1,22 @@
 {
   "name": "archbuddy-frontend",
+  "version": "1.0.0",
+  "description": "Web interface to show the information, create new information and change it",
   "main": "/index.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archbuddy/frontend.git"
+  },
+  "author": "https://github.com/archbuddy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/archbuddy/frontend/issues"
+  },
+  "homepage": "https://archbuddy.github.io/documentation",
   "dependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
