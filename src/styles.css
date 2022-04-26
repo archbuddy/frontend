@@ -57,22 +57,18 @@ html, body, #root {
   min-width: 60px;
 }
 
-.handleSystemNode {
+.systemNode .handle-target {
   z-index: -1;
-}
-
-.handleSystemNodeTarget {
-  background-color: red;
   width: 5px;
   height: 5px;
   border: none;
-  border-radius: 0%
+  border-radius: 50%;
 }
 
-.handleSystemNodeSource {
-  background-color: black;
+.systemNode .handle-source {
+  z-index: -1;
   width: 5px;
   height: 5px;
   border: none;
-  border-radius: 0%
+  border-radius: 50%;
 }

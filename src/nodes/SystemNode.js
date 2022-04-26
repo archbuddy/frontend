@@ -6,10 +6,10 @@ import { Handle, Position } from 'react-flow-renderer';
 function SystemNode({ data, isConnectable }) {
   return (
     <div className='systemNode'>
-      <Handle position={Position.Top} id='a1' key='a1' type="source" className="handleSystemNode handleSystemNodeSource"/>
-      <Handle position={Position.Right} id="r1" key='r1' type="source" className="handleSystemNode handleSystemNodeSource"/>
-      <Handle position={Position.Bottom} id="b1" key='b1' type="target" className="handleSystemNode handleSystemNodeTarget"/>
-      <Handle position={Position.Left} id="l1" key='l1' type="target" className="handleSystemNode handleSystemNodeTarget handleSystemNodeLeft"/>
+      <Handle position={Position.Top} id='a1' key='a1' type="source" className="handle-source"/>
+      <Handle position={Position.Right} id="r1" key='r1' type="source" className="handle-source"/>
+      <Handle position={Position.Bottom} id="b1" key='b1' type="target" className="handle-target"/>
+      <Handle position={Position.Left} id="l1" key='l1' type="target" className="handle-target"/>
         {data.label}
     </div>
   );
