@@ -31,7 +31,13 @@ function Flow() {
     [setEdges]
   );
   const onConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection) => {
+      if (connection.source === connection.target) {
+        console.log('Opps, source and target are the same')
+      } else {
+        setEdges((eds) => addEdge(connection, eds))
+      }
+    },
     [setEdges]
   );
 
