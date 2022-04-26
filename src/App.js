@@ -45,7 +45,7 @@ function Flow() {
           ...nds,
           {
             id,
-            position: { x: 120, y: 220 },
+            position: { x: 0, y: 0 },
             data: { label: id },
             type: 'system',
           }
@@ -63,6 +63,7 @@ function Flow() {
     console.log(nodes)
   }
 
+  // connectionMode loose define that handles can connect with each other
   return (
     <div className='main'>
       <Header/>
@@ -83,6 +84,7 @@ function Flow() {
             fitView
             attributionPosition="top-right"
             nodeTypes={nodeTypes}
+            connectionMode="loose"
           >
             <MiniMap />
             <Controls />
