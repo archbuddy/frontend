@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import ReactFlow from 'react-flow-renderer';
 import {
   addEdge,
@@ -19,8 +19,26 @@ import initialEdges from './tmp/edges.js';
 const nodeTypes = { system: SystemNode };
 
 function Flow() {
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  //load data on init
+  useEffect(() => {loadData()}, []);
+
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
+
+  const loadData = () => {
+    fetch("http://localhost:3000")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        setNodes(result.nodes)
+        setEdges(result.edges)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -32,6 +50,7 @@ function Flow() {
   );
   const onConnect = useCallback(
     (connection) => {
+      console.log(`Connect nodes ${connection.source} > ${connection.target} `)
       if (connection.source === connection.target) {
         console.log('Opps, source and target are the same')
       } else {
