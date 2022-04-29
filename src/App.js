@@ -23,6 +23,7 @@ function Flow() {
 
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
+  const [inputSystemNode, setInputSystemNode] = useState([]);
 
   const loadData = () => {
     fetch(endpoint)
@@ -66,11 +67,12 @@ function Flow() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: 'aaaa' })
+      body: JSON.stringify({ name: inputSystemNode })
     })
     .then(res => res.json())
     .then(
       (result) => {
+        setInputSystemNode('')
         loadData()
       },
       (error) => {
@@ -94,6 +96,7 @@ function Flow() {
       <div className='middle'>
         <div className='middleLeft'>
           <p>Buttons and actions to interact with canvas</p>
+          <input type="text" onChange={(e) => setInputSystemNode(e.target.value)} value={inputSystemNode}/>
           <button onClick={onClickNewSystem}>Add System</button><br/>
           <p>Console outputs</p>
           <button onClick={onClickReadEdges}>Read Edges</button><br/>
