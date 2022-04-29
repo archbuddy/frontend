@@ -55,11 +55,30 @@ function Flow() {
         console.log('Opps, source and target are the same')
       } else {
         setEdges((eds) => addEdge(connection, eds))
+        saveEdges(connection)
       }
     },
     [setEdges]
   );
 
+  const saveEdges = (connection) => {
+    fetch(`${endpoint}/edge`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(connection)
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        loadData()
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
   //custom code to generate elements
   const onClickNewSystem = () => {
     fetch(`${endpoint}/system`, {
@@ -73,6 +92,25 @@ function Flow() {
     .then(
       (result) => {
         setInputSystemNode('')
+        loadData()
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
+  const onClickSaveNodesPos = () => {
+    fetch(`${endpoint}/system`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(nodes)
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
         loadData()
       },
       (error) => {
@@ -101,6 +139,7 @@ function Flow() {
           <p>Console outputs</p>
           <button onClick={onClickReadEdges}>Read Edges</button><br/>
           <button onClick={onClickReadNodes}>Read Nodes</button><br/>
+          <button onClick={onClickSaveNodesPos}>Save Nodes Pos</button><br/>
         </div>
         <div className='middleRight'>
           <ReactFlow
