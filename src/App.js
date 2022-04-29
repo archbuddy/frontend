@@ -1,3 +1,5 @@
+// check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
+
 import { useCallback, useState, useEffect } from 'react';
 import ReactFlow from 'react-flow-renderer';
 import {
@@ -12,11 +14,8 @@ import SystemNode from './nodes/SystemNode';
 import Header from './Header';
 import Footer from './Footer';
 
-import initialNodes from './tmp/nodes.js';
-// check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
-import initialEdges from './tmp/edges.js';
-
 const nodeTypes = { system: SystemNode };
+const endpoint = "http://localhost:3000"
 
 function Flow() {
   //load data on init
@@ -26,7 +25,7 @@ function Flow() {
   const [edges, setEdges] = useState([]);
 
   const loadData = () => {
-    fetch("http://localhost:3000")
+    fetch(endpoint)
     .then(res => res.json())
     .then(
       (result) => {
@@ -61,24 +60,24 @@ function Flow() {
   );
 
   //custom code to generate elements
-  const onClickNewSystem = useCallback(
-    () => {
-      console.log('click')
-      setNodes((nds) => {
-        const id = 'aaaa'
-        return [
-          ...nds,
-          {
-            id,
-            position: { x: 0, y: 0 },
-            data: { label: id },
-            type: 'system',
-          }
-        ];
-      })
-    },
-    []
-  )
+  const onClickNewSystem = () => {
+    fetch(`${endpoint}/system`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: 'aaaa' })
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        loadData()
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
 
   const onClickReadEdges = () => {
     console.log(edges)
