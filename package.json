@@ -7,6 +7,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "prepare": "husky install",
+    "test": "eslint .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
