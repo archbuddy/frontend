@@ -5,7 +5,11 @@
   "main": "/index.js",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "prepare": "husky install",
+    "test": "eslint .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -23,7 +27,25 @@
     "react-scripts": "^4.0.3",
     "react-flow-renderer": "^10.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "8.13.0",
+    "eslint-config-next": "^12.1.5",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jest": "^26.1.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.4.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-sonarjs": "^0.13.0",
+    "husky": "^7.0.4",
+    "prettier": "^2.6.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --ignore-path .gitignore --fix"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
