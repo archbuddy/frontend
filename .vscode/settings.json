@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+      "**/node_modules": false,
+      "**/coverage": true,
+      "**/package-lock.json": false,
+      "**/yarn.lock": false,
+      "**/.yarn": false
+    },
+    "editor.formatOnSave": true,
+  }
