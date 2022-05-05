@@ -142,10 +142,11 @@ function Flow() {
             nodeTypes={nodeTypes}
             connectionMode="loose"
             onEdgeClick={onEdgesClick}
-            onNodesDelete={onNodesDelete}>
-              <MiniMap />
-              <Controls />
-              <Background />
+            onNodesDelete={onNodesDelete}
+          >
+            <MiniMap />
+            <Controls />
+            <Background />
           </ReactFlow>
         </div>
       </div>
