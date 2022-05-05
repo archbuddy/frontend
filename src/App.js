@@ -24,6 +24,8 @@ function Flow() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [inputSystemNode, setInputSystemNode] = useState([]);
+  const [inputEdgeLabel, setInputEdgeLabel] = useState([]);
+  const [selectedEdge, setSelectedEdge] = useState([]);
 
   const loadData = () => {
     fetch(endpoint)
@@ -127,6 +129,36 @@ function Flow() {
     console.log(nodes)
   }
 
+  const onEdgesClick = (event, param) => {
+    const index = edges.findIndex((item) => item.id === param.id)
+    setSelectedEdge(edges[index])
+    setInputEdgeLabel(edges[index].label)
+  }
+
+  const onClickSaveEdgeLabel = () => {
+    selectedEdge.label = inputEdgeLabel
+    setInputEdgeLabel('')
+    setSelectedEdge('')
+  }
+
+  const onNodesDelete = (event, params) => {
+    fetch(`${endpoint}/node/${event[0].id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        loadData()
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
   // connectionMode loose define that handles can connect with each other
   return (
     <div className='main'>
@@ -134,11 +166,18 @@ function Flow() {
       <div className='middle'>
         <div className='middleLeft'>
           <p>Buttons and actions to interact with canvas</p>
+          <p></p>
+          <p>Nodes</p>
           <input type="text" onChange={(e) => setInputSystemNode(e.target.value)} value={inputSystemNode}/>
           <button onClick={onClickNewSystem}>Add System</button><br/>
+          <p></p>
+          <p>Edge</p>
+          <input type="text" onChange={(e) => setInputEdgeLabel(e.target.value)} value={inputEdgeLabel}/>
+          <button onClick={onClickSaveEdgeLabel}>Save Edge label</button><br/>
           <p>Console outputs</p>
           <button onClick={onClickReadEdges}>Read Edges</button><br/>
           <button onClick={onClickReadNodes}>Read Nodes</button><br/>
+          <p>Actions</p>
           <button onClick={onClickSaveNodesPos}>Save Nodes Pos</button><br/>
         </div>
         <div className='middleRight'>
@@ -152,6 +191,8 @@ function Flow() {
             attributionPosition="top-right"
             nodeTypes={nodeTypes}
             connectionMode="loose"
+            onEdgeClick={onEdgesClick}
+            onNodesDelete={onNodesDelete}
           >
             <MiniMap />
             <Controls />
