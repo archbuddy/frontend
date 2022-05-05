@@ -8,7 +8,7 @@ import {
   applyNodeChanges,
   Background,
   Controls,
-  MiniMap,
+  MiniMap
 } from 'react-flow-renderer'
 
 import Footer from './Footer'
@@ -143,9 +143,9 @@ function Flow() {
             connectionMode="loose"
             onEdgeClick={onEdgesClick}
             onNodesDelete={onNodesDelete}>
-            <MiniMap />
-            <Controls />
-            <Background />
+              <MiniMap />
+              <Controls />
+              <Background />
           </ReactFlow>
         </div>
       </div>

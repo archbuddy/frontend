@@ -13,9 +13,9 @@ const createEdge = async (connection) => {
   const response = await fetch(`${endpoint}/edge`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(connection),
+    body: JSON.stringify(connection)
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
