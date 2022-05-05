@@ -14,8 +14,11 @@ import SystemNode from './nodes/SystemNode';
 import Header from './Header';
 import Footer from './Footer';
 
+import srvGeneral from './services/general'
+import srvEdges from './services/edges'
+import srvNodes from './services/nodes'
+
 const nodeTypes = { system: SystemNode };
-const endpoint = "http://localhost:3000"
 
 function Flow() {
   //load data on init
@@ -27,98 +30,43 @@ function Flow() {
   const [inputEdgeLabel, setInputEdgeLabel] = useState([]);
   const [selectedEdge, setSelectedEdge] = useState([]);
 
-  const loadData = () => {
-    fetch(endpoint)
-    .then(res => res.json())
-    .then(
-      (result) => {
-        setNodes(result.nodes)
-        setEdges(result.edges)
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+  const loadData = async () => {
+    const result = await srvGeneral.loadData()
+    setNodes(result.nodes)
+    setEdges(result.edges)
   }
-
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [setNodes]
   );
+
   const onEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     [setEdges]
   );
+
   const onConnect = useCallback(
-    (connection) => {
-      console.log(`Connect nodes ${connection.source} > ${connection.target} `)
-      if (connection.source === connection.target) {
-        console.log('Opps, source and target are the same')
-      } else {
+    async (connection) => {
+      if (srvEdges.edgeCanConnect(connection)) {
         setEdges((eds) => addEdge(connection, eds))
-        saveEdges(connection)
+        await srvEdges.createEdge(connection)
+        await loadData()
       }
     },
     [setEdges]
   );
 
-  const saveEdges = (connection) => {
-    fetch(`${endpoint}/edge`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(connection)
-    })
-    .then(res => res.json())
-    .then(
-      (result) => {
-        loadData()
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-  }
   //custom code to generate elements
-  const onClickNewSystem = () => {
-    fetch(`${endpoint}/system`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: inputSystemNode })
-    })
-    .then(res => res.json())
-    .then(
-      (result) => {
-        setInputSystemNode('')
-        loadData()
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+  const onClickNewSystem = async () => {
+    await srvNodes.createNode('system', inputSystemNode)
+    setInputSystemNode('')
+    await loadData()
   }
 
-  const onClickSaveNodesPos = () => {
-    fetch(`${endpoint}/system`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(nodes)
-    })
-    .then(res => res.json())
-    .then(
-      (result) => {
-        loadData()
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+  const onClickSaveNodesPos = async () => {
+    await srvNodes.saveAllNodePosition(nodes)
+    await loadData()
   }
 
   const onClickReadEdges = () => {
@@ -141,22 +89,9 @@ function Flow() {
     setSelectedEdge('')
   }
 
-  const onNodesDelete = (event, params) => {
-    fetch(`${endpoint}/node/${event[0].id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    .then(res => res.json())
-    .then(
-      (result) => {
-        loadData()
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+  const onNodesDelete = async (event, params) => {
+    await srvNodes.deleteNode(event[0].id)
+    await loadData()
   }
 
   // connectionMode loose define that handles can connect with each other
