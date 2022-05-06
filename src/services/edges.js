@@ -23,7 +23,22 @@ const createEdge = async (connection) => {
   }
 }
 
+const updateEdge = async (edge) => {
+  const response = await fetch(`${endpoint}/edge`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(edge)
+  })
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`
+    throw new Error(message)
+  }
+}
+
 module.exports = {
   edgeCanConnect,
-  createEdge
+  createEdge,
+  updateEdge
 }

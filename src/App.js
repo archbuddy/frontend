@@ -81,14 +81,17 @@ function Flow() {
 
   const onEdgesClick = (event, param) => {
     const index = edges.findIndex((item) => item.id === param.id)
-    setSelectedEdge(edges[index])
+    setSelectedEdge(edges[index].id)
     setInputEdgeLabel(edges[index].label)
   }
 
-  const onClickSaveEdgeLabel = () => {
-    selectedEdge.label = inputEdgeLabel
+  const onClickSaveEdgeLabel = async () => {
+    const index = edges.findIndex((item) => item.id === selectedEdge)
+    edges[index].label = inputEdgeLabel
+    await srvEdges.updateEdge(edges[index])
     setInputEdgeLabel('')
     setSelectedEdge('')
+    await loadData()
   }
 
   const onNodesDelete = async (event) => {
