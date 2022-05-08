@@ -1,8 +1,7 @@
 // check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
 
-import { useCallback, useEffect, useState } from 'react'
-import ReactFlow from 'react-flow-renderer'
-import {
+import React, { useCallback, useEffect, useState } from 'react'
+import ReactFlow, {
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
@@ -10,6 +9,9 @@ import {
   Controls,
   MiniMap
 } from 'react-flow-renderer'
+
+import Modal from 'react-modal'
+import ModalEdge from './ModalEdge'
 
 import Footer from './Footer'
 import Header from './Header'
@@ -19,6 +21,8 @@ import srvGeneral from './services/general'
 import srvNodes from './services/nodes'
 
 const nodeTypes = { system: SystemNode }
+
+Modal.setAppElement('#root')
 
 function Flow() {
   //load data on init
@@ -31,6 +35,7 @@ function Flow() {
   const [inputSystemNode, setInputSystemNode] = useState([])
   const [inputEdgeLabel, setInputEdgeLabel] = useState([])
   const [selectedEdge, setSelectedEdge] = useState([])
+  const [modalIsOpen, setIsOpen] = React.useState(false)
 
   const loadData = async () => {
     const result = await srvGeneral.loadData()
@@ -79,7 +84,12 @@ function Flow() {
     console.log(nodes)
   }
 
+  function closeModal() {
+    setIsOpen(false)
+  }
+
   const onEdgesClick = (event, param) => {
+    setIsOpen(true)
     const index = edges.findIndex((item) => item.id === param.id)
     setSelectedEdge(edges[index].id)
     setInputEdgeLabel(edges[index].label)
@@ -105,10 +115,25 @@ function Flow() {
     await srvEdges.deleteEdge(event[0].id)
     await loadData()
   }
-
+  const customStyles = {
+    overlay: {
+      zIndex: 1000
+    }
+  }
   // connectionMode loose define that handles can connect with each other
   return (
-    <div className="main">
+    <div className="main" id="main">
+      <Modal
+        isOpen={modalIsOpen}
+        contentLabel="Example Modal"
+        onRequestClose={closeModal}
+        style={customStyles}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <ModalEdge />
+      </Modal>
       <Header />
       <div className="middle">
         <div className="middleLeft">
