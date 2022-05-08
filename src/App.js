@@ -95,7 +95,14 @@ function Flow() {
   }
 
   const onNodesDelete = async (event) => {
+    // TODO it could receive a list of itens
     await srvNodes.deleteNode(event[0].id)
+    await loadData()
+  }
+
+  const onEdgesDelete = async (event) => {
+    // TODO it could receive a list of itens
+    await srvEdges.deleteEdge(event[0].id)
     await loadData()
   }
 
@@ -146,6 +153,7 @@ function Flow() {
             connectionMode="loose"
             onEdgeClick={onEdgesClick}
             onNodesDelete={onNodesDelete}
+            onEdgesDelete={onEdgesDelete}
           >
             <MiniMap />
             <Controls />
