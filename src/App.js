@@ -7,12 +7,12 @@ import ReactFlow, {
   applyNodeChanges,
   Background,
   Controls,
-  MiniMap
+  MiniMap,
+  MarkerType
 } from 'react-flow-renderer'
-
 import Modal from 'react-modal'
 import ModalEdge from './ModalEdge'
-import log from './util'
+import { log } from './util'
 
 import Footer from './Footer'
 import Header from './Header'
@@ -50,6 +50,10 @@ function Flow() {
   const loadData = async () => {
     const result = await srvGeneral.loadData()
     setNodes(result.nodes)
+    for (const item of result.edges) {
+      item.markerEnd = {}
+      item.markerEnd.type = MarkerType.ArrowClosed
+    }
     setEdges(result.edges)
   }
 
