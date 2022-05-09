@@ -1,10 +1,11 @@
+import log from './util'
 const endpoint = 'http://localhost:3000'
 
 const edgeCanConnect = (connection) => {
-  console.log(`Connect nodes ${connection.source} > ${connection.target} `)
+  log(`Connect nodes ${connection.source} > ${connection.target} `)
   const can = connection.source !== connection.target
   if (!can) {
-    console.log('Opps, source and target are the same')
+    log('Opps, source and target are the same')
   }
   return can
 }
