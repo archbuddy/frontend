@@ -29,7 +29,7 @@ module.exports = {
     'no-console': 'warn',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
-    'simple-import-sort/imports': 'error',
+    'simple-import-sort/imports': 'off',
     'simple-import-sort/exports': 'error'
   }
 }

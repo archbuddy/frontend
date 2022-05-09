@@ -10,6 +10,8 @@ const loadData = async () => {
   return data
 }
 
-module.exports = {
+const general = {
   loadData
 }
+
+export default general

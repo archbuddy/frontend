@@ -1,15 +1,18 @@
 // check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
 
-import { useCallback, useEffect, useState } from 'react'
-import ReactFlow from 'react-flow-renderer'
-import {
+import React, { useCallback, useEffect, useState } from 'react'
+import ReactFlow, {
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
   Background,
   Controls,
-  MiniMap
+  MiniMap,
+  MarkerType
 } from 'react-flow-renderer'
+import Modal from 'react-modal'
+import ModalEdge from './ModalEdge'
+import { log } from './util'
 
 import Footer from './Footer'
 import Header from './Header'
@@ -18,7 +21,19 @@ import srvEdges from './services/edges'
 import srvGeneral from './services/general'
 import srvNodes from './services/nodes'
 
+const modalCustomStyles = {
+  overlay: {
+    zIndex: 1000
+  },
+  content: {
+    width: '50%',
+    height: '50%',
+    margin: 'auto'
+  }
+}
+
 const nodeTypes = { system: SystemNode }
+Modal.setAppElement('#root')
 
 function Flow() {
   //load data on init
@@ -29,12 +44,16 @@ function Flow() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
   const [inputSystemNode, setInputSystemNode] = useState([])
-  const [inputEdgeLabel, setInputEdgeLabel] = useState([])
   const [selectedEdge, setSelectedEdge] = useState([])
+  const [modalEdgeIsOpen, setModalEdgeIsOpen] = React.useState(false)
 
   const loadData = async () => {
     const result = await srvGeneral.loadData()
     setNodes(result.nodes)
+    for (const item of result.edges) {
+      item.markerEnd = {}
+      item.markerEnd.type = MarkerType.ArrowClosed
+    }
     setEdges(result.edges)
   }
 
@@ -72,26 +91,28 @@ function Flow() {
   }
 
   const onClickReadEdges = () => {
-    console.log(edges)
+    log(edges)
   }
 
   const onClickReadNodes = () => {
-    console.log(nodes)
+    log(nodes)
   }
 
+  function closeEdgeModal() {
+    log('closing')
+    setSelectedEdge({})
+    setModalEdgeIsOpen(false)
+  }
+  async function callBackModalEdge(reload = false) {
+    if (reload) {
+      await loadData()
+    }
+    setModalEdgeIsOpen(false)
+  }
   const onEdgesClick = (event, param) => {
     const index = edges.findIndex((item) => item.id === param.id)
-    setSelectedEdge(edges[index].id)
-    setInputEdgeLabel(edges[index].label)
-  }
-
-  const onClickSaveEdgeLabel = async () => {
-    const index = edges.findIndex((item) => item.id === selectedEdge)
-    edges[index].label = inputEdgeLabel
-    await srvEdges.updateEdge(edges[index])
-    setInputEdgeLabel('')
-    setSelectedEdge('')
-    await loadData()
+    setSelectedEdge(edges[index])
+    setModalEdgeIsOpen(true)
   }
 
   const onNodesDelete = async (event) => {
@@ -108,7 +129,17 @@ function Flow() {
 
   // connectionMode loose define that handles can connect with each other
   return (
-    <div className="main">
+    <div className="main" id="main">
+      <Modal
+        isOpen={modalEdgeIsOpen}
+        contentLabel="Example Modal"
+        onRequestClose={closeEdgeModal}
+        style={modalCustomStyles}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+      >
+        <ModalEdge edge={selectedEdge} callback={callBackModalEdge} closeModal={closeEdgeModal} />
+      </Modal>
       <Header />
       <div className="middle">
         <div className="middleLeft">
@@ -121,15 +152,6 @@ function Flow() {
             value={inputSystemNode}
           />
           <button onClick={onClickNewSystem}>Add System</button>
-          <br />
-          <p></p>
-          <p>Edge</p>
-          <input
-            type="text"
-            onChange={(e) => setInputEdgeLabel(e.target.value)}
-            value={inputEdgeLabel}
-          />
-          <button onClick={onClickSaveEdgeLabel}>Save Edge label</button>
           <br />
           <p>Console outputs</p>
           <button onClick={onClickReadEdges}>Read Edges</button>
