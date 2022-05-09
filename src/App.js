@@ -12,6 +12,7 @@ import ReactFlow, {
 
 import Modal from 'react-modal'
 import ModalEdge from './ModalEdge'
+import log from './util'
 
 import Footer from './Footer'
 import Header from './Header'
@@ -20,8 +21,18 @@ import srvEdges from './services/edges'
 import srvGeneral from './services/general'
 import srvNodes from './services/nodes'
 
-const nodeTypes = { system: SystemNode }
+const modalCustomStyles = {
+  overlay: {
+    zIndex: 1000
+  },
+  content: {
+    width: '50%',
+    height: '50%',
+    margin: 'auto'
+  }
+}
 
+const nodeTypes = { system: SystemNode }
 Modal.setAppElement('#root')
 
 function Flow() {
@@ -33,9 +44,8 @@ function Flow() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
   const [inputSystemNode, setInputSystemNode] = useState([])
-  const [inputEdgeLabel, setInputEdgeLabel] = useState([])
   const [selectedEdge, setSelectedEdge] = useState([])
-  const [modalIsOpen, setIsOpen] = React.useState(false)
+  const [modalEdgeIsOpen, setModalEdgeIsOpen] = React.useState(false)
 
   const loadData = async () => {
     const result = await srvGeneral.loadData()
@@ -77,31 +87,28 @@ function Flow() {
   }
 
   const onClickReadEdges = () => {
-    console.log(edges)
+    log(edges)
   }
 
   const onClickReadNodes = () => {
-    console.log(nodes)
+    log(nodes)
   }
 
-  function closeModal() {
-    setIsOpen(false)
+  function closeEdgeModal() {
+    log('closing')
+    setSelectedEdge({})
+    setModalEdgeIsOpen(false)
   }
-
+  async function callBackModalEdge(reload = false) {
+    if (reload) {
+      await loadData()
+    }
+    setModalEdgeIsOpen(false)
+  }
   const onEdgesClick = (event, param) => {
-    setIsOpen(true)
     const index = edges.findIndex((item) => item.id === param.id)
-    setSelectedEdge(edges[index].id)
-    setInputEdgeLabel(edges[index].label)
-  }
-
-  const onClickSaveEdgeLabel = async () => {
-    const index = edges.findIndex((item) => item.id === selectedEdge)
-    edges[index].label = inputEdgeLabel
-    await srvEdges.updateEdge(edges[index])
-    setInputEdgeLabel('')
-    setSelectedEdge('')
-    await loadData()
+    setSelectedEdge(edges[index])
+    setModalEdgeIsOpen(true)
   }
 
   const onNodesDelete = async (event) => {
@@ -115,24 +122,19 @@ function Flow() {
     await srvEdges.deleteEdge(event[0].id)
     await loadData()
   }
-  const customStyles = {
-    overlay: {
-      zIndex: 1000
-    }
-  }
+
   // connectionMode loose define that handles can connect with each other
   return (
     <div className="main" id="main">
       <Modal
-        isOpen={modalIsOpen}
+        isOpen={modalEdgeIsOpen}
         contentLabel="Example Modal"
-        onRequestClose={closeModal}
-        style={customStyles}
+        onRequestClose={closeEdgeModal}
+        style={modalCustomStyles}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
-        centered
       >
-        <ModalEdge />
+        <ModalEdge edge={selectedEdge} callback={callBackModalEdge} closeModal={closeEdgeModal} />
       </Modal>
       <Header />
       <div className="middle">
@@ -146,15 +148,6 @@ function Flow() {
             value={inputSystemNode}
           />
           <button onClick={onClickNewSystem}>Add System</button>
-          <br />
-          <p></p>
-          <p>Edge</p>
-          <input
-            type="text"
-            onChange={(e) => setInputEdgeLabel(e.target.value)}
-            value={inputEdgeLabel}
-          />
-          <button onClick={onClickSaveEdgeLabel}>Save Edge label</button>
           <br />
           <p>Console outputs</p>
           <button onClick={onClickReadEdges}>Read Edges</button>
