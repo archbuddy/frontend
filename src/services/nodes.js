@@ -43,8 +43,10 @@ const deleteNode = async (nodeId) => {
   }
 }
 
-module.exports = {
+const nodes = {
   createNode,
   saveAllNodePosition,
   deleteNode
 }
+
+export default nodes

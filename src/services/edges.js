@@ -1,4 +1,5 @@
-import log from './util'
+import { log } from '../util'
+
 const endpoint = 'http://localhost:3000'
 
 const edgeCanConnect = (connection) => {
@@ -52,9 +53,11 @@ const deleteEdge = async (nodeId) => {
   }
 }
 
-module.exports = {
+const edges = {
   edgeCanConnect,
   createEdge,
   updateEdge,
   deleteEdge
 }
+
+export default edges
