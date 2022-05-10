@@ -19,17 +19,54 @@ function ModalEdge({ edge, callback, closeModal }) {
     closeModal()
   }
 
-  return (
-    <div>
-      <p>Edge operation</p>
+  const renderDataTable = () => {
+    if (edge.innerList === undefined || edge.innerList.length === 0) {
+      return
+    }
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <td>Label</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody>
+          {edge.innerList.map((item) => {
+            return [
+              <tr key={item.id}>
+                <td>{item.label}</td>
+                <td>a | b</td>
+              </tr>
+            ]
+          })}
+        </tbody>
+      </table>
+    )
+  }
+
+  const renderInputCommand = () => {
+    if (edge.innerList !== undefined && edge.innerList.length > 0) {
+      return
+    }
+    return (
       <input
         type="text"
         onChange={(e) => setInputEdgeLabel(e.target.value)}
         value={inputEdgeLabel}
       />
+    )
+  }
+
+  return (
+    <div>
+      <p>Edge operation</p>
+      {renderInputCommand()}
+      {renderDataTable()}
       <br />
       <button onClick={onClickSaveEdgeLabel}>Save Edge label</button>
-      <br />
+      &nbsp;&nbsp;&nbsp;
       <button onClick={onClickDeleteEdgeLabel}>Delete Edge</button>
       <br />
       <br />

@@ -81,3 +81,23 @@ html, body, #root {
 path.react-flow__edge-path:hover {
   stroke-width: 4;
 }
+table {
+  border-collapse: collapse;
+  width: 100%
+}
+
+table, th, td {
+  border: 1px solid;
+}
+
+table thead {
+  background-color:lightblue;
+}
+
+table thead tr td{
+  padding: 5px;
+}
+
+table tbody tr td {
+  padding-left: 5px;
+}
