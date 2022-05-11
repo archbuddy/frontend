@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import srvEdges from './services/edges'
+import { FaPen as EditIcon, FaTrashAlt as TrashIcon } from 'react-icons/fa'
 
 function ModalEdge({ edge, callback, closeModal }) {
   const [inputEdgeLabel, setInputEdgeLabel] = useState(edge.label)
@@ -37,7 +38,9 @@ function ModalEdge({ edge, callback, closeModal }) {
             return [
               <tr key={item.id}>
                 <td>{item.label}</td>
-                <td>a | b</td>
+                <td>
+                  <EditIcon /> | <TrashIcon />
+                </td>
               </tr>
             ]
           })}
@@ -65,11 +68,10 @@ function ModalEdge({ edge, callback, closeModal }) {
       {renderInputCommand()}
       {renderDataTable()}
       <br />
-      <button onClick={onClickSaveEdgeLabel}>Save Edge label</button>
+      <button onClick={onClickSaveEdgeLabel}>Save Edge</button>
       &nbsp;&nbsp;&nbsp;
       <button onClick={onClickDeleteEdgeLabel}>Delete Edge</button>
-      <br />
-      <br />
+      &nbsp;&nbsp;&nbsp;
       <button onClick={onClickClose}>Close</button>
     </div>
   )

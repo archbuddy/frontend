@@ -20,6 +20,7 @@ import SystemNode from './nodes/SystemNode'
 import srvEdges from './services/edges'
 import srvGeneral from './services/general'
 import srvNodes from './services/nodes'
+import { FaSave as SaveIcon } from 'react-icons/fa'
 
 const modalCustomStyles = {
   overlay: {
@@ -159,7 +160,9 @@ function Flow() {
           <button onClick={onClickReadNodes}>Read Nodes</button>
           <br />
           <p>Actions</p>
-          <button onClick={onClickSaveNodesPos}>Save Nodes Pos</button>
+          <button onClick={onClickSaveNodesPos}>
+            <SaveIcon />
+          </button>
           <br />
         </div>
         <div className="middleRight">
