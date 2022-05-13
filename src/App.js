@@ -18,7 +18,6 @@ import Footer from './Footer'
 import Header from './Header'
 import SystemNode from './nodes/SystemNode'
 import srvEdges from './services/edges'
-import srvGeneral from './services/general'
 import srvNodes from './services/nodes'
 import srvViewPoint from './services/viewpoint'
 import { FaSave as SaveIcon } from 'react-icons/fa'
@@ -52,19 +51,12 @@ function Flow() {
   let selectedViewPoint = '0'
 
   const initialLoad = async () => {
-    const result = await srvGeneral.loadData()
-    setNodes(result.nodes)
-    for (const item of result.edges) {
-      item.markerEnd = {}
-      item.markerEnd.type = MarkerType.ArrowClosed
-    }
-    setEdges(result.edges)
     setViewPoint(await srvViewPoint.list())
   }
 
   const loadData = async () => {
     log(`Loading data with viewPoint ${selectedViewPoint}`)
-    const result = await srvGeneral.loadData(selectedViewPoint)
+    const result = await srvViewPoint.loadData(selectedViewPoint)
     setNodes(result.nodes)
     for (const item of result.edges) {
       item.markerEnd = {}
@@ -102,7 +94,7 @@ function Flow() {
   }
 
   const onClickSaveNodesPos = async () => {
-    await srvNodes.saveAllNodePosition(nodes)
+    await srvViewPoint.savePosition(selectedViewPoint, nodes, edges)
     await loadData()
   }
 
