@@ -1,7 +1,11 @@
 const endpoint = 'http://localhost:3000'
 
-const loadData = async () => {
-  const response = await fetch(endpoint)
+const loadData = async (viewPointId) => {
+  let url = endpoint
+  if (viewPointId && viewPointId > 0) {
+    url += `?viewPoint=${viewPointId}`
+  }
+  const response = await fetch(url)
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)

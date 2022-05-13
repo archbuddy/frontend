@@ -20,6 +20,7 @@ import SystemNode from './nodes/SystemNode'
 import srvEdges from './services/edges'
 import srvGeneral from './services/general'
 import srvNodes from './services/nodes'
+import srvViewPoint from './services/viewpoint'
 import { FaSave as SaveIcon } from 'react-icons/fa'
 
 const modalCustomStyles = {
@@ -39,17 +40,31 @@ Modal.setAppElement('#root')
 function Flow() {
   //load data on init
   useEffect(() => {
-    loadData()
+    initialLoad()
   }, [])
 
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
-  const [inputSystemNode, setInputSystemNode] = useState([])
-  const [selectedEdge, setSelectedEdge] = useState([])
+  const [viewPoint, setViewPoint] = useState([])
+  const [inputSystemNode, setInputSystemNode] = useState('')
+  const [selectedEdge, setSelectedEdge] = useState('')
   const [modalEdgeIsOpen, setModalEdgeIsOpen] = React.useState(false)
+  let selectedViewPoint = '0'
+
+  const initialLoad = async () => {
+    const result = await srvGeneral.loadData()
+    setNodes(result.nodes)
+    for (const item of result.edges) {
+      item.markerEnd = {}
+      item.markerEnd.type = MarkerType.ArrowClosed
+    }
+    setEdges(result.edges)
+    setViewPoint(await srvViewPoint.list())
+  }
 
   const loadData = async () => {
-    const result = await srvGeneral.loadData()
+    log(`Loading data with viewPoint ${selectedViewPoint}`)
+    const result = await srvGeneral.loadData(selectedViewPoint)
     setNodes(result.nodes)
     for (const item of result.edges) {
       item.markerEnd = {}
@@ -99,6 +114,10 @@ function Flow() {
     log(nodes)
   }
 
+  const onClickReadViews = () => {
+    log(viewPoint)
+  }
+
   function closeEdgeModal() {
     log('closing')
     setSelectedEdge({})
@@ -127,7 +146,10 @@ function Flow() {
     await srvEdges.deleteEdge(event[0].id)
     await loadData()
   }
-
+  const viewPointOnChange = (event) => {
+    selectedViewPoint = event.target.value
+    loadData()
+  }
   // connectionMode loose define that handles can connect with each other
   return (
     <div className="main" id="main">
@@ -145,6 +167,23 @@ function Flow() {
       <div className="middle">
         <div className="middleLeft">
           <p>Buttons and actions to interact with canvas</p>
+          <br />
+          <p>View points</p>
+          <select
+            name="viewPointSelect"
+            onChange={viewPointOnChange}
+            value={selectedViewPoint}
+            multiple={false}
+          >
+            <option value="0">selecione</option>
+            {viewPoint.map((item, i) => {
+              return (
+                <option key={i} value={item.id}>
+                  {item.name}
+                </option>
+              )
+            })}
+          </select>
           <p></p>
           <p>Nodes</p>
           <input
@@ -158,6 +197,8 @@ function Flow() {
           <button onClick={onClickReadEdges}>Read Edges</button>
           <br />
           <button onClick={onClickReadNodes}>Read Nodes</button>
+          <br />
+          <button onClick={onClickReadViews}>Read Views</button>
           <br />
           <p>Actions</p>
           <button onClick={onClickSaveNodesPos}>
