@@ -18,7 +18,7 @@ const list = async () => {
 const loadData = async (viewPointId) => {
   let url = endpoint
   if (viewPointId && viewPointId > 0) {
-    url += `?viewPoint=${viewPointId}`
+    url += `?viewpoint=${viewPointId}`
   }
   const response = await fetch(url)
   if (!response.ok) {
@@ -29,16 +29,35 @@ const loadData = async (viewPointId) => {
   return data
 }
 
-const savePosition = async (id, nodes, edges) => {
+const savePosition = async (viewPoint, nodes, edges) => {
+  // TODO clear invalid information, but this in the future will be valid
+  const nodesToBeSaved = []
+  const edgesToBeSaved = []
+  for (const node of nodes) {
+    nodesToBeSaved.push({
+      id: node.id,
+      position: node.position
+    })
+  }
+  for (const edge of edges) {
+    if (edge.innerList) {
+      for (const innerItem of edge.innerList) {
+        edgesToBeSaved.push(innerItem.id)
+      }
+    } else {
+      edgesToBeSaved.push(edge.id)
+    }
+  }
   const response = await fetch(`${endpoint}/viewpoint`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      id,
-      nodes,
-      edges
+      id: viewPoint.id,
+      name: viewPoint.name,
+      nodes: nodesToBeSaved,
+      edges: edgesToBeSaved
     })
   })
 

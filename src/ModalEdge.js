@@ -1,28 +1,80 @@
 import React, { useState } from 'react'
 import srvEdges from './services/edges'
-import { FaPen as EditIcon, FaTrashAlt as TrashIcon } from 'react-icons/fa'
+import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
+import { MdCancel as Cancel } from 'react-icons/md'
+import { log } from './util'
 
 function ModalEdge({ edge, callback, closeModal }) {
-  const [inputEdgeLabel, setInputEdgeLabel] = useState(edge.label)
+  const [selectedRowEdgeId, setSelectedRowEdgeId] = useState('')
+  const [inputEdge, setInputEdge] = useState('')
 
-  const onClickSaveEdgeLabel = async () => {
-    edge.label = inputEdgeLabel
-    await srvEdges.updateEdge(edge)
+  const onClickSave = async () => {
+    log(`Saving edge ${selectedRowEdgeId} with value ${inputEdge}`)
+    await srvEdges.updateEdge({ id: selectedRowEdgeId, label: inputEdge })
     callback(true)
   }
 
-  const onClickDeleteEdgeLabel = async () => {
-    await srvEdges.deleteEdge(edge.id)
+  const deleteEdge = async (edgeId) => {
+    log(`Deleting edge ${edgeId}`)
     callback(true)
+  }
+
+  const onSelectRow = (edgeId, edgeLabel) => {
+    setSelectedRowEdgeId(edgeId)
+    setInputEdge(edgeLabel)
   }
 
   const onClickClose = async () => {
     closeModal()
   }
 
+  const renderLine = (item) => {
+    if (selectedRowEdgeId === '') {
+      return [
+        <tr key={item.id}>
+          <td>{item.label}</td>
+          <td>
+            <button onClick={() => onSelectRow(item.id, item.label)}>
+              <EditIcon />
+            </button>
+            <button onClick={() => deleteEdge(item.id)}>
+              <TrashIcon />
+            </button>
+          </td>
+        </tr>
+      ]
+    }
+
+    return [
+      <tr key={item.id}>
+        <td>{item.label}</td>
+        <td></td>
+      </tr>
+    ]
+  }
+
+  const renderField = (item) => {
+    return [
+      <tr key={item.id}>
+        <td>
+          <input type="text" onChange={(e) => setInputEdge(e.target.value)} value={inputEdge} />
+        </td>
+        <td>
+          <button onClick={onClickSave}>
+            <SaveIcon />
+          </button>
+          <button onClick={() => setSelectedRowEdgeId('')}>
+            <Cancel />
+          </button>
+        </td>
+      </tr>
+    ]
+  }
+
   const renderDataTable = () => {
-    if (edge.innerList === undefined || edge.innerList.length === 0) {
-      return
+    let list = [edge]
+    if (edge.innerList !== undefined && edge.innerList.length >= 0) {
+      list = edge.innerList
     }
 
     return (
@@ -34,44 +86,23 @@ function ModalEdge({ edge, callback, closeModal }) {
           </tr>
         </thead>
         <tbody>
-          {edge.innerList.map((item) => {
-            return [
-              <tr key={item.id}>
-                <td>{item.label}</td>
-                <td>
-                  <EditIcon /> | <TrashIcon />
-                </td>
-              </tr>
-            ]
+          {list.map((item) => {
+            if (item.id === selectedRowEdgeId) {
+              return renderField(item)
+            } else {
+              return renderLine(item)
+            }
           })}
         </tbody>
       </table>
     )
   }
 
-  const renderInputCommand = () => {
-    if (edge.innerList !== undefined && edge.innerList.length > 0) {
-      return
-    }
-    return (
-      <input
-        type="text"
-        onChange={(e) => setInputEdgeLabel(e.target.value)}
-        value={inputEdgeLabel}
-      />
-    )
-  }
-
   return (
     <div>
-      <p>Edge operation</p>
-      {renderInputCommand()}
+      <p>Edge(s) selected data</p>
       {renderDataTable()}
       <br />
-      <button onClick={onClickSaveEdgeLabel}>Save Edge</button>
-      &nbsp;&nbsp;&nbsp;
-      <button onClick={onClickDeleteEdgeLabel}>Delete Edge</button>
-      &nbsp;&nbsp;&nbsp;
       <button onClick={onClickClose}>Close</button>
     </div>
   )

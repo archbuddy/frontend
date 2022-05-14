@@ -44,19 +44,20 @@ function Flow() {
 
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
-  const [viewPoint, setViewPoint] = useState([])
+  const [viewPoints, setViewPoints] = useState([])
   const [inputSystemNode, setInputSystemNode] = useState('')
   const [selectedEdge, setSelectedEdge] = useState('')
   const [modalEdgeIsOpen, setModalEdgeIsOpen] = React.useState(false)
-  let selectedViewPoint = '0'
+  const [selectedViewPoint, setSelectedViewPoint] = useState('0')
 
   const initialLoad = async () => {
-    setViewPoint(await srvViewPoint.list())
+    setViewPoints(await srvViewPoint.list())
   }
 
-  const loadData = async () => {
-    log(`Loading data with viewPoint ${selectedViewPoint}`)
-    const result = await srvViewPoint.loadData(selectedViewPoint)
+  const loadData = async (viewPointId) => {
+    const searchId = viewPointId === undefined ? selectedViewPoint : viewPointId
+    log(`Loading data with viewPoint ${searchId}`)
+    const result = await srvViewPoint.loadData(searchId)
     setNodes(result.nodes)
     for (const item of result.edges) {
       item.markerEnd = {}
@@ -94,7 +95,9 @@ function Flow() {
   }
 
   const onClickSaveNodesPos = async () => {
-    await srvViewPoint.savePosition(selectedViewPoint, nodes, edges)
+    const searchId = parseInt(selectedViewPoint)
+    const index = viewPoints.findIndex((e) => e.id === searchId)
+    await srvViewPoint.savePosition(viewPoints[index], nodes, edges)
     await loadData()
   }
 
@@ -107,7 +110,7 @@ function Flow() {
   }
 
   const onClickReadViews = () => {
-    log(viewPoint)
+    log(viewPoints)
   }
 
   function closeEdgeModal() {
@@ -139,8 +142,9 @@ function Flow() {
     await loadData()
   }
   const viewPointOnChange = (event) => {
-    selectedViewPoint = event.target.value
-    loadData()
+    //useState is async and will not garantuee that the value is updated
+    setSelectedViewPoint(event.target.value)
+    loadData(event.target.value)
   }
   // connectionMode loose define that handles can connect with each other
   return (
@@ -168,7 +172,7 @@ function Flow() {
             multiple={false}
           >
             <option value="0">selecione</option>
-            {viewPoint.map((item, i) => {
+            {viewPoints.map((item, i) => {
               return (
                 <option key={i} value={item.id}>
                   {item.name}
