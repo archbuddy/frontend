@@ -48,15 +48,16 @@ function Flow() {
   const [inputSystemNode, setInputSystemNode] = useState('')
   const [selectedEdge, setSelectedEdge] = useState('')
   const [modalEdgeIsOpen, setModalEdgeIsOpen] = React.useState(false)
-  let selectedViewPoint = '0'
+  const [selectedViewPoint, setSelectedViewPoint] = useState('0')
 
   const initialLoad = async () => {
     setViewPoint(await srvViewPoint.list())
   }
 
-  const loadData = async () => {
-    log(`Loading data with viewPoint ${selectedViewPoint}`)
-    const result = await srvViewPoint.loadData(selectedViewPoint)
+  const loadData = async (viewPointId) => {
+    const searchId = viewPointId === undefined ? selectedViewPoint : viewPointId
+    log(`Loading data with viewPoint ${searchId}`)
+    const result = await srvViewPoint.loadData(searchId)
     setNodes(result.nodes)
     for (const item of result.edges) {
       item.markerEnd = {}
@@ -139,8 +140,9 @@ function Flow() {
     await loadData()
   }
   const viewPointOnChange = (event) => {
-    selectedViewPoint = event.target.value
-    loadData()
+    //useState is async and will not garantuee that the value is updated
+    setSelectedViewPoint(event.target.value)
+    loadData(event.target.value)
   }
   // connectionMode loose define that handles can connect with each other
   return (
