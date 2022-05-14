@@ -44,14 +44,14 @@ function Flow() {
 
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
-  const [viewPoint, setViewPoint] = useState([])
+  const [viewPoints, setViewPoints] = useState([])
   const [inputSystemNode, setInputSystemNode] = useState('')
   const [selectedEdge, setSelectedEdge] = useState('')
   const [modalEdgeIsOpen, setModalEdgeIsOpen] = React.useState(false)
   const [selectedViewPoint, setSelectedViewPoint] = useState('0')
 
   const initialLoad = async () => {
-    setViewPoint(await srvViewPoint.list())
+    setViewPoints(await srvViewPoint.list())
   }
 
   const loadData = async (viewPointId) => {
@@ -95,7 +95,9 @@ function Flow() {
   }
 
   const onClickSaveNodesPos = async () => {
-    await srvViewPoint.savePosition(selectedViewPoint, nodes, edges)
+    const searchId = parseInt(selectedViewPoint)
+    const index = viewPoints.findIndex((e) => e.id === searchId)
+    await srvViewPoint.savePosition(viewPoints[index], nodes, edges)
     await loadData()
   }
 
@@ -108,7 +110,7 @@ function Flow() {
   }
 
   const onClickReadViews = () => {
-    log(viewPoint)
+    log(viewPoints)
   }
 
   function closeEdgeModal() {
@@ -170,7 +172,7 @@ function Flow() {
             multiple={false}
           >
             <option value="0">selecione</option>
-            {viewPoint.map((item, i) => {
+            {viewPoints.map((item, i) => {
               return (
                 <option key={i} value={item.id}>
                   {item.name}
