@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
-// import srvEdges from './services/edges'
+import srvEdges from './services/edges'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
 import { log } from './util'
 
 function ModalEdge({ edge, callback, closeModal }) {
-  const [selectedRow, setSelectedRow] = useState('')
-  const [inputSystemNode, setInputSystemNode] = useState('')
+  const [selectedRowEdgeId, setSelectedRowEdgeId] = useState('')
+  const [inputEdge, setInputEdge] = useState('')
 
   const onClickSave = async () => {
-    log(`Saving edge ${selectedRow} with value ${inputSystemNode}`)
-    // edge.label = inputEdgeLabel
-    // await srvEdges.updateEdge(edge)
+    log(`Saving edge ${selectedRowEdgeId} with value ${inputEdge}`)
+    await srvEdges.updateEdge({ id: selectedRowEdgeId, label: inputEdge })
     callback(true)
   }
 
@@ -21,8 +20,8 @@ function ModalEdge({ edge, callback, closeModal }) {
   }
 
   const onSelectRow = (edgeId, edgeLabel) => {
-    setSelectedRow(edgeId)
-    setInputSystemNode(edgeLabel)
+    setSelectedRowEdgeId(edgeId)
+    setInputEdge(edgeLabel)
   }
 
   const onClickClose = async () => {
@@ -30,7 +29,7 @@ function ModalEdge({ edge, callback, closeModal }) {
   }
 
   const renderLine = (item) => {
-    if (selectedRow === '') {
+    if (selectedRowEdgeId === '') {
       return [
         <tr key={item.id}>
           <td>{item.label}</td>
@@ -58,17 +57,13 @@ function ModalEdge({ edge, callback, closeModal }) {
     return [
       <tr key={item.id}>
         <td>
-          <input
-            type="text"
-            onChange={(e) => setInputSystemNode(e.target.value)}
-            value={inputSystemNode}
-          />
+          <input type="text" onChange={(e) => setInputEdge(e.target.value)} value={inputEdge} />
         </td>
         <td>
           <button onClick={onClickSave}>
             <SaveIcon />
           </button>
-          <button onClick={() => setSelectedRow('')}>
+          <button onClick={() => setSelectedRowEdgeId('')}>
             <Cancel />
           </button>
         </td>
@@ -92,7 +87,7 @@ function ModalEdge({ edge, callback, closeModal }) {
         </thead>
         <tbody>
           {list.map((item) => {
-            if (item.id === selectedRow) {
+            if (item.id === selectedRowEdgeId) {
               return renderField(item)
             } else {
               return renderLine(item)
