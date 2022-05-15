@@ -19,11 +19,10 @@ const list = async () => {
 }
 
 const loadData = async (viewPointId) => {
-  let url = endpoint
-  if (viewPointId && viewPointId > 0) {
-    url += `?viewpoint=${viewPointId}`
+  if (!viewPointId || viewPointId === 0) {
+    throw new Error('invalid view point id')
   }
-  const response = await fetch(url)
+  const response = await fetch(`${endpoint}/reactflow/${viewPointId}`)
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
