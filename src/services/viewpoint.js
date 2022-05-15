@@ -1,7 +1,7 @@
 const endpoint = 'http://localhost:3000'
 
 const list = async () => {
-  const response = await fetch(`${endpoint}/viewpoint`, {
+  const response = await fetch(`${endpoint}/diagrams`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -12,7 +12,10 @@ const list = async () => {
     throw new Error(message)
   }
   const data = await response.json()
-  return data
+  for (const item of data.data) {
+    item.id = item._id
+  }
+  return data.data
 }
 
 const loadData = async (viewPointId) => {
