@@ -22,7 +22,7 @@ const loadData = async (viewPointId) => {
   if (!viewPointId || viewPointId === 0) {
     throw new Error('invalid view point id')
   }
-  const response = await fetch(`${endpoint}/reactflow/${viewPointId}`)
+  const response = await fetch(`${endpoint}/diagrams/${viewPointId}/reactflow`)
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
