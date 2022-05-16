@@ -84,14 +84,13 @@ function Flow() {
 
   //custom code to generate elements
   const onClickNewSystem = async () => {
-    await srvNodes.createNode('system', inputText)
+    await srvNodes.createNode('system', inputText, 0, 0, selectedViewPoint)
     setInputText('')
     await loadData()
   }
 
   const onClickSaveNodesPos = async () => {
-    const searchId = parseInt(selectedViewPoint)
-    const index = viewPoints.findIndex((e) => e.id === searchId)
+    const index = viewPoints.findIndex((e) => e.id === selectedViewPoint)
     await srvViewPoint.savePosition(viewPoints[index], nodes, edges)
     await loadData()
   }
