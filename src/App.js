@@ -44,7 +44,7 @@ function Flow() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
   const [viewPoints, setViewPoints] = useState([])
-  const [inputSystemNode, setInputSystemNode] = useState('')
+  const [inputText, setInputText] = useState('')
   const [selectedEdge, setSelectedEdge] = useState('')
   const [modalEdgeIsOpen, setModalEdgeIsOpen] = React.useState(false)
   const [selectedViewPoint, setSelectedViewPoint] = useState('0')
@@ -84,8 +84,8 @@ function Flow() {
 
   //custom code to generate elements
   const onClickNewSystem = async () => {
-    await srvNodes.createNode('system', inputSystemNode)
-    setInputSystemNode('')
+    await srvNodes.createNode('system', inputText)
+    setInputText('')
     await loadData()
   }
 
@@ -141,6 +141,13 @@ function Flow() {
     setSelectedViewPoint(event.target.value)
     loadData(event.target.value)
   }
+
+  const onClickNewViewPoint = async () => {
+    await srvViewPoint.create(inputText)
+    setInputText('')
+    await initialLoad()
+  }
+
   // connectionMode loose define that handles can connect with each other
   return (
     <div className="main" id="main">
@@ -177,12 +184,9 @@ function Flow() {
           </select>
           <p></p>
           <p>Nodes</p>
-          <input
-            type="text"
-            onChange={(e) => setInputSystemNode(e.target.value)}
-            value={inputSystemNode}
-          />
+          <input type="text" onChange={(e) => setInputText(e.target.value)} value={inputText} />
           <button onClick={onClickNewSystem}>Add System</button>
+          <button onClick={onClickNewViewPoint}>Add ViewPoint</button>
           <br />
           <p>Console outputs</p>
           <button onClick={onClickReadEdges}>Read Edges</button>
