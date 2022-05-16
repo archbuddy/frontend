@@ -19,11 +19,10 @@ const list = async () => {
 }
 
 const loadData = async (viewPointId) => {
-  let url = endpoint
-  if (viewPointId && viewPointId > 0) {
-    url += `?viewpoint=${viewPointId}`
+  if (!viewPointId || viewPointId === 0) {
+    throw new Error('invalid view point id')
   }
-  const response = await fetch(url)
+  const response = await fetch(`${endpoint}/diagrams/${viewPointId}/reactflow`)
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
@@ -32,6 +31,8 @@ const loadData = async (viewPointId) => {
   return data
 }
 
+// TODO remove this implementation and change for real time colaboration
+// Like how it works with Miro
 const savePosition = async (viewPoint, nodes, edges) => {
   // TODO clear invalid information, but this in the future will be valid
   const nodesToBeSaved = []

@@ -7,8 +7,7 @@ import ReactFlow, {
   applyNodeChanges,
   Background,
   Controls,
-  MiniMap,
-  MarkerType
+  MiniMap
 } from 'react-flow-renderer'
 import Modal from 'react-modal'
 import ModalEdge from './ModalEdge'
@@ -59,10 +58,6 @@ function Flow() {
     log(`Loading data with viewPoint ${searchId}`)
     const result = await srvViewPoint.loadData(searchId)
     setNodes(result.nodes)
-    for (const item of result.edges) {
-      item.markerEnd = {}
-      item.markerEnd.type = MarkerType.ArrowClosed
-    }
     setEdges(result.edges)
   }
 
