@@ -11,16 +11,22 @@ const edgeCanConnect = (connection) => {
   return can
 }
 
-const createEdge = async (connection) => {
-  const response = await fetch(`${endpoint}/edge`, {
+const createEdge = async (connection, diagram) => {
+  const body = {
+    ...connection,
+    diagram
+  }
+  log(body)
+  const response = await fetch(`${endpoint}/edges`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(connection)
+    body: JSON.stringify(body)
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
+    log(await response.json())
     throw new Error(message)
   }
 }

@@ -75,11 +75,12 @@ function Flow() {
     async (connection) => {
       if (srvEdges.edgeCanConnect(connection)) {
         setEdges((eds) => addEdge(connection, eds))
-        await srvEdges.createEdge(connection)
+        log(`Selected view point ${selectedViewPoint}`)
+        await srvEdges.createEdge(connection, selectedViewPoint)
         await loadData()
       }
     },
-    [setEdges]
+    [selectedViewPoint]
   )
 
   //custom code to generate elements
@@ -191,6 +192,7 @@ function Flow() {
           <p>Nodes</p>
           <input type="text" onChange={(e) => setInputText(e.target.value)} value={inputText} />
           <button onClick={onClickNewSystem}>Add System</button>
+          <br />
           <button onClick={onClickNewViewPoint}>Add ViewPoint</button>
           <br />
           <p>Console outputs</p>
