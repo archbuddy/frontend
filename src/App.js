@@ -147,6 +147,12 @@ function Flow() {
     await initialLoad()
   }
 
+  // save the node position on pan
+  const onNodeDragStop = async (event, node) => {
+    await srvNodes.patchNode(node, selectedViewPoint)
+    await loadData()
+  }
+
   // connectionMode loose define that handles can connect with each other
   return (
     <div className="main" id="main">
@@ -214,6 +220,7 @@ function Flow() {
             onEdgeClick={onEdgesClick}
             onNodesDelete={onNodesDelete}
             onEdgesDelete={onEdgesDelete}
+            onNodeDragStop={onNodeDragStop}
           >
             <MiniMap />
             <Controls />
