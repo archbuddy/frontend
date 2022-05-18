@@ -44,7 +44,7 @@ function Flow() {
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
   const [viewPoints, setViewPoints] = useState([])
-  const [inputSystemNode, setInputSystemNode] = useState('')
+  const [inputText, setInputText] = useState('')
   const [selectedEdge, setSelectedEdge] = useState('')
   const [modalEdgeIsOpen, setModalEdgeIsOpen] = React.useState(false)
   const [selectedViewPoint, setSelectedViewPoint] = useState('0')
@@ -75,23 +75,23 @@ function Flow() {
     async (connection) => {
       if (srvEdges.edgeCanConnect(connection)) {
         setEdges((eds) => addEdge(connection, eds))
-        await srvEdges.createEdge(connection)
+        log(`Selected view point ${selectedViewPoint}`)
+        await srvEdges.createEdge(connection, selectedViewPoint)
         await loadData()
       }
     },
-    [setEdges]
+    [selectedViewPoint]
   )
 
   //custom code to generate elements
   const onClickNewSystem = async () => {
-    await srvNodes.createNode('system', inputSystemNode)
-    setInputSystemNode('')
+    await srvNodes.createNode('system', inputText, 0, 0, selectedViewPoint)
+    setInputText('')
     await loadData()
   }
 
   const onClickSaveNodesPos = async () => {
-    const searchId = parseInt(selectedViewPoint)
-    const index = viewPoints.findIndex((e) => e.id === searchId)
+    const index = viewPoints.findIndex((e) => e.id === selectedViewPoint)
     await srvViewPoint.savePosition(viewPoints[index], nodes, edges)
     await loadData()
   }
@@ -127,20 +127,28 @@ function Flow() {
 
   const onNodesDelete = async (event) => {
     // TODO it could receive a list of itens
-    await srvNodes.deleteNode(event[0].id)
+    await srvNodes.deleteNode(event[0].nodeId)
     await loadData()
   }
 
-  const onEdgesDelete = async (event) => {
-    // TODO it could receive a list of itens
-    await srvEdges.deleteEdge(event[0].id)
-    await loadData()
-  }
   const viewPointOnChange = (event) => {
     //useState is async and will not garantuee that the value is updated
     setSelectedViewPoint(event.target.value)
     loadData(event.target.value)
   }
+
+  const onClickNewViewPoint = async () => {
+    await srvViewPoint.create(inputText)
+    setInputText('')
+    await initialLoad()
+  }
+
+  // save the node position on pan
+  const onNodeDragStop = async (event, node) => {
+    await srvNodes.patchNode(node, selectedViewPoint)
+    await loadData()
+  }
+
   // connectionMode loose define that handles can connect with each other
   return (
     <div className="main" id="main">
@@ -177,12 +185,10 @@ function Flow() {
           </select>
           <p></p>
           <p>Nodes</p>
-          <input
-            type="text"
-            onChange={(e) => setInputSystemNode(e.target.value)}
-            value={inputSystemNode}
-          />
+          <input type="text" onChange={(e) => setInputText(e.target.value)} value={inputText} />
           <button onClick={onClickNewSystem}>Add System</button>
+          <br />
+          <button onClick={onClickNewViewPoint}>Add ViewPoint</button>
           <br />
           <p>Console outputs</p>
           <button onClick={onClickReadEdges}>Read Edges</button>
@@ -210,7 +216,7 @@ function Flow() {
             connectionMode="loose"
             onEdgeClick={onEdgesClick}
             onNodesDelete={onNodesDelete}
-            onEdgesDelete={onEdgesDelete}
+            onNodeDragStop={onNodeDragStop}
           >
             <MiniMap />
             <Controls />

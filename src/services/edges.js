@@ -11,36 +11,35 @@ const edgeCanConnect = (connection) => {
   return can
 }
 
-const createEdge = async (connection) => {
-  const response = await fetch(`${endpoint}/edge`, {
+const createEdge = async (connection, diagram) => {
+  const body = {
+    ...connection,
+    diagram
+  }
+  log(body)
+  const response = await fetch(`${endpoint}/edges`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(connection)
+    body: JSON.stringify(body)
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
+    log(await response.json())
     throw new Error(message)
   }
 }
 
 const updateEdge = async (edge) => {
-  const response = await fetch(`${endpoint}/edge`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(edge)
-  })
-  if (!response.ok) {
-    const message = `An error has occured: ${response.status}`
-    throw new Error(message)
-  }
+  log(edge)
+  throw new Error('Not implemented')
 }
 
-const deleteEdge = async (nodeId) => {
-  const response = await fetch(`${endpoint}/edge/${nodeId}`, {
+const deleteEdge = async (edgeId) => {
+  const url = `${endpoint}/edges/${edgeId}`
+  log(url)
+  const response = await fetch(url, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
