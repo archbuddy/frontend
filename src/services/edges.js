@@ -45,8 +45,10 @@ const updateEdge = async (edge) => {
   }
 }
 
-const deleteEdge = async (nodeId) => {
-  const response = await fetch(`${endpoint}/edge/${nodeId}`, {
+const deleteEdge = async (edgeId) => {
+  const url = `${endpoint}/edges/${edgeId}`
+  log(url)
+  const response = await fetch(url, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'

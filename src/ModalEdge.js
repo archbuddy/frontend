@@ -15,7 +15,8 @@ function ModalEdge({ edge, callback, closeModal }) {
   }
 
   const deleteEdge = async (edgeId) => {
-    log(`Deleting edge ${edgeId}`)
+    // TODO it could receive a list of itens
+    await srvEdges.deleteEdge(edgeId)
     callback(true)
   }
 

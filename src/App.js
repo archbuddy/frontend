@@ -131,11 +131,6 @@ function Flow() {
     await loadData()
   }
 
-  const onEdgesDelete = async (event) => {
-    // TODO it could receive a list of itens
-    await srvEdges.deleteEdge(event[0].id)
-    await loadData()
-  }
   const viewPointOnChange = (event) => {
     //useState is async and will not garantuee that the value is updated
     setSelectedViewPoint(event.target.value)
@@ -221,7 +216,6 @@ function Flow() {
             connectionMode="loose"
             onEdgeClick={onEdgesClick}
             onNodesDelete={onNodesDelete}
-            onEdgesDelete={onEdgesDelete}
             onNodeDragStop={onNodeDragStop}
           >
             <MiniMap />
