@@ -24,7 +24,9 @@ const createNode = async (type, name, x, y, diagramId) => {
 }
 
 const deleteNode = async (nodeId) => {
-  const response = await fetch(`${endpoint}/node/${nodeId}`, {
+  const url = `${endpoint}/nodes/${nodeId}`
+  log(url)
+  const response = await fetch(url, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
@@ -33,6 +35,7 @@ const deleteNode = async (nodeId) => {
 
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
+    log(await response.json())
     throw new Error(message)
   }
 }

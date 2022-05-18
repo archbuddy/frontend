@@ -127,7 +127,7 @@ function Flow() {
 
   const onNodesDelete = async (event) => {
     // TODO it could receive a list of itens
-    await srvNodes.deleteNode(event[0].id)
+    await srvNodes.deleteNode(event[0].nodeId)
     await loadData()
   }
 
