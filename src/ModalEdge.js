@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import srvEdges from './services/edges'
+import srvRelations from './services/relations'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
 import { log } from './util'
@@ -10,7 +11,12 @@ function ModalEdge({ edge, callback, closeModal }) {
 
   const onClickSave = async () => {
     log(`Saving edge ${selectedRowEdgeId} with value ${inputEdge}`)
-    await srvEdges.updateEdge({ id: selectedRowEdgeId, label: inputEdge })
+    // TODO detail field should be checked
+    await srvRelations.updateRelation({
+      id: selectedRowEdgeId,
+      description: inputEdge,
+      detail: ''
+    })
     callback(true)
   }
 
@@ -32,13 +38,13 @@ function ModalEdge({ edge, callback, closeModal }) {
   const renderLine = (item) => {
     if (selectedRowEdgeId === '') {
       return [
-        <tr key={item.id}>
+        <tr key={item.relation}>
           <td>{item.label}</td>
           <td>
-            <button onClick={() => onSelectRow(item.id, item.label)}>
+            <button onClick={() => onSelectRow(item.relation, item.label)}>
               <EditIcon />
             </button>
-            <button onClick={() => deleteEdge(item.id)}>
+            <button onClick={() => deleteEdge(item.relation)}>
               <TrashIcon />
             </button>
           </td>
@@ -47,7 +53,7 @@ function ModalEdge({ edge, callback, closeModal }) {
     }
 
     return [
-      <tr key={item.id}>
+      <tr key={item.relation}>
         <td>{item.label}</td>
         <td></td>
       </tr>
@@ -56,7 +62,7 @@ function ModalEdge({ edge, callback, closeModal }) {
 
   const renderField = (item) => {
     return [
-      <tr key={item.id}>
+      <tr key={item.relation}>
         <td>
           <input type="text" onChange={(e) => setInputEdge(e.target.value)} value={inputEdge} />
         </td>
@@ -88,7 +94,7 @@ function ModalEdge({ edge, callback, closeModal }) {
         </thead>
         <tbody>
           {list.map((item) => {
-            if (item.id === selectedRowEdgeId) {
+            if (item.relation === selectedRowEdgeId) {
               return renderField(item)
             } else {
               return renderLine(item)
