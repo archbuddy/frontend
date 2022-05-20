@@ -20,10 +20,6 @@ export default function AddNodeModal(props) {
     setNewNode(props.newNode)
   }, [props.newNode])
 
-  useEffect(() => {
-    setNewNode(newNode)
-  }, [newNode])
-
   const onNameChange = (e) => {
     newNode.data.name = e.target.value
     setNewNode(newNode)
