@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -48,14 +50,13 @@ html, body, #root {
 }
 
 .systemNode {
-  background-color: #3066B7;
+  background-color: #3066b7;
   color: white;
   padding: 5px;
   border-radius: 3px;
   border: 0px solid #1a192b;
   font-size: 8px;
   text-align: center;
-  min-width: 60px;
 }
 
 .systemNode .handle-target {
@@ -78,23 +79,34 @@ html, body, #root {
   font-size: 8px;
 }
 
+path.react-flow__edge-path {
+  stroke-width: 4;
+  stroke: #ddd;
+}
 path.react-flow__edge-path:hover {
+  stroke-width: 4;
+  stroke: #555;
+  cursor: pointer;
+}
+path.react-flow__edge-path {
   stroke-width: 4;
 }
 table {
   border-collapse: collapse;
-  width: 100%
+  width: 100%;
 }
 
-table, th, td {
+table,
+th,
+td {
   border: 1px solid;
 }
 
 table thead {
-  background-color:lightblue;
+  background-color: lightblue;
 }
 
-table thead tr td{
+table thead tr td {
   padding: 5px;
   font-weight: bold;
 }

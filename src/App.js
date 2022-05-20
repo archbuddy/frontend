@@ -1,6 +1,7 @@
 // check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
 
 import React, { useCallback, useEffect, useState } from 'react'
+import { ChakraProvider, Flex, Spacer } from '@chakra-ui/react'
 import ReactFlow, {
   addEdge,
   applyEdgeChanges,
@@ -13,13 +14,14 @@ import Modal from 'react-modal'
 import ModalEdge from './ModalEdge'
 import { log } from './util'
 
-import Footer from './Footer'
 import Header from './Header'
+import Footer from './Footer'
 import SystemNode from './nodes/SystemNode'
 import srvEdges from './services/edges'
 import srvNodes from './services/nodes'
 import srvViewPoint from './services/viewpoint'
 import { FaSave as SaveIcon } from 'react-icons/fa'
+import DiagramEditor from './diagram-editor'
 
 const modalCustomStyles = {
   overlay: {
@@ -151,81 +153,92 @@ function Flow() {
 
   // connectionMode loose define that handles can connect with each other
   return (
-    <div className="main" id="main">
-      <Modal
-        isOpen={modalEdgeIsOpen}
-        contentLabel="Example Modal"
-        onRequestClose={closeEdgeModal}
-        style={modalCustomStyles}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-      >
-        <ModalEdge edge={selectedEdge} callback={callBackModalEdge} closeModal={closeEdgeModal} />
-      </Modal>
-      <Header />
-      <div className="middle">
-        <div className="middleLeft">
-          <p>Buttons and actions to interact with canvas</p>
-          <br />
-          <p>View points</p>
-          <select
-            name="viewPointSelect"
-            onChange={viewPointOnChange}
-            value={selectedViewPoint}
-            multiple={false}
-          >
-            <option value="0">selecione</option>
-            {viewPoints.map((item, i) => {
-              return (
-                <option key={i} value={item.id}>
-                  {item.name}
-                </option>
-              )
-            })}
-          </select>
-          <p></p>
-          <p>Nodes</p>
-          <input type="text" onChange={(e) => setInputText(e.target.value)} value={inputText} />
-          <button onClick={onClickNewSystem}>Add System</button>
-          <br />
-          <button onClick={onClickNewViewPoint}>Add ViewPoint</button>
-          <br />
-          <p>Console outputs</p>
-          <button onClick={onClickReadEdges}>Read Edges</button>
-          <br />
-          <button onClick={onClickReadNodes}>Read Nodes</button>
-          <br />
-          <button onClick={onClickReadViews}>Read Views</button>
-          <br />
-          <p>Actions</p>
-          <button onClick={onClickSaveNodesPos}>
-            <SaveIcon />
-          </button>
-          <br />
+    <>
+      <ChakraProvider>
+        <Flex direction="column" h="100%">
+          <Header />
+          <Spacer>
+            <DiagramEditor></DiagramEditor>
+          </Spacer>
+          <Footer />
+        </Flex>
+      </ChakraProvider>
+      <div className="main" id="main" style={{ display: 'none' }}>
+        <Modal
+          isOpen={modalEdgeIsOpen}
+          contentLabel="Example Modal"
+          onRequestClose={closeEdgeModal}
+          style={modalCustomStyles}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+        >
+          <ModalEdge edge={selectedEdge} callback={callBackModalEdge} closeModal={closeEdgeModal} />
+        </Modal>
+        <Header />
+        <div className="middle">
+          <div className="middleLeft">
+            <p>Buttons and actions to interact with canvas</p>
+            <br />
+            <p>View points</p>
+            <select
+              name="viewPointSelect"
+              onChange={viewPointOnChange}
+              value={selectedViewPoint}
+              multiple={false}
+            >
+              <option value="0">selecione</option>
+              {viewPoints.map((item, i) => {
+                return (
+                  <option key={i} value={item.id}>
+                    {item.name}
+                  </option>
+                )
+              })}
+            </select>
+            <p></p>
+            <p>Nodes</p>
+            <input type="text" onChange={(e) => setInputText(e.target.value)} value={inputText} />
+            <button onClick={onClickNewSystem}>Add System</button>
+            <br />
+            <button onClick={onClickNewViewPoint}>Add ViewPoint</button>
+            <br />
+            <p>Console outputs</p>
+            <button onClick={onClickReadEdges}>Read Edges</button>
+            <br />
+            <button onClick={onClickReadNodes}>Read Nodes</button>
+            <br />
+            <button onClick={onClickReadViews}>Read Views</button>
+            <br />
+            <p>Actions</p>
+            <button onClick={onClickSaveNodesPos}>
+              <SaveIcon />
+            </button>
+            <br />
+          </div>
+          <div className="middleRight">
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              fitView
+              attributionPosition="top-right"
+              nodeTypes={nodeTypes}
+              connectionMode="loose"
+              onEdgeClick={onEdgesClick}
+              onNodesDelete={onNodesDelete}
+              onNodeDragStop={onNodeDragStop}
+            >
+              <MiniMap />
+              <Controls />
+              <Background />
+            </ReactFlow>
+          </div>
         </div>
-        <div className="middleRight">
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            fitView
-            attributionPosition="top-right"
-            nodeTypes={nodeTypes}
-            connectionMode="loose"
-            onEdgeClick={onEdgesClick}
-            onNodesDelete={onNodesDelete}
-            onNodeDragStop={onNodeDragStop}
-          >
-            <MiniMap />
-            <Controls />
-            <Background />
-          </ReactFlow>
-        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   )
 }
 
