@@ -5,31 +5,31 @@ import SidebarItem from './SidebarItem'
 import OpenDiagramModal from './OpenDiagramModal'
 import { Shape as PersonShape, defaultData as personData } from './nodes/PersonNode'
 import { Shape as SystemShape, defaultData as systemData } from './nodes/SystemNode'
-import { Shape as ContainerShape, defaultData as containerData } from './nodes/ContainerNode'
-import {
-  Shape as StorageContainerShape,
-  defaultData as storageContainerData
-} from './nodes/StorageContainerNode'
-import {
-  Shape as MicroserviceContainerShape,
-  defaultData as microserviceContainerData
-} from './nodes/MicroserviceContainerNode'
-import {
-  Shape as BusContainerShape,
-  defaultData as busContainerData
-} from './nodes/BusContainerNode'
-import {
-  Shape as WebContainerNode,
-  defaultData as webContainerData
-} from './nodes/WebContainerNode'
-import {
-  Shape as MobContainerNode,
-  defaultData as mobContainerData
-} from './nodes/MobContainerNode'
+// import { Shape as ContainerShape, defaultData as containerData } from './nodes/ContainerNode'
+// import {
+//   Shape as StorageContainerShape,
+//   defaultData as storageContainerData
+// } from './nodes/StorageContainerNode'
+// import {
+//   Shape as MicroserviceContainerShape,
+//   defaultData as microserviceContainerData
+// } from './nodes/MicroserviceContainerNode'
+// import {
+//   Shape as BusContainerShape,
+//   defaultData as busContainerData
+// } from './nodes/BusContainerNode'
+// import {
+//   Shape as WebContainerNode,
+//   defaultData as webContainerData
+// } from './nodes/WebContainerNode'
+// import {
+//   Shape as MobContainerNode,
+//   defaultData as mobContainerData
+// } from './nodes/MobContainerNode'
 
 import './index.css'
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -42,7 +42,11 @@ export default function Sidebar() {
       borderRadius={'xl'}
       zIndex="20"
     >
-      <OpenDiagramModal isOpen={isOpen} onClose={onClose}></OpenDiagramModal>
+      <OpenDiagramModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onSelect={props.onDiagramSelect}
+      ></OpenDiagramModal>
 
       <VStack className="sidebar" divider={<StackDivider borderColor="gray.200" />}>
         <IconButton
@@ -66,7 +70,7 @@ export default function Sidebar() {
           {...{ ...systemData, ...{ variant: 'external' } }}
         />
 
-        <SidebarItem shape={ContainerShape} label="Container" {...containerData} />
+        {/* <SidebarItem shape={ContainerShape} label="Container" {...containerData} />
 
         <SidebarItem
           shape={StorageContainerShape}
@@ -88,7 +92,7 @@ export default function Sidebar() {
 
         <SidebarItem shape={WebContainerNode} label="Web Container" {...webContainerData} />
 
-        <SidebarItem shape={MobContainerNode} label="Mobile Container" {...mobContainerData} />
+        <SidebarItem shape={MobContainerNode} label="Mobile Container" {...mobContainerData} /> */}
       </VStack>
     </Box>
   )

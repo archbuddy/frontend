@@ -7,7 +7,8 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Button
+  Button,
+  SimpleGrid
 } from '@chakra-ui/react'
 import srvViewPoint from '../services/viewpoint'
 
@@ -24,19 +25,33 @@ export default function OpenDiagramModal(props) {
     }
   }, [props.isOpen])
 
+  const onDiagramSelect = (diagramId) => {
+    props.onSelect(diagramId)
+    props.onClose()
+  }
+
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Modal Title</ModalHeader>
+        <ModalHeader>Open Diagram</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>{viewPoints.map((v) => v.name)}</ModalBody>
+        <ModalBody>
+          <SimpleGrid columns={2} spacing={10}>
+            {viewPoints.map((v) => {
+              return (
+                <Button key={v.id} onClick={() => onDiagramSelect(v.id)} fontSize="sm">
+                  {v.name}
+                </Button>
+              )
+            })}
+          </SimpleGrid>
+        </ModalBody>
 
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={props.onClose}>
             Close
           </Button>
-          <Button variant="ghost">Secondary Action</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

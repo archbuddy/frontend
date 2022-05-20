@@ -9,7 +9,8 @@ export default function C4Edge({
   targetY,
   sourcePosition,
   targetPosition,
-  markerEnd
+  markerEnd,
+  data
 }) {
   const edgePath = getBezierPath({
     sourceX,
@@ -53,10 +54,10 @@ export default function C4Edge({
             }}
           >
             <tspan x={centerX} dy="0" fontWeight={'bold'}>
-              e.g. Makes API calls
+              {data.description}
             </tspan>
             <tspan x={centerX} dy="1.2em">
-              [e.g. JSON/HTTP]
+              {data.detail ? `[${data.detail}]` : ''}
             </tspan>
           </text>
         </g>
