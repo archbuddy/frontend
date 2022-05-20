@@ -1,5 +1,5 @@
 import { Box, Flex, useDisclosure } from '@chakra-ui/react'
-import React, { useEffect, useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import ReactFlow, {
   ReactFlowProvider,
   useNodesState,
@@ -75,64 +75,6 @@ export default function DiagramEditor() {
     setDiagramId(viewPointId)
   }
 
-  useEffect(() => {
-    setNodes([
-      {
-        id: '1',
-        type: 'system',
-        data: {
-          name: 'System Name',
-          description: 'Description of software system'
-        },
-        position: { x: 0, y: 0 }
-      },
-      {
-        id: '2',
-        type: 'person',
-        data: {
-          name: 'Person Name',
-          description: 'Description of person'
-        },
-        position: { x: 400, y: -100 }
-      },
-      {
-        id: '3',
-        type: 'storageContainer',
-        position: { x: 0, y: 200 }
-      },
-      {
-        id: '4',
-        type: 'microserviceContainer',
-        position: { x: 0, y: 400 }
-      },
-      {
-        id: '5',
-        type: 'busContainer',
-        position: { x: 0, y: 700 }
-      },
-      {
-        id: '6',
-        type: 'webContainer',
-        position: { x: 0, y: 900 }
-      },
-      {
-        id: '7',
-        type: 'mobContainer',
-        position: { x: 0, y: 1200 }
-      }
-    ])
-
-    setEdges([
-      formatEdge({
-        id: 'e1-2',
-        source: '1',
-        target: '2',
-        sourceHandle: 'r',
-        targetHandle: 'l'
-      })
-    ])
-  }, [])
-
   const onConnect = async (connection) => {
     if (srvEdges.edgeCanConnect(connection)) {
       setEdges((eds) => addEdge(formatEdge(connection), eds))
@@ -178,7 +120,6 @@ export default function DiagramEditor() {
         position,
         data: { label: `${data.type} node`, variant: data.variant }
       }
-
       setNewNode(newNode)
       onOpen()
     },

@@ -14,8 +14,6 @@ import {
 } from '@chakra-ui/react'
 
 export default function AddNodeModal(props) {
-  const [description, setDescription] = useState()
-  const [name, setName] = useState()
   const [newNode, setNewNode] = useState(props.newNode)
 
   useEffect(() => {
@@ -23,18 +21,17 @@ export default function AddNodeModal(props) {
   }, [props.newNode])
 
   useEffect(() => {
-    if (!newNode?.data) return
-    newNode.data.name = name
-    newNode.data.description = description
     setNewNode(newNode)
-  }, [props.isOpen, setName, setDescription, newNode, description, name])
+  }, [newNode])
 
   const onNameChange = (e) => {
-    setName(e.target.value)
+    newNode.data.name = e.target.value
+    setNewNode(newNode)
   }
 
   const onDescriptionChange = (e) => {
-    setDescription(e.target.value)
+    newNode.data.description = e.target.value
+    setNewNode(newNode)
   }
 
   return (
@@ -59,7 +56,6 @@ export default function AddNodeModal(props) {
             colorScheme="blue"
             mr={3}
             onClick={() => {
-              console.log(newNode)
               props.onOk(newNode)
             }}
           >
