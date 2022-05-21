@@ -126,6 +126,10 @@ export default function DiagramEditor() {
     [reactFlowInstance, onOpen, setNewNode]
   )
 
+  const onNodeDragStop = async (_e, node) => {
+    await srvNodes.patchNode(node, diagramId)
+  }
+
   return (
     <>
       <AddNodeModal
@@ -149,6 +153,7 @@ export default function DiagramEditor() {
               onInit={setReactFlowInstance}
               onDrop={onDrop}
               onDragOver={onDragOver}
+              onNodeDragStop={onNodeDragStop}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               connectionLineStyle={connectionLineStyle}
