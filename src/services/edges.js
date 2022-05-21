@@ -13,7 +13,14 @@ const edgeCanConnect = (connection) => {
 
 const createEdge = async (connection, diagram) => {
   const body = {
-    ...connection,
+    source: {
+      handle: connection.sourceHandle,
+      node: connection.source
+    },
+    target: {
+      handle: connection.targetHandle,
+      node: connection.target
+    },
     diagram
   }
   log(body)
