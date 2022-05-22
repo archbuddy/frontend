@@ -9,6 +9,7 @@ import ReactFlow, {
   Controls,
   MarkerType
 } from 'react-flow-renderer'
+import { v4 as uuidv4 } from 'uuid'
 
 import Sidebar from './Sidebar'
 import PersonNode from './nodes/PersonNode'
@@ -43,9 +44,6 @@ const edgeTypes = {
 
 const connectionLineStyle = { stroke: '#ddddd' }
 const snapGrid = [20, 20]
-
-let id = 50
-const getId = () => `dndnode_${id++}`
 
 const formatEdge = (edge) => {
   return {
@@ -91,6 +89,7 @@ export default function DiagramEditor() {
     setNodes(nodes.concat(newNode))
     onClose()
     await srvNodes.createNode(
+      newNode.id,
       newNode.type,
       newNode.data.name,
       newNode.position.x,
@@ -115,7 +114,7 @@ export default function DiagramEditor() {
         y: event.clientY - 50
       })
       const newNode = {
-        id: getId(),
+        id: uuidv4(),
         type: data.type,
         position,
         data: { label: `${data.type} node`, variant: data.variant }
@@ -125,6 +124,10 @@ export default function DiagramEditor() {
     },
     [reactFlowInstance, onOpen, setNewNode]
   )
+
+  const onNodeDragStop = async (_e, node) => {
+    await srvNodes.patchNode(node, diagramId)
+  }
 
   return (
     <>
@@ -149,6 +152,7 @@ export default function DiagramEditor() {
               onInit={setReactFlowInstance}
               onDrop={onDrop}
               onDragOver={onDragOver}
+              onNodeDragStop={onNodeDragStop}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               connectionLineStyle={connectionLineStyle}

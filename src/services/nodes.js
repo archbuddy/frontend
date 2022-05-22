@@ -1,7 +1,10 @@
 const endpoint = 'http://localhost:3000'
 const { log } = require('../util')
-const createNode = async (type, name, x, y, diagramId) => {
+import { v4 as uuidv4 } from 'uuid'
+
+const createNode = async (id, type, name, x, y, diagramId) => {
   const body = {
+    _id: id ?? uuidv4(),
     type,
     name,
     x,
