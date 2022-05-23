@@ -52,7 +52,8 @@ export default function Sidebar(props) {
         <IconButton
           colorScheme="gray"
           aria-label="Search database"
-          icon={<AiFillFolderOpen title="Open Diagram" onClick={onOpen} />}
+          icon={<AiFillFolderOpen title="Open Diagram" />}
+          onClick={onOpen}
         />
         <SidebarItem shape={PersonShape} label="Person" {...personData} />
 
