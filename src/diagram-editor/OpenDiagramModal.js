@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -7,35 +7,23 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Button,
-  Select,
-  Text,
-  Input
+  Button
 } from '@chakra-ui/react'
 import srvViewPoint from '../services/viewpoint'
+import SearchTable from './SearchTable'
 
 export default function OpenDiagramModal(props) {
-  const [viewPoints, setViewPoints] = useState([])
-  const [value, setValue] = React.useState('')
-  const handleChange = (event) => setValue(event.target.value)
-  const loadViewPoints = async () => {
-    setViewPoints(await srvViewPoint.list())
-  }
-  useEffect(() => {
-    if (props.isOpen) {
-      loadViewPoints()
-    }
-  }, [props.isOpen])
-
-  const viewPointOnChange = (event) => {
-    props.onSelect(event.target.value)
+  const onDiagramSelect = (diagramId) => {
+    props.onSelect(diagramId)
     props.onClose()
   }
 
-  const createNewViewPoint = async () => {
-    await srvViewPoint.create(value)
-    setValue('')
-    await loadViewPoints()
+  const listDiagram = (filter = '', offset = 0, limit = 10) => {
+    if (!filter || filter === '') {
+      return srvViewPoint.list(null, offset, limit)
+    }
+
+    return srvViewPoint.list(`name=re=('.*${filter}.*')`, offset, limit)
   }
 
   return (
@@ -45,20 +33,12 @@ export default function OpenDiagramModal(props) {
         <ModalHeader>Open Diagram</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Select placeholder="Select option" onChange={viewPointOnChange}>
-            {viewPoints.map((v) => {
-              return (
-                <option key={v.id} value={v.id}>
-                  {v.name}
-                </option>
-              )
-            })}
-          </Select>
-          <br />
-          <Text>Or create a new diagram:</Text>
-          <Input value={value} onChange={handleChange}></Input>
+          <SearchTable
+            loadData={listDiagram}
+            columns={[{ header: 'Name', prop: 'name' }]}
+            onSelect={(i) => onDiagramSelect(i.id)}
+          ></SearchTable>
         </ModalBody>
-
         <ModalFooter>
           <Button colorScheme="green" mr={3} onClick={createNewViewPoint}>
             Create diagram

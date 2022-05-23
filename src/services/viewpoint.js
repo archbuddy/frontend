@@ -1,7 +1,25 @@
 const endpoint = 'http://localhost:3000'
 
-const list = async () => {
-  const response = await fetch(`${endpoint}/diagrams`, {
+const list = async (fiql = null, offset = 0, limit = 10) => {
+  let address = `${endpoint}/diagrams`
+  let hasParameter = false
+
+  if (fiql && fiql !== '') {
+    address += `${hasParameter ? '&' : '?'}fiql=${encodeURI(fiql)}`
+    hasParameter = true
+  }
+
+  if (offset) {
+    address += `${hasParameter ? '&' : '?'}offset=${offset}`
+    hasParameter = true
+  }
+
+  if (limit) {
+    address += `${hasParameter ? '&' : '?'}offset=${limit}`
+    hasParameter = true
+  }
+
+  const response = await fetch(address, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
