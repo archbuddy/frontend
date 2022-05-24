@@ -58,7 +58,7 @@ const formatEdge = (edge) => {
 }
 
 export default function DiagramEditor() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen1, onOpen1, onClose1 } = useDisclosure()
   const reactFlowWrapper = useRef(null)
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -87,7 +87,7 @@ export default function DiagramEditor() {
 
   const insertNode = async (newNode) => {
     setNodes(nodes.concat(newNode))
-    onClose()
+    onClose1()
     await srvNodes.createNode(
       newNode.id,
       newNode.type,
@@ -120,9 +120,9 @@ export default function DiagramEditor() {
         data: { label: `${data.type} node`, variant: data.variant }
       }
       setNewNode(newNode)
-      onOpen()
+      onOpen1()
     },
-    [reactFlowInstance, onOpen, setNewNode]
+    [reactFlowInstance, onOpen1, setNewNode]
   )
 
   const onNodeDragStop = async (_e, node) => {
@@ -132,8 +132,8 @@ export default function DiagramEditor() {
   return (
     <>
       <AddNodeModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isOpen1}
+        onClose={onClose1}
         onOk={insertNode}
         newNode={newNode}
       ></AddNodeModal>
