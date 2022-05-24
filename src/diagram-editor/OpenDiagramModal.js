@@ -8,12 +8,14 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  SimpleGrid
+  Select
 } from '@chakra-ui/react'
 import srvViewPoint from '../services/viewpoint'
 
 export default function OpenDiagramModal(props) {
   const [viewPoints, setViewPoints] = useState([])
+  // const [value, setValue] = React.useState('')
+  // const handleChange = (event) => setValue(event.target.value)
 
   useEffect(() => {
     const loadViewPoints = async () => {
@@ -25,8 +27,8 @@ export default function OpenDiagramModal(props) {
     }
   }, [props.isOpen])
 
-  const onDiagramSelect = (diagramId) => {
-    props.onSelect(diagramId)
+  const viewPointOnChange = (event) => {
+    props.onSelect(event.target.value)
     props.onClose()
   }
 
@@ -37,15 +39,15 @@ export default function OpenDiagramModal(props) {
         <ModalHeader>Open Diagram</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <SimpleGrid columns={2} spacing={10}>
+          <Select placeholder="Select option" onChange={viewPointOnChange}>
             {viewPoints.map((v) => {
               return (
-                <Button key={v.id} onClick={() => onDiagramSelect(v.id)} fontSize="sm">
+                <option key={v.id} value={v.id}>
                   {v.name}
-                </Button>
+                </option>
               )
             })}
-          </SimpleGrid>
+          </Select>
         </ModalBody>
 
         <ModalFooter>
