@@ -64,7 +64,11 @@ export default function DiagramEditor() {
     onOpen: onAddNodeModalOpen,
     onClose: onAddNodeModalClose
   } = useDisclosure()
-  const { isOpen2, onOpen2, onClose2 } = useDisclosure()
+  const {
+    isOpen: isEdgeSelectionOpen,
+    onOpen: onEdgeSelectionOpen,
+    onClose: onEdgeSelectionClose
+  } = useDisclosure()
   const reactFlowWrapper = useRef(null)
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -137,9 +141,9 @@ export default function DiagramEditor() {
 
   const onEdgesClick = (event, param) => {
     const index = edges.findIndex((item) => item.id === param.id)
-    console.log(index)
-    onOpen2()
+    onEdgeSelectionOpen(index)
   }
+
   return (
     <>
       <AddNodeModal
@@ -148,7 +152,10 @@ export default function DiagramEditor() {
         onOk={insertNode}
         newNode={newNode}
       ></AddNodeModal>
-      <EdgeSelectionModal isOpen={isOpen2} onClose={onClose2}></EdgeSelectionModal>
+      <EdgeSelectionModal
+        isOpen={isEdgeSelectionOpen}
+        onClose={onEdgeSelectionClose}
+      ></EdgeSelectionModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
           <Sidebar onDiagramSelect={loadData} diagramSelected={diagramId}></Sidebar>
