@@ -60,6 +60,7 @@ const formatEdge = (edge) => {
 
 export default function DiagramEditor() {
   const { isOpen1, onOpen1, onClose1 } = useDisclosure()
+  const { isOpen2, onOpen2, onClose2 } = useDisclosure()
   const reactFlowWrapper = useRef(null)
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -130,6 +131,11 @@ export default function DiagramEditor() {
     await srvNodes.patchNode(node, diagramId)
   }
 
+  const onEdgesClick = (event, param) => {
+    const index = edges.findIndex((item) => item.id === param.id)
+    console.log(index)
+    onOpen2()
+  }
   return (
     <>
       <AddNodeModal
@@ -138,10 +144,7 @@ export default function DiagramEditor() {
         onOk={insertNode}
         newNode={newNode}
       ></AddNodeModal>
-      <EdgeSelectionModal
-        isOpen={isOpen1}
-        onClose={onClose1}
-      ></EdgeSelectionModal>
+      <EdgeSelectionModal isOpen={isOpen2} onClose={onClose2}></EdgeSelectionModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
           <Sidebar onDiagramSelect={loadData}></Sidebar>
@@ -158,6 +161,7 @@ export default function DiagramEditor() {
               onDrop={onDrop}
               onDragOver={onDragOver}
               onNodeDragStop={onNodeDragStop}
+              onEdgeClick={onEdgesClick}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               connectionLineStyle={connectionLineStyle}
