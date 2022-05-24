@@ -23,6 +23,7 @@ import MobContainerNode from './nodes/MobContainerNode'
 import C4Edge from './edges/C4Edge'
 
 import AddNodeModal from './AddNodeModal'
+import EdgeSelectionModal from './EdgeSelectionModal'
 
 import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
@@ -137,6 +138,10 @@ export default function DiagramEditor() {
         onOk={insertNode}
         newNode={newNode}
       ></AddNodeModal>
+      <EdgeSelectionModal
+        isOpen={isOpen1}
+        onClose={onClose1}
+      ></EdgeSelectionModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
           <Sidebar onDiagramSelect={loadData}></Sidebar>

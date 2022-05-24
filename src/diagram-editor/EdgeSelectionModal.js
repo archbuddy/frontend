@@ -9,7 +9,7 @@ import {
   ModalFooter
 } from '@chakra-ui/react'
 
-export default function AddNodeModal(props) {
+export default function EdgeSelectionModal(props) {
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <ModalOverlay />
