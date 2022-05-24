@@ -4,11 +4,19 @@ import { Box, Popover, PopoverContent, PopoverTrigger, Text } from '@chakra-ui/r
 import './index.css'
 
 export default function SidebarItem(props) {
-  const onDragStart = (event, data) => {
-    event.dataTransfer.setData('application/reactflow', data)
-    event.dataTransfer.effectAllowed = 'move'
+  const isEnable = () => {
+    return props.enabled === 'true'
   }
 
+  const onDragStart = (event, data) => {
+    if (isEnable()) {
+      event.dataTransfer.setData('application/reactflow', data)
+      event.dataTransfer.effectAllowed = 'move'
+    }
+  }
+  if (!props.diagramSelected) {
+    return <></>
+  }
   return (
     <Box className="sidebar-item">
       <Popover trigger="hover" placement="right">

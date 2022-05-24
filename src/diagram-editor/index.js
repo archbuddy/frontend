@@ -147,7 +147,7 @@ export default function DiagramEditor() {
       <EdgeSelectionModal isOpen={isOpen2} onClose={onClose2}></EdgeSelectionModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
-          <Sidebar onDiagramSelect={loadData}></Sidebar>
+          <Sidebar onDiagramSelect={loadData} diagramSelected={diagramId}></Sidebar>
           <Box height="100%" width="100%" bgColor="gray.50">
             <ReactFlow
               minZoom={0.05}
