@@ -52,6 +52,7 @@ export default function EdgeSelectionModal(props) {
       detail: inputDetailEdge
     })
     resetSelectedData()
+    await props.refresh()
   }
 
   const renderLine = (item) => {

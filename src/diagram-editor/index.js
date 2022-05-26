@@ -29,6 +29,8 @@ import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
 import srvNodes from '../services/nodes'
 
+import { log, isUndefined } from '../util'
+
 const nodeTypes = {
   person: PersonNode,
   system: SystemNode,
@@ -78,10 +80,14 @@ export default function DiagramEditor() {
   const [selectedEdge, setSelectedEdge] = useState(null)
 
   const loadData = async (viewPointId) => {
-    const result = await srvViewPoint.loadData(viewPointId)
+    const id = viewPointId || diagramId
+    log(`Loading view point with id ${id}`)
+    const result = await srvViewPoint.loadData(id)
     setNodes(result.nodes)
     setEdges(result.edges.map((e) => formatEdge(e)))
-    setDiagramId(viewPointId)
+    if (!isUndefined(viewPointId)) {
+      setDiagramId(viewPointId)
+    }
   }
 
   const onConnect = async (connection) => {
@@ -158,6 +164,7 @@ export default function DiagramEditor() {
         isOpen={isEdgeSelectionOpen}
         onClose={onEdgeSelectionClose}
         edges={selectedEdge}
+        refresh={loadData}
       ></EdgeSelectionModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
