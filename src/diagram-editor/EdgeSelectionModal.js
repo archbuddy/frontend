@@ -14,10 +14,14 @@ import {
   Tr,
   Th,
   Td,
-  TableContainer
+  TableContainer,
+  Input
 } from '@chakra-ui/react'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
+import srvEdges from '../services/edges'
+import srvRelations from '../services/relations'
+import { isUndefined, log } from '../util'
 
 export default function EdgeSelectionModal(props) {
   const [selectedRowEdgeId, setSelectedRowEdgeId] = useState('')
@@ -25,29 +29,26 @@ export default function EdgeSelectionModal(props) {
   const [inputDetailEdge, setInputDetailEdge] = useState('')
 
   const onSelectRow = (edge) => {
-    setSelectedRowEdgeId(edge.relation)
+    log(`Selected edge ${edge.id}`)
+    setSelectedRowEdgeId(edge.id)
     setInputDescriptionEdge(edge.data.description)
     setInputDetailEdge(edge.data.detail)
   }
 
-  const deleteEdge = async (edgeId) => {
-    console.log(edgeId)
+  const deleteEdge = async (edge) => {
+    log(`Deleting edge ${edge.id}`)
     // TODO it could receive a list of itens
-    // await srvEdges.deleteEdge(edgeId)
-    // callback(true)
+    await srvEdges.deleteEdge(edge.id)
   }
 
   const onClickSave = async () => {
-    console.loglog(`Saving edge ${selectedRowEdgeId} with value ${inputDescriptionEdge}`)
+    log(`Saving edge ${selectedRowEdgeId} with value ${inputDescriptionEdge}`)
     // TODO detail field should be checked
-    /*
     await srvRelations.updateRelation({
       id: selectedRowEdgeId,
-      description: inputEdge,
-      detail: ''
+      description: inputDescriptionEdge,
+      detail: inputDetailEdge
     })
-    callback(true)
-    */
   }
 
   const renderLine = (item) => {
@@ -57,12 +58,12 @@ export default function EdgeSelectionModal(props) {
           <Td>{item.data.description}</Td>
           <Td>{item.data.detail}</Td>
           <Td>
-            <button onClick={() => onSelectRow(item)}>
+            <Button onClick={() => onSelectRow(item)}>
               <EditIcon />
-            </button>
-            <button onClick={() => deleteEdge(item.relation)}>
+            </Button>
+            <Button onClick={() => deleteEdge(item)}>
               <TrashIcon />
-            </button>
+            </Button>
           </Td>
         </Tr>
       ]
@@ -81,39 +82,52 @@ export default function EdgeSelectionModal(props) {
     return [
       <Tr key={item.relation}>
         <Td>
-          <input
+          <Input
             type="text"
             onChange={(e) => setInputDescriptionEdge(e.target.value)}
             value={inputDescriptionEdge}
+            placeHolder="Inform description of the edge"
+            size="sm"
+            variant="outline"
+            borderColor="blue.400"
           />
         </Td>
         <Td>
-          <input
+          <Input
             type="text"
             onChange={(e) => setInputDetailEdge(e.target.value)}
             value={inputDetailEdge}
+            placeHolder="Inform detail of the edge"
+            size="sm"
+            variant="outline"
+            borderColor="blue.400"
           />
         </Td>
         <Td>
-          <button onClick={onClickSave}>
+          <Button onClick={onClickSave}>
             <SaveIcon />
-          </button>
-          <button onClick={() => setSelectedRowEdgeId('')}>
+          </Button>
+          &nbsp;&nbsp;
+          <Button onClick={() => setSelectedRowEdgeId('')}>
             <Cancel />
-          </button>
+          </Button>
         </Td>
       </Tr>
     ]
   }
 
   const renderDataTable = () => {
+    if (isUndefined(props.edges)) {
+      // TODO implement edge creation
+      return <></>
+    }
     let list = [props.edges]
-    if (props.edges.innerList !== undefined && props.edges.innerList.length >= 0) {
+    if (!isUndefined(props.edges.innerList) && props.edges.innerList.length >= 0) {
       list = props.edges.innerList
     }
     return (
       <TableContainer>
-        <Table>
+        <Table colorScheme="gray" variant="striped">
           <Thead>
             <Tr>
               <Th>Description</Th>
@@ -123,7 +137,7 @@ export default function EdgeSelectionModal(props) {
           </Thead>
           <Tbody>
             {list.map((item) => {
-              if (item.relation === selectedRowEdgeId) {
+              if (item.id === selectedRowEdgeId) {
                 return renderField(item)
               } else {
                 return renderLine(item)
@@ -134,15 +148,23 @@ export default function EdgeSelectionModal(props) {
       </TableContainer>
     )
   }
+
+  const closeModal = () => {
+    setInputDetailEdge('')
+    setInputDescriptionEdge('')
+    setSelectedRowEdgeId('')
+    props.onClose()
+  }
+
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose} size="full">
+    <Modal isOpen={props.isOpen} onClose={closeModal} size="full">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{renderDataTable()}</ModalBody>
         <ModalFooter>
-          <Button variant="ghost" onClick={props.onClose}>
+          <Button variant="ghost" onClick={closeModal}>
             Close
           </Button>
         </ModalFooter>
