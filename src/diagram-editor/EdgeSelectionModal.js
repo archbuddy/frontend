@@ -27,12 +27,14 @@ export default function EdgeSelectionModal(props) {
   const [selectedRowEdgeId, setSelectedRowEdgeId] = useState('')
   const [inputDescriptionEdge, setInputDescriptionEdge] = useState('')
   const [inputDetailEdge, setInputDetailEdge] = useState('')
+  const [relationId, setRelationId] = useState('')
 
   const onSelectRow = (edge) => {
     log(`Selected edge ${edge.id}`)
     setSelectedRowEdgeId(edge.id)
     setInputDescriptionEdge(edge.data.description)
     setInputDetailEdge(edge.data.detail)
+    setRelationId(edge.relation)
   }
 
   const deleteEdge = async (edge) => {
@@ -42,13 +44,14 @@ export default function EdgeSelectionModal(props) {
   }
 
   const onClickSave = async () => {
-    log(`Saving edge ${selectedRowEdgeId} with value ${inputDescriptionEdge}`)
+    log(`Saving Relation ${relationId} with value ${inputDescriptionEdge}`)
     // TODO detail field should be checked
     await srvRelations.updateRelation({
-      id: selectedRowEdgeId,
+      id: relationId,
       description: inputDescriptionEdge,
       detail: inputDetailEdge
     })
+    resetSelectedData()
   }
 
   const renderLine = (item) => {
@@ -86,7 +89,7 @@ export default function EdgeSelectionModal(props) {
             type="text"
             onChange={(e) => setInputDescriptionEdge(e.target.value)}
             value={inputDescriptionEdge}
-            placeHolder="Inform description of the edge"
+            placeholder="Inform description of the edge"
             size="sm"
             variant="outline"
             borderColor="blue.400"
@@ -97,7 +100,7 @@ export default function EdgeSelectionModal(props) {
             type="text"
             onChange={(e) => setInputDetailEdge(e.target.value)}
             value={inputDetailEdge}
-            placeHolder="Inform detail of the edge"
+            placeholder="Inform detail of the edge"
             size="sm"
             variant="outline"
             borderColor="blue.400"
@@ -148,11 +151,14 @@ export default function EdgeSelectionModal(props) {
       </TableContainer>
     )
   }
-
-  const closeModal = () => {
+  const resetSelectedData = () => {
     setInputDetailEdge('')
     setInputDescriptionEdge('')
     setSelectedRowEdgeId('')
+    setRelationId('')
+  }
+  const closeModal = () => {
+    resetSelectedData()
     props.onClose()
   }
 
