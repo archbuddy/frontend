@@ -65,6 +65,7 @@ export default function EdgeSelectionModal(props) {
             <Button onClick={() => onSelectRow(item)}>
               <EditIcon />
             </Button>
+            &nbsp;&nbsp;
             <Button onClick={() => deleteEdge(item)}>
               <TrashIcon />
             </Button>
