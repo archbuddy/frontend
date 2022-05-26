@@ -75,6 +75,7 @@ export default function DiagramEditor() {
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
   const [diagramId, setDiagramId] = useState(null)
   const [newNode, setNewNode] = useState(null)
+  const [selectedEdge, setSelectedEdge] = useState(null)
 
   const loadData = async (viewPointId) => {
     const result = await srvViewPoint.loadData(viewPointId)
@@ -141,7 +142,8 @@ export default function DiagramEditor() {
 
   const onEdgesClick = (event, param) => {
     const index = edges.findIndex((item) => item.id === param.id)
-    onEdgeSelectionOpen(index)
+    setSelectedEdge(edges[index])
+    onEdgeSelectionOpen()
   }
 
   return (
@@ -155,6 +157,7 @@ export default function DiagramEditor() {
       <EdgeSelectionModal
         isOpen={isEdgeSelectionOpen}
         onClose={onEdgeSelectionClose}
+        edges={selectedEdge}
       ></EdgeSelectionModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
