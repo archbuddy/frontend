@@ -23,10 +23,13 @@ import MobContainerNode from './nodes/MobContainerNode'
 import C4Edge from './edges/C4Edge'
 
 import AddNodeModal from './AddNodeModal'
+import EdgeSelectionModal from './EdgeSelectionModal'
 
 import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
 import srvNodes from '../services/nodes'
+
+import { log, isUndefined } from '../util'
 
 const nodeTypes = {
   person: PersonNode,
@@ -58,19 +61,33 @@ const formatEdge = (edge) => {
 }
 
 export default function DiagramEditor() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isAddNodeModalOpen,
+    onOpen: onAddNodeModalOpen,
+    onClose: onAddNodeModalClose
+  } = useDisclosure()
+  const {
+    isOpen: isEdgeSelectionOpen,
+    onOpen: onEdgeSelectionOpen,
+    onClose: onEdgeSelectionClose
+  } = useDisclosure()
   const reactFlowWrapper = useRef(null)
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
   const [diagramId, setDiagramId] = useState(null)
   const [newNode, setNewNode] = useState(null)
+  const [selectedEdge, setSelectedEdge] = useState(null)
 
   const loadData = async (viewPointId) => {
-    const result = await srvViewPoint.loadData(viewPointId)
+    const id = viewPointId || diagramId
+    log(`Loading view point with id ${id}`)
+    const result = await srvViewPoint.loadData(id)
     setNodes(result.nodes)
     setEdges(result.edges.map((e) => formatEdge(e)))
-    setDiagramId(viewPointId)
+    if (!isUndefined(viewPointId)) {
+      setDiagramId(viewPointId)
+    }
   }
 
   const onConnect = async (connection) => {
@@ -87,7 +104,7 @@ export default function DiagramEditor() {
 
   const insertNode = async (newNode) => {
     setNodes(nodes.concat(newNode))
-    onClose()
+    onAddNodeModalClose()
     await srvNodes.createNode(
       newNode.id,
       newNode.type,
@@ -120,26 +137,38 @@ export default function DiagramEditor() {
         data: { label: `${data.type} node`, variant: data.variant }
       }
       setNewNode(newNode)
-      onOpen()
+      onAddNodeModalOpen()
     },
-    [reactFlowInstance, onOpen, setNewNode]
+    [reactFlowInstance, onAddNodeModalOpen, setNewNode]
   )
 
   const onNodeDragStop = async (_e, node) => {
     await srvNodes.patchNode(node, diagramId)
   }
 
+  const onEdgesClick = (event, param) => {
+    const index = edges.findIndex((item) => item.id === param.id)
+    setSelectedEdge(edges[index])
+    onEdgeSelectionOpen()
+  }
+
   return (
     <>
       <AddNodeModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isAddNodeModalOpen}
+        onClose={onAddNodeModalClose}
         onOk={insertNode}
         newNode={newNode}
       ></AddNodeModal>
+      <EdgeSelectionModal
+        isOpen={isEdgeSelectionOpen}
+        onClose={onEdgeSelectionClose}
+        edges={selectedEdge}
+        refresh={loadData}
+      ></EdgeSelectionModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
-          <Sidebar onDiagramSelect={loadData}></Sidebar>
+          <Sidebar onDiagramSelect={loadData} diagramSelected={diagramId}></Sidebar>
           <Box height="100%" width="100%" bgColor="gray.50">
             <ReactFlow
               minZoom={0.05}
@@ -153,6 +182,7 @@ export default function DiagramEditor() {
               onDrop={onDrop}
               onDragOver={onDragOver}
               onNodeDragStop={onNodeDragStop}
+              onEdgeClick={onEdgesClick}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               connectionLineStyle={connectionLineStyle}

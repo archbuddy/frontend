@@ -1,5 +1,5 @@
 import React from 'react'
-import { VStack, StackDivider, Box, IconButton, useDisclosure } from '@chakra-ui/react'
+import { VStack, Box, IconButton, useDisclosure } from '@chakra-ui/react'
 import { AiFillFolderOpen } from 'react-icons/ai'
 import SidebarItem from './SidebarItem'
 import OpenDiagramModal from './OpenDiagramModal'
@@ -32,6 +32,10 @@ import './index.css'
 export default function Sidebar(props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const isDiagramSelected = () => {
+    return props.diagramSelected !== null && props.diagramSelected !== undefined
+  }
+
   return (
     <Box
       margin={2}
@@ -48,27 +52,39 @@ export default function Sidebar(props) {
         onSelect={props.onDiagramSelect}
       ></OpenDiagramModal>
 
-      <VStack className="sidebar" divider={<StackDivider borderColor="gray.200" />}>
+      <VStack className="sidebar">
         <IconButton
           colorScheme="gray"
           aria-label="Search database"
           icon={<AiFillFolderOpen title="Open Diagram" />}
           onClick={onOpen}
         />
-        <SidebarItem shape={PersonShape} label="Person" {...personData} />
+        <SidebarItem
+          shape={PersonShape}
+          label="Person"
+          {...personData}
+          diagramSelected={isDiagramSelected()}
+        />
 
         <SidebarItem
           shape={PersonShape}
           label="External Person"
           {...{ ...personData, ...{ variant: 'external' } }}
+          diagramSelected={isDiagramSelected()}
         />
 
-        <SidebarItem shape={SystemShape} label="System" {...systemData} />
+        <SidebarItem
+          shape={SystemShape}
+          label="System"
+          {...systemData}
+          diagramSelected={isDiagramSelected()}
+        />
 
         <SidebarItem
           shape={SystemShape}
           label="External System"
           {...{ ...systemData, ...{ variant: 'external' } }}
+          diagramSelected={isDiagramSelected()}
         />
 
         {/* <SidebarItem shape={ContainerShape} label="Container" {...containerData} />

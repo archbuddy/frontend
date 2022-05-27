@@ -8,26 +8,34 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  SimpleGrid
+  Select,
+  Text,
+  Input
 } from '@chakra-ui/react'
 import srvViewPoint from '../services/viewpoint'
 
 export default function OpenDiagramModal(props) {
   const [viewPoints, setViewPoints] = useState([])
-
+  const [value, setValue] = React.useState('')
+  const handleChange = (event) => setValue(event.target.value)
+  const loadViewPoints = async () => {
+    setViewPoints(await srvViewPoint.list())
+  }
   useEffect(() => {
-    const loadViewPoints = async () => {
-      setViewPoints(await srvViewPoint.list())
-    }
-
     if (props.isOpen) {
       loadViewPoints()
     }
   }, [props.isOpen])
 
-  const onDiagramSelect = (diagramId) => {
-    props.onSelect(diagramId)
+  const viewPointOnChange = (event) => {
+    props.onSelect(event.target.value)
     props.onClose()
+  }
+
+  const createNewViewPoint = async () => {
+    await srvViewPoint.create(value)
+    setValue('')
+    await loadViewPoints()
   }
 
   return (
@@ -37,18 +45,24 @@ export default function OpenDiagramModal(props) {
         <ModalHeader>Open Diagram</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <SimpleGrid columns={2} spacing={10}>
+          <Select placeholder="Select option" onChange={viewPointOnChange}>
             {viewPoints.map((v) => {
               return (
-                <Button key={v.id} onClick={() => onDiagramSelect(v.id)} fontSize="sm">
+                <option key={v.id} value={v.id}>
                   {v.name}
-                </Button>
+                </option>
               )
             })}
-          </SimpleGrid>
+          </Select>
+          <br />
+          <Text>Or create a new diagram:</Text>
+          <Input value={value} onChange={handleChange}></Input>
         </ModalBody>
 
         <ModalFooter>
+          <Button colorScheme="green" mr={3} onClick={createNewViewPoint}>
+            Create diagram
+          </Button>
           <Button colorScheme="blue" mr={3} onClick={props.onClose}>
             Close
           </Button>
