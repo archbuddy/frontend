@@ -26,6 +26,7 @@ export default function AddNodeModal(props) {
   const [isNewEntityNameValid, setIsNewEntityNameValid] = useState(false)
   const [newEntityDescription, setNewEntityDescription] = useState(null)
   const [isNewEntityDescriptionValid, setIsNewEntityDescriptionValid] = useState(false)
+  const descriptionRef = React.useRef()
 
   useEffect(() => {
     setNewNode(props.newNode)
@@ -72,6 +73,8 @@ export default function AddNodeModal(props) {
     if (entity.id === 'new') {
       setIsNewEntity(true)
       setNewEntityName(entity.newEntityName)
+      setNewEntityDescription('')
+      descriptionRef.current.focus()
     } else {
       newNode.data.name = entity.name
       newNode.data.description = entity.description
@@ -114,7 +117,6 @@ export default function AddNodeModal(props) {
             <FormControl isInvalid={!isNewEntityNameValid}>
               <FormLabel htmlFor="name">Name</FormLabel>
               <Input id="name" type="name" value={newEntityName} onChange={onNameChange} />
-              {isNewEntityNameValid}
               {!isNewEntityNameValid ? (
                 <FormErrorMessage>Name is required.</FormErrorMessage>
               ) : (
@@ -128,8 +130,8 @@ export default function AddNodeModal(props) {
                 type="description"
                 value={newEntityDescription}
                 onChange={onDescriptionChange}
+                ref={descriptionRef}
               />
-              {isNewEntityDescriptionValid}
               {!isNewEntityDescriptionValid ? (
                 <FormErrorMessage>Description is required.</FormErrorMessage>
               ) : (

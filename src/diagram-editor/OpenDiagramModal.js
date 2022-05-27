@@ -7,23 +7,32 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Button
+  Button,
+  Text
 } from '@chakra-ui/react'
 import srvViewPoint from '../services/viewpoint'
 import SearchTable from './SearchTable'
 
 export default function OpenDiagramModal(props) {
-  const onDiagramSelect = (diagramId) => {
-    props.onSelect(diagramId)
+  const onDiagramSelect = async (diagram) => {
+    if (diagram.id === 'new') {
+      props.onSelect(await srvViewPoint.create(diagram.newDiagramName))
+    } else {
+      props.onSelect(diagram.id)
+    }
     props.onClose()
   }
 
-  const listDiagram = (filter = '', offset = 0, limit = 10) => {
+  const listDiagram = async (filter = '', offset = 0, limit = 10) => {
     if (!filter || filter === '') {
-      return srvViewPoint.list(null, offset, limit)
+      return await srvViewPoint.list(null, offset, limit)
+    } else {
+      return (await srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)).concat({
+        id: 'new',
+        newDiagramName: filter,
+        name: () => <Text as="i">{filter} (New Diagram)</Text>
+      })
     }
-
-    return srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)
   }
 
   return (
@@ -36,14 +45,11 @@ export default function OpenDiagramModal(props) {
           <SearchTable
             loadData={listDiagram}
             columns={[{ header: 'Name', prop: 'name' }]}
-            onSelect={(i) => onDiagramSelect(i.id)}
+            onSelect={(i) => onDiagramSelect(i)}
             placeholder="Diagram Name"
           ></SearchTable>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="green" mr={3} onClick={createNewViewPoint}>
-            Create diagram
-          </Button>
           <Button colorScheme="blue" mr={3} onClick={props.onClose}>
             Close
           </Button>

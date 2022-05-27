@@ -9,12 +9,8 @@ export default function SidebarItem(props) {
     event.dataTransfer.effectAllowed = 'move'
   }
 
-  if (!props.diagramSelected) {
-    return <></>
-  }
-
   return (
-    <Box className="sidebar-item">
+    <Box className="sidebar-item" hidden={props.hidden}>
       <Popover trigger="hover" placement="right">
         <PopoverTrigger>
           <Box
