@@ -1,23 +1,9 @@
+import { buildFiqlQuery } from './util'
+
 const endpoint = 'http://localhost:3000'
 
 const list = async (fiql = null, offset = 0, limit = 10) => {
-  let address = `${endpoint}/entities`
-  let hasParameter = false
-
-  if (fiql && fiql !== '') {
-    address += `${hasParameter ? '&' : '?'}fiql=${encodeURI(fiql)}`
-    hasParameter = true
-  }
-
-  if (offset) {
-    address += `${hasParameter ? '&' : '?'}offset=${offset}`
-    hasParameter = true
-  }
-
-  if (limit) {
-    address += `${hasParameter ? '&' : '?'}offset=${limit}`
-    hasParameter = true
-  }
+  let address = `${endpoint}/entities${buildFiqlQuery(fiql, offset, limit)}`
 
   const response = await fetch(address, {
     method: 'GET',
