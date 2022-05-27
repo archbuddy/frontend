@@ -23,7 +23,7 @@ export default function OpenDiagramModal(props) {
       return srvViewPoint.list(null, offset, limit)
     }
 
-    return srvViewPoint.list(`name=re=('.*${filter}.*')`, offset, limit)
+    return srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)
   }
 
   return (
@@ -37,6 +37,7 @@ export default function OpenDiagramModal(props) {
             loadData={listDiagram}
             columns={[{ header: 'Name', prop: 'name' }]}
             onSelect={(i) => onDiagramSelect(i.id)}
+            placeholder="Diagram Name"
           ></SearchTable>
         </ModalBody>
         <ModalFooter>

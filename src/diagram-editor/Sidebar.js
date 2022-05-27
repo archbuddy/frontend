@@ -69,8 +69,7 @@ export default function Sidebar(props) {
         <SidebarItem
           shape={PersonShape}
           label="External Person"
-          {...{ ...personData, ...{ variant: 'external' } }}
-          diagramSelected={isDiagramSelected()}
+          {...{ ...personData, ...{ data: { variant: 'external' } } }}
         />
 
         <SidebarItem
@@ -83,8 +82,7 @@ export default function Sidebar(props) {
         <SidebarItem
           shape={SystemShape}
           label="External System"
-          {...{ ...systemData, ...{ variant: 'external' } }}
-          diagramSelected={isDiagramSelected()}
+          {...{ ...systemData, ...{ data: { variant: 'external' } } }}
         />
 
         {/* <SidebarItem shape={ContainerShape} label="Container" {...containerData} />

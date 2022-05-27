@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { TableContainer, Table, Thead, Th, Tr, Tbody, Td, Tfoot, Input } from '@chakra-ui/react'
 
 export default function SearchTable(props) {
+  const [selectedIndex, setSelectedIndex] = useState(0)
   const [filter, setFilter] = useState(props.filter)
   const [list, setList] = useState([])
   const [columns, setColumns] = useState(props.columns ?? [])
+  const initialRef = React.useRef()
 
   useEffect(() => {
     const getColumns = (list) => {
@@ -33,7 +35,10 @@ export default function SearchTable(props) {
       const list = await props.loadData(filter)
       getColumns(list)
       setList(list)
+      setSelectedIndex(0)
     }
+
+    initialRef.current.focus()
 
     if (props.loadData) {
       fetchData()
@@ -46,9 +51,62 @@ export default function SearchTable(props) {
     return Math.floor(Math.random() * (max - min)) + min
   }
 
+  function getValue(p) {
+    if (typeof p === 'function') {
+      return p()
+    }
+
+    return p
+  }
+
+  function getLines(list) {
+    const lines = []
+    let count = 0
+
+    list.forEach((i) => {
+      lines.push(
+        <Tr key={`item-${count}`} className={count == selectedIndex ? 'selected' : ''}>
+          {columns.map((c) => (
+            <Td
+              key={`${c.prop}-${i._id}-${getRandomInt()}`}
+              onClick={() => props.onSelect && props.onSelect(i)}
+            >
+              {getValue(i[c.prop])}
+            </Td>
+          ))}
+        </Tr>
+      )
+      count++
+    })
+
+    return lines
+  }
+
+  const onKeyDown = (e) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        if (selectedIndex < list.length - 1) setSelectedIndex(selectedIndex + 1)
+        e.preventDefault()
+        break
+      case 'ArrowUp':
+        if (selectedIndex > 0) setSelectedIndex(selectedIndex - 1)
+        e.preventDefault()
+        break
+      case 'Enter':
+        if (props.onSelect) {
+          props.onSelect(list[selectedIndex])
+        }
+    }
+  }
+
   return (
     <>
-      <Input placeholder="Basic usage" onChange={(v) => setFilter(v.target.value)} />
+      <Input
+        placeholder={props.placeholder}
+        onChange={(v) => setFilter(v.target.value)}
+        onKeyDown={onKeyDown}
+        ref={initialRef}
+      />
       <TableContainer>
         <Table className="searchTable" variant="simple">
           <Thead>
@@ -58,20 +116,7 @@ export default function SearchTable(props) {
               ))}
             </Tr>
           </Thead>
-          <Tbody>
-            {list.map((i) => (
-              <Tr key={`${getRandomInt()}`}>
-                {columns.map((c) => (
-                  <Td
-                    key={`${c.prop}-${i._id}-${getRandomInt()}`}
-                    onClick={() => props.onSelect && props.onSelect(i)}
-                  >
-                    {i[c.prop]}
-                  </Td>
-                ))}
-              </Tr>
-            ))}
-          </Tbody>
+          <Tbody>{getLines(list)}</Tbody>
           <Tfoot>
             <Tr>
               <Th></Th>

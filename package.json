@@ -4,7 +4,7 @@
   "description": "Web interface to show the information, create new information and change it",
   "main": "/index.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "prepare": "husky install",
     "test": "eslint .",

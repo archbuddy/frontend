@@ -105,14 +105,7 @@ export default function DiagramEditor() {
   const insertNode = async (newNode) => {
     setNodes(nodes.concat(newNode))
     onAddNodeModalClose()
-    await srvNodes.createNode(
-      newNode.id,
-      newNode.type,
-      newNode.data.name,
-      newNode.position.x,
-      newNode.position.y,
-      diagramId
-    )
+    await srvNodes.createNode(newNode, diagramId)
   }
 
   const onDrop = useCallback(
@@ -132,9 +125,9 @@ export default function DiagramEditor() {
       })
       const newNode = {
         id: uuidv4(),
-        type: data.type,
         position,
-        data: { label: `${data.type} node`, variant: data.variant }
+        type: data.type,
+        data: { variant: data.data.variant }
       }
       setNewNode(newNode)
       onAddNodeModalOpen()
@@ -143,7 +136,7 @@ export default function DiagramEditor() {
   )
 
   const onNodeDragStop = async (_e, node) => {
-    await srvNodes.patchNode(node, diagramId)
+    await srvNodes.patchNode({ id: node.id, x: node.position.x, y: node.position.y })
   }
 
   const onEdgesClick = (event, param) => {

@@ -6,20 +6,24 @@ import '../index.css'
 import Node from './Node'
 
 export const defaultData = {
+  data: {
+    name: 'Person Name',
+    description: 'Description of person',
+    variant: 'internal',
+    typeDescription: 'Person'
+  },
   type: 'person',
-  variant: 'internal',
-  width: '200px',
-  name: 'Person Name',
-  description: 'Description of person'
+  showType: true,
+  width: '200px'
 }
 
 export function Shape(props) {
   const p = {
-    ...{
-      showType: true,
-      variant: 'internal'
-    },
-    ...props,
+    ...defaultData,
+    ...props
+  }
+  p.data = {
+    ...defaultData.data,
     ...props.data
   }
 
@@ -27,7 +31,7 @@ export function Shape(props) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      className={'shape ' + p.variant + ' person'}
+      className={'shape ' + p.data.variant + ' person'}
       viewBox="0 0 200 200"
     >
       <rect cx="0" y="40%" rx="15%" ry="15%" width="100%" height="60%" strokeMiterlimit="10" />
@@ -35,11 +39,11 @@ export function Shape(props) {
       <circle cx="50%" cy="23%" r="22%" />
 
       <foreignObject className="texts" y="45%" width="100%" height="55%">
-        <Center className="name">{p.name}</Center>
+        <Center className="name">{p.data.name}</Center>
         <Center className="type" hidden={!p.showType}>
           Person
         </Center>
-        <Center className="description">{p.description}</Center>
+        <Center className="description">{p.data.description}</Center>
       </foreignObject>
     </svg>
   )
