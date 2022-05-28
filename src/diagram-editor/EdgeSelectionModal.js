@@ -124,7 +124,7 @@ export default function EdgeSelectionModal(props) {
   }
 
   const renderDataTable = () => {
-    if (isUndefined(props.edges)) {
+    if (isUndefined(props.edge)) {
       // TODO implement edge creation
       return <></>
     }
@@ -139,7 +139,7 @@ export default function EdgeSelectionModal(props) {
             </Tr>
           </Thead>
           <Tbody>
-            {props.edges.innerList.map((item) => {
+            {props.edge.innerList.map((item) => {
               if (item.id === selectedRowEdgeId) {
                 return renderField(item)
               } else {
@@ -161,6 +161,14 @@ export default function EdgeSelectionModal(props) {
     resetSelectedData()
     props.onClose()
   }
+  const showNodesInfo = (edge) => {
+    if (isUndefined(edge)) {
+      return ''
+    }
+    const source = props.nodes.findIndex((e) => e.id === edge.source)
+    const target = props.nodes.findIndex((e) => e.id === edge.target)
+    return `${props.nodes[source].data.name} >>>> ${props.nodes[target].data.name}`
+  }
 
   return (
     <Modal isOpen={props.isOpen} onClose={closeModal} size="full">
@@ -168,7 +176,10 @@ export default function EdgeSelectionModal(props) {
       <ModalContent>
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>{renderDataTable()}</ModalBody>
+        <ModalBody>
+          <p>{showNodesInfo(props.edge)}</p>
+          {renderDataTable()}
+        </ModalBody>
         <ModalFooter>
           <Button variant="ghost" onClick={closeModal}>
             Close
