@@ -41,6 +41,8 @@ export default function EdgeSelectionModal(props) {
     log(`Deleting edge ${edge.id}`)
     // TODO it could receive a list of itens
     await srvEdges.deleteEdge(edge.id)
+    resetSelectedData()
+    await props.refresh()
   }
 
   const onClickSave = async () => {
@@ -126,10 +128,6 @@ export default function EdgeSelectionModal(props) {
       // TODO implement edge creation
       return <></>
     }
-    let list = [props.edges]
-    if (!isUndefined(props.edges.innerList) && props.edges.innerList.length >= 0) {
-      list = props.edges.innerList
-    }
     return (
       <TableContainer>
         <Table colorScheme="gray" variant="striped">
@@ -141,7 +139,7 @@ export default function EdgeSelectionModal(props) {
             </Tr>
           </Thead>
           <Tbody>
-            {list.map((item) => {
+            {props.edges.innerList.map((item) => {
               if (item.id === selectedRowEdgeId) {
                 return renderField(item)
               } else {

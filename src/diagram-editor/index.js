@@ -94,6 +94,8 @@ export default function DiagramEditor() {
     if (srvEdges.edgeCanConnect(connection)) {
       setEdges((eds) => addEdge(formatEdge(connection), eds))
       await srvEdges.createEdge(connection, diagramId)
+      // It needs to refresh to create the structure
+      await loadData()
     }
   }
 
