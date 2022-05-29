@@ -15,6 +15,7 @@ import {
   Th,
   Td,
   TableContainer,
+  TableCaption,
   Input,
   Box
 } from '@chakra-ui/react'
@@ -132,11 +133,14 @@ export default function EdgeSelectionModal(props) {
     return (
       <TableContainer>
         <Table colorScheme="gray" variant="striped">
+          <TableCaption>
+            Showing all connections between the nodes of the selected edge
+          </TableCaption>
           <Thead>
             <Tr>
-              <Th>Description</Th>
-              <Th>Detail</Th>
-              <Th>Action</Th>
+              <Th style={{ width: '40%' }}>Description</Th>
+              <Th style={{ width: '40%' }}>Detail</Th>
+              <Th style={{ width: '20%' }}>Action</Th>
             </Tr>
           </Thead>
           <Tbody>
