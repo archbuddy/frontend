@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -26,10 +26,15 @@ import srvRelations from '../services/relations'
 import { isUndefined, log } from '../util'
 
 export default function EdgeSelectionModal(props) {
+  useEffect(() => {
+    setEdge(props.edge)
+  }, [props.edge])
+
   const [selectedRowEdgeId, setSelectedRowEdgeId] = useState('')
   const [inputDescriptionEdge, setInputDescriptionEdge] = useState('')
   const [inputDetailEdge, setInputDetailEdge] = useState('')
   const [relationId, setRelationId] = useState('')
+  const [edge, setEdge] = useState(undefined)
 
   const onSelectRow = (edge) => {
     log(`Selected edge ${edge.id}`)
@@ -55,8 +60,15 @@ export default function EdgeSelectionModal(props) {
       description: inputDescriptionEdge,
       detail: inputDetailEdge
     })
-    resetSelectedData()
     await props.refresh()
+    // this solution fix the ux of the screen
+    // but is a mud solution
+    const newEdge = JSON.parse(JSON.stringify(edge))
+    const index = newEdge.innerList.findIndex((e) => e.relation === relationId)
+    newEdge.innerList[index].data.description = inputDescriptionEdge
+    newEdge.innerList[index].data.detail = inputDetailEdge
+    setEdge(newEdge)
+    resetSelectedData()
   }
 
   const renderLine = (item) => {
@@ -126,7 +138,7 @@ export default function EdgeSelectionModal(props) {
   }
 
   const renderDataTable = () => {
-    if (isUndefined(props.edge)) {
+    if (isUndefined(edge)) {
       // TODO implement edge creation
       return <></>
     }
@@ -144,7 +156,7 @@ export default function EdgeSelectionModal(props) {
             </Tr>
           </Thead>
           <Tbody>
-            {props.edge.innerList.map((item) => {
+            {edge.innerList.map((item) => {
               if (item.id === selectedRowEdgeId) {
                 return renderField(item)
               } else {
@@ -156,17 +168,20 @@ export default function EdgeSelectionModal(props) {
       </TableContainer>
     )
   }
+
   const resetSelectedData = () => {
     setInputDetailEdge('')
     setInputDescriptionEdge('')
     setSelectedRowEdgeId('')
     setRelationId('')
   }
+
   const closeModal = () => {
     resetSelectedData()
     props.onClose()
   }
-  const showNodesInfo = (edge) => {
+
+  const showNodesInfo = () => {
     if (isUndefined(edge)) {
       return ''
     }
@@ -219,7 +234,7 @@ export default function EdgeSelectionModal(props) {
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {showNodesInfo(props.edge)}
+          {showNodesInfo()}
           {renderDataTable()}
         </ModalBody>
         <ModalFooter>
