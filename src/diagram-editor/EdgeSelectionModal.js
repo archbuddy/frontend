@@ -27,14 +27,16 @@ import { isUndefined, log } from '../util'
 
 export default function EdgeSelectionModal(props) {
   useEffect(() => {
-    setEdge(props.edge)
+    if (props.edge) {
+      setEdgesList(props.edge.innerList)
+    }
   }, [props.edge])
 
   const [selectedRowEdgeId, setSelectedRowEdgeId] = useState('')
   const [inputDescriptionEdge, setInputDescriptionEdge] = useState('')
   const [inputDetailEdge, setInputDetailEdge] = useState('')
   const [relationId, setRelationId] = useState('')
-  const [edge, setEdge] = useState(undefined)
+  const [edgesList, setEdgesList] = useState(undefined)
 
   const onSelectRow = (edge) => {
     log(`Selected edge ${edge.id}`)
@@ -48,8 +50,16 @@ export default function EdgeSelectionModal(props) {
     log(`Deleting edge ${edge.id}`)
     // TODO it could receive a list of itens
     await srvEdges.deleteEdge(edge.id)
-    resetSelectedData()
     await props.refresh()
+    if (edgesList.length === 1) {
+      closeModal()
+    } else {
+      const newList = edgesList.filter(function (value) {
+        return value.id !== edge.id
+      })
+      setEdgesList(newList)
+      resetSelectedData()
+    }
   }
 
   const onClickSave = async () => {
@@ -63,38 +73,28 @@ export default function EdgeSelectionModal(props) {
     await props.refresh()
     // this solution fix the ux of the screen
     // but is a mud solution
-    const newEdge = JSON.parse(JSON.stringify(edge))
-    const index = newEdge.innerList.findIndex((e) => e.relation === relationId)
-    newEdge.innerList[index].data.description = inputDescriptionEdge
-    newEdge.innerList[index].data.detail = inputDetailEdge
-    setEdge(newEdge)
+    const newList = JSON.parse(JSON.stringify(edgesList))
+    const index = newList.findIndex((e) => e.relation === relationId)
+    newList[index].data.description = inputDescriptionEdge
+    newList[index].data.detail = inputDetailEdge
+    setEdgesList(newList)
     resetSelectedData()
   }
 
   const renderLine = (item) => {
-    if (selectedRowEdgeId === '') {
-      return [
-        <Tr key={item.relation}>
-          <Td>{item.data.description}</Td>
-          <Td>{item.data.detail}</Td>
-          <Td>
-            <Button onClick={() => onSelectRow(item)}>
-              <EditIcon />
-            </Button>
-            &nbsp;&nbsp;
-            <Button onClick={() => deleteEdge(item)}>
-              <TrashIcon />
-            </Button>
-          </Td>
-        </Tr>
-      ]
-    }
-
     return [
       <Tr key={item.relation}>
         <Td>{item.data.description}</Td>
         <Td>{item.data.detail}</Td>
-        <Td></Td>
+        <Td>
+          <Button onClick={() => onSelectRow(item)}>
+            <EditIcon />
+          </Button>
+          &nbsp;&nbsp;
+          <Button onClick={() => deleteEdge(item)}>
+            <TrashIcon />
+          </Button>
+        </Td>
       </Tr>
     ]
   }
@@ -138,7 +138,7 @@ export default function EdgeSelectionModal(props) {
   }
 
   const renderDataTable = () => {
-    if (isUndefined(edge)) {
+    if (isUndefined(edgesList)) {
       // TODO implement edge creation
       return <></>
     }
@@ -156,7 +156,7 @@ export default function EdgeSelectionModal(props) {
             </Tr>
           </Thead>
           <Tbody>
-            {edge.innerList.map((item) => {
+            {edgesList.map((item) => {
               if (item.id === selectedRowEdgeId) {
                 return renderField(item)
               } else {
@@ -182,11 +182,11 @@ export default function EdgeSelectionModal(props) {
   }
 
   const showNodesInfo = () => {
-    if (isUndefined(edge)) {
+    if (isUndefined(props.edge)) {
       return ''
     }
-    const source = props.nodes.findIndex((e) => e.id === edge.source)
-    const target = props.nodes.findIndex((e) => e.id === edge.target)
+    const source = props.nodes.findIndex((e) => e.id === props.edge.source)
+    const target = props.nodes.findIndex((e) => e.id === props.edge.target)
     return (
       <Box
         style={{
