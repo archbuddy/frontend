@@ -15,7 +15,8 @@ import {
   Th,
   Td,
   TableContainer,
-  Input
+  Input,
+  Box
 } from '@chakra-ui/react'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
@@ -167,7 +168,44 @@ export default function EdgeSelectionModal(props) {
     }
     const source = props.nodes.findIndex((e) => e.id === edge.source)
     const target = props.nodes.findIndex((e) => e.id === edge.target)
-    return `${props.nodes[source].data.name} >>>> ${props.nodes[target].data.name}`
+    return (
+      <Box
+        style={{
+          paddingBottom: '10px',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Box style={{ padding: '10px', borderRadius: 5, borderWidth: '2px' }}>
+          {props.nodes[source].data.name}
+        </Box>
+        <Box
+          style={{ padding: '10px', display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+        >
+          <Box
+            style={{
+              width: '75px',
+              height: '2px',
+              backgroundColor: 'black'
+            }}
+          />
+          <Box
+            style={{
+              border: 'solid black',
+              borderWidth: '0 3px 3px 0',
+              display: 'inline-block',
+              padding: '3px',
+              transform: 'rotate(-45deg)'
+            }}
+          />
+        </Box>
+        <Box style={{ padding: '10px', borderRadius: 5, borderWidth: '2px' }}>
+          {props.nodes[target].data.name}
+        </Box>
+      </Box>
+    )
   }
 
   return (
@@ -177,7 +215,7 @@ export default function EdgeSelectionModal(props) {
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <p>{showNodesInfo(props.edge)}</p>
+          {showNodesInfo(props.edge)}
           {renderDataTable()}
         </ModalBody>
         <ModalFooter>
