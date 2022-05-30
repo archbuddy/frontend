@@ -11,7 +11,7 @@ const createNode = async (id, type, name, x, y, diagramId) => {
     y,
     diagram: diagramId
   }
-  log(body)
+  log(`Creating node ${JSON.stringify(body)}`)
   const response = await fetch(`${endpoint}/nodes`, {
     method: 'POST',
     headers: {
@@ -28,7 +28,7 @@ const createNode = async (id, type, name, x, y, diagramId) => {
 
 const deleteNode = async (nodeId) => {
   const url = `${endpoint}/nodes/${nodeId}`
-  log(url)
+  log(`Deleting node ${url}`)
   const response = await fetch(url, {
     method: 'DELETE',
     headers: {
@@ -50,7 +50,7 @@ const patchNode = async (node, diagram) => {
     y: node.position.y,
     diagram
   }
-  log(body)
+  log(`Patching node ${JSON.stringify(body)}`)
   const response = await fetch(`${endpoint}/nodes/${node.id}`, {
     method: 'PATCH',
     headers: {

@@ -12,6 +12,7 @@ const edgeCanConnect = (connection) => {
 }
 
 const createEdge = async (connection, diagram) => {
+  log(`Create edge on viewpoint ${diagram} values ${JSON.stringify(connection)}`)
   const body = {
     source: {
       handle: connection.sourceHandle,
@@ -38,14 +39,9 @@ const createEdge = async (connection, diagram) => {
   }
 }
 
-const updateEdge = async (edge) => {
-  log(edge)
-  throw new Error('Not implemented')
-}
-
 const deleteEdge = async (edgeId) => {
   const url = `${endpoint}/edges/${edgeId}`
-  log(url)
+  log(`Deleting edge ${url}`)
   const response = await fetch(url, {
     method: 'DELETE',
     headers: {
@@ -62,7 +58,6 @@ const deleteEdge = async (edgeId) => {
 const edges = {
   edgeCanConnect,
   createEdge,
-  updateEdge,
   deleteEdge
 }
 

@@ -1,6 +1,8 @@
 const endpoint = 'http://localhost:3000'
+import { log } from '../util'
 
 const list = async () => {
+  log('List view points')
   const response = await fetch(`${endpoint}/diagrams`, {
     method: 'GET',
     headers: {
@@ -22,6 +24,7 @@ const loadData = async (viewPointId) => {
   if (!viewPointId || viewPointId === 0) {
     throw new Error('invalid view point id')
   }
+  log(`Getting data for viewpoint ${viewPointId}`)
   const response = await fetch(`${endpoint}/diagrams/${viewPointId}/reactflow`)
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
@@ -31,47 +34,8 @@ const loadData = async (viewPointId) => {
   return data
 }
 
-// TODO remove this implementation and change for real time colaboration
-// Like how it works with Miro
-const savePosition = async (viewPoint, nodes, edges) => {
-  // TODO clear invalid information, but this in the future will be valid
-  const nodesToBeSaved = []
-  const edgesToBeSaved = []
-  for (const node of nodes) {
-    nodesToBeSaved.push({
-      id: node.id,
-      position: node.position
-    })
-  }
-  for (const edge of edges) {
-    if (edge.innerList) {
-      for (const innerItem of edge.innerList) {
-        edgesToBeSaved.push(innerItem.id)
-      }
-    } else {
-      edgesToBeSaved.push(edge.id)
-    }
-  }
-  const response = await fetch(`${endpoint}/viewpoint`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      id: viewPoint.id,
-      name: viewPoint.name,
-      nodes: nodesToBeSaved,
-      edges: edgesToBeSaved
-    })
-  })
-
-  if (!response.ok) {
-    const message = `An error has occured: ${response.status}`
-    throw new Error(message)
-  }
-}
-
 const create = async (name) => {
+  log('Creating new view point')
   const response = await fetch(`${endpoint}/diagrams`, {
     method: 'POST',
     headers: {
@@ -90,7 +54,6 @@ const create = async (name) => {
 
 const nodes = {
   list,
-  savePosition,
   loadData,
   create
 }

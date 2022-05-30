@@ -29,7 +29,7 @@ import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
 import srvNodes from '../services/nodes'
 
-import { log, isUndefined } from '../util'
+import { isUndefined } from '../util'
 
 const nodeTypes = {
   person: PersonNode,
@@ -81,7 +81,6 @@ export default function DiagramEditor() {
 
   const loadData = async (viewPointId) => {
     const id = viewPointId || diagramId
-    log(`Loading view point with id ${id}`)
     const result = await srvViewPoint.loadData(id)
     setNodes(result.nodes)
     setEdges(result.edges.map((e) => formatEdge(e)))
@@ -94,6 +93,8 @@ export default function DiagramEditor() {
     if (srvEdges.edgeCanConnect(connection)) {
       setEdges((eds) => addEdge(formatEdge(connection), eds))
       await srvEdges.createEdge(connection, diagramId)
+      // It needs to refresh to create the structure
+      await loadData()
     }
   }
 
@@ -163,7 +164,8 @@ export default function DiagramEditor() {
       <EdgeSelectionModal
         isOpen={isEdgeSelectionOpen}
         onClose={onEdgeSelectionClose}
-        edges={selectedEdge}
+        edge={selectedEdge}
+        nodes={nodes}
         refresh={loadData}
       ></EdgeSelectionModal>
       <ReactFlowProvider>

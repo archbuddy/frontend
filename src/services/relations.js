@@ -4,7 +4,7 @@ const endpoint = 'http://localhost:3000'
 
 const updateRelation = async (relation) => {
   const url = `${endpoint}/relations/${relation.id}`
-  log(url)
+  log(`Update relation ${url}`)
   const response = await fetch(url, {
     method: 'PATCH',
     headers: {
