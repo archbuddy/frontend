@@ -1,9 +1,13 @@
+import { v4 as uuidv4 } from 'uuid'
+import { buildFiqlQuery } from './util'
+
 const endpoint = 'http://localhost:3000'
 import { log } from '../util'
 
-const list = async () => {
-  log('List view points')
-  const response = await fetch(`${endpoint}/diagrams`, {
+const list = async (fiql = null, offset = 0, limit = 10) => {
+  let address = `${endpoint}/diagrams${buildFiqlQuery(fiql, offset, limit)}`
+
+  const response = await fetch(address, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -42,6 +46,7 @@ const create = async (name) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
+      _id,
       name
     })
   })
@@ -50,6 +55,8 @@ const create = async (name) => {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
   }
+
+  return _id
 }
 
 const nodes = {

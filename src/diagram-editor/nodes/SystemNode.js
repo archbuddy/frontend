@@ -2,22 +2,37 @@ import React, { memo } from 'react'
 import Node, { Shape as DefaultShape } from './Node'
 
 export const defaultData = {
+  data: {
+    name: 'System Name',
+    description: 'Description of software system',
+    variant: 'internal',
+    typeDescription: 'Software System'
+  },
   type: 'system',
-  variant: 'internal',
-  width: '240px',
-  name: 'System Name',
-  description: 'Description of software system',
-  typeDescription: 'Software System'
+  width: '240px'
 }
 
 export function Shape(props) {
-  return DefaultShape(props)
+  const _props = {
+    ...defaultData,
+    ...props
+  }
+  _props.data = {
+    ...defaultData.data,
+    ...props.data
+  }
+
+  return DefaultShape(_props)
 }
 
 export default memo(function SystemNode(props) {
   const _props = {
     ...defaultData,
     ...props
+  }
+  _props.data = {
+    ...defaultData.data,
+    ...props.data
   }
   return <Node {..._props} />
 })

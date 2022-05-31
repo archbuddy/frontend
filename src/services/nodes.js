@@ -2,14 +2,14 @@ const endpoint = 'http://localhost:3000'
 const { log } = require('../util')
 import { v4 as uuidv4 } from 'uuid'
 
-const createNode = async (id, type, name, x, y, diagramId) => {
+const createNode = async (node, diagramId) => {
   const body = {
-    _id: id ?? uuidv4(),
-    type,
-    name,
-    x,
-    y,
-    diagram: diagramId
+    _id: node.id ?? uuidv4(),
+    x: node.position.x,
+    y: node.position.y,
+    variant: node.data.variant,
+    diagram: diagramId,
+    entity: node.data.entity
   }
   log(`Creating node ${JSON.stringify(body)}`)
   const response = await fetch(`${endpoint}/nodes`, {
@@ -43,14 +43,11 @@ const deleteNode = async (nodeId) => {
   }
 }
 
-const patchNode = async (node, diagram) => {
-  const body = {
-    name: node.data.label,
-    x: node.position.x,
-    y: node.position.y,
-    diagram
-  }
-  log(`Patching node ${JSON.stringify(body)}`)
+const patchNode = async (node) => {
+  const body = { ...node }
+  delete body.id
+  log(body)
+
   const response = await fetch(`${endpoint}/nodes/${node.id}`, {
     method: 'PATCH',
     headers: {

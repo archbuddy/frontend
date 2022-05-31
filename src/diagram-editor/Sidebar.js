@@ -63,28 +63,28 @@ export default function Sidebar(props) {
           shape={PersonShape}
           label="Person"
           {...personData}
-          diagramSelected={isDiagramSelected()}
+          hidden={!isDiagramSelected()}
         />
 
         <SidebarItem
           shape={PersonShape}
           label="External Person"
-          {...{ ...personData, ...{ variant: 'external' } }}
-          diagramSelected={isDiagramSelected()}
+          {...{ ...personData, ...{ data: { variant: 'external' } } }}
+          hidden={!isDiagramSelected()}
         />
 
         <SidebarItem
           shape={SystemShape}
           label="System"
           {...systemData}
-          diagramSelected={isDiagramSelected()}
+          hidden={!isDiagramSelected()}
         />
 
         <SidebarItem
           shape={SystemShape}
           label="External System"
-          {...{ ...systemData, ...{ variant: 'external' } }}
-          diagramSelected={isDiagramSelected()}
+          {...{ ...systemData, ...{ data: { variant: 'external' } } }}
+          hidden={!isDiagramSelected()}
         />
 
         {/* <SidebarItem shape={ContainerShape} label="Container" {...containerData} />

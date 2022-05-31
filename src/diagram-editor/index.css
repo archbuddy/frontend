@@ -77,3 +77,14 @@
   cursor: grab;
   font-size: small;
 }
+
+/* Search Table*/
+
+.searchTable td:hover {
+  cursor: pointer;
+  background-color: var(--chakra-colors-gray-100);
+}
+
+.searchTable tr.selected {
+  background-color: var(--chakra-colors-gray-100);
+}

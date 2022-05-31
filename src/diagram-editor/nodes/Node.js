@@ -10,23 +10,22 @@ export function Shape(props) {
       showType: true,
       variant: 'internal'
     },
-    ...props,
-    ...props.data
+    ...props
   }
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
-      className={`shape rectangle ${p.variant} ${p.type}`}
+      className={`shape rectangle ${p.data.variant} ${p.type}`}
       viewBox="0 0 240 125"
     >
       <rect rx="10%" ry="20%" width="100%" height="100%" strokeMiterlimit="10" />
 
       <foreignObject className="texts" y="15%" width="100%" height="100%">
-        <Center className="name">{p.name}</Center>
-        <Center className="type">{p.typeDescription ?? p.type}</Center>
-        <Center className="description">{p.description}</Center>
+        <Center className="name">{p.data.name}</Center>
+        <Center className="type">{p.data.typeDescription ?? p.type}</Center>
+        <Center className="description">{p.data.description}</Center>
       </foreignObject>
     </svg>
   )
@@ -102,16 +101,11 @@ function DefaultHandles({ isConnectable }) {
 export default memo(function Node(props) {
   const _props = {
     ...{
-      name: 'Name',
-      showType: true,
-      description: 'Description',
-      variant: 'internal',
       size: {
         width: '240px'
       }
     },
-    ...props,
-    ...props.data
+    ...props
   }
 
   let shape = Shape(_props)
