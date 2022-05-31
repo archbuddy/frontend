@@ -16,8 +16,8 @@ import {
   Box
 } from '@chakra-ui/react'
 import { v4 } from 'uuid'
-import srvEntities from '../services/entities'
-import SearchTable from './SearchTable'
+import srvEntities from '../../services/entities'
+import SearchTable from '../SearchTable'
 
 export default function AddNodeModal(props) {
   const [newNode, setNewNode] = useState(props.newNode)

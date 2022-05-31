@@ -21,9 +21,9 @@ import {
 } from '@chakra-ui/react'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
-import srvEdges from '../services/edges'
-import srvRelations from '../services/relations'
-import { isUndefined, log } from '../util'
+import srvEdges from '../../services/edges'
+import srvRelations from '../../services/relations'
+import { isUndefined, log } from '../../util'
 
 export default function EdgeSelectionModal(props) {
   useEffect(() => {

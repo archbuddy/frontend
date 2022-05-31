@@ -10,8 +10,8 @@ import {
   Button,
   Text
 } from '@chakra-ui/react'
-import srvViewPoint from '../services/viewpoint'
-import SearchTable from './SearchTable'
+import srvViewPoint from '../../services/viewpoint'
+import SearchTable from '../SearchTable'
 
 export default function OpenDiagramModal(props) {
   const onDiagramSelect = async (diagram) => {

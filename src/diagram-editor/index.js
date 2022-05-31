@@ -22,8 +22,8 @@ import WebContainerNode from './nodes/WebContainerNode'
 import MobContainerNode from './nodes/MobContainerNode'
 import C4Edge from './edges/C4Edge'
 
-import AddNodeModal from './AddNodeModal'
-import EdgeSelectionModal from './EdgeSelectionModal'
+import AddNodeModal from './modal/AddNodeModal'
+import EdgeSelectionModal from './modal/EdgeSelectionModal'
 
 import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
