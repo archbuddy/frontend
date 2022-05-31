@@ -40,6 +40,7 @@ const loadData = async (viewPointId) => {
 
 const create = async (name) => {
   log('Creating new view point')
+  const _id = uuidv4()
   const response = await fetch(`${endpoint}/diagrams`, {
     method: 'POST',
     headers: {
