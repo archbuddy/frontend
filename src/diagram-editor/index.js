@@ -75,24 +75,24 @@ export default function DiagramEditor() {
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
-  const [diagramId, setDiagramId] = useState(null)
+  const [diagramSelected, setDiagramSelected] = useState(undefined)
   const [newNode, setNewNode] = useState(null)
   const [selectedEdge, setSelectedEdge] = useState(null)
 
-  const loadData = async (viewPointId) => {
-    const id = viewPointId || diagramId
+  const loadData = async (viewPoint) => {
+    const id = viewPoint.id || diagramSelected.id
     const result = await srvViewPoint.loadData(id)
     setNodes(result.nodes)
     setEdges(result.edges.map((e) => formatEdge(e)))
-    if (!isUndefined(viewPointId)) {
-      setDiagramId(viewPointId)
+    if (!isUndefined(viewPoint)) {
+      setDiagramSelected(viewPoint)
     }
   }
 
   const onConnect = async (connection) => {
     if (srvEdges.edgeCanConnect(connection)) {
       setEdges((eds) => addEdge(formatEdge(connection), eds))
-      await srvEdges.createEdge(connection, diagramId)
+      await srvEdges.createEdge(connection, diagramSelected.id)
       // It needs to refresh to create the structure
       await loadData()
     }
@@ -106,7 +106,7 @@ export default function DiagramEditor() {
   const insertNode = async (newNode) => {
     setNodes(nodes.concat(newNode))
     onAddNodeModalClose()
-    await srvNodes.createNode(newNode, diagramId)
+    await srvNodes.createNode(newNode, diagramSelected.id)
   }
 
   const onDrop = useCallback(
@@ -163,7 +163,7 @@ export default function DiagramEditor() {
       ></EdgeSelectionModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
-          <Sidebar onDiagramSelect={loadData} diagramSelected={diagramId}></Sidebar>
+          <Sidebar onDiagramSelect={loadData} diagramSelected={diagramSelected}></Sidebar>
           <Box height="100%" width="100%" bgColor="gray.50">
             <ReactFlow
               minZoom={0.05}

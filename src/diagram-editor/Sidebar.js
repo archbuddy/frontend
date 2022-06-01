@@ -49,6 +49,7 @@ export default function Sidebar(props) {
       <OpenDiagramModal
         isOpen={isOpen}
         onClose={onClose}
+        diagramSelected={props.diagramSelected}
         onSelect={props.onDiagramSelect}
       ></OpenDiagramModal>
 

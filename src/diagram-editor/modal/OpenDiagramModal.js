@@ -8,17 +8,20 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Text
+  Text,
+  Box,
+  Flex
 } from '@chakra-ui/react'
 import srvViewPoint from '../../services/viewpoint'
 import SearchTable from '../SearchTable'
+import { isUndefined } from '../../util'
 
 export default function OpenDiagramModal(props) {
   const onDiagramSelect = async (diagram) => {
     if (diagram.id === 'new') {
       props.onSelect(await srvViewPoint.create(diagram.newDiagramName))
     } else {
-      props.onSelect(diagram.id)
+      props.onSelect(diagram)
     }
     props.onClose()
   }
@@ -34,6 +37,13 @@ export default function OpenDiagramModal(props) {
       })
     }
   }
+  const currentView = () => {
+    const value = props.diagramSelected
+    if (!isUndefined(value)) {
+      return value.name
+    }
+    return undefined
+  }
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -42,6 +52,24 @@ export default function OpenDiagramModal(props) {
         <ModalHeader>Open Diagram</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          <Box
+            w="100%"
+            p={2}
+            color="black"
+            hidden={currentView() === undefined}
+            bg="gray.200"
+            borderRadius="md"
+          >
+            <Flex>
+              <Text fontSize="sm" as="i">
+                Current diagram:
+              </Text>
+              <Text fontSize="sm" as="i">
+                {currentView()}
+              </Text>
+            </Flex>
+          </Box>
+          <br />
           <SearchTable
             loadData={listDiagram}
             columns={[{ header: 'Name', prop: 'name' }]}
