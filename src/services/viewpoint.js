@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
-import { buildFiqlQuery } from './util'
 
 const endpoint = 'http://localhost:3000'
-import { log } from '../util'
+import { log, buildFiqlQuery } from '../util'
 
 const list = async (fiql = null, offset = 0, limit = 10) => {
   let address = `${endpoint}/diagrams${buildFiqlQuery(fiql, offset, limit)}`
