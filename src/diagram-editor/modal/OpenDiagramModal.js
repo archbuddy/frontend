@@ -46,7 +46,7 @@ export default function OpenDiagramModal(props) {
             loadData={listDiagram}
             columns={[{ header: 'Name', prop: 'name' }]}
             onSelect={(i) => onDiagramSelect(i)}
-            placeholder="Diagram Name"
+            placeholder="Diagram Name (type to create a new one)"
           ></SearchTable>
         </ModalBody>
         <ModalFooter>
