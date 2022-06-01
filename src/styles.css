@@ -8,3 +8,15 @@ body,
   box-sizing: border-box;
   font-family: sans-serif;
 }
+path.react-flow__edge-path {
+  stroke-width: 4;
+  stroke: #ddd;
+}
+path.react-flow__edge-path:hover {
+  stroke-width: 4;
+  stroke: #555;
+  cursor: pointer;
+}
+path.react-flow__edge-path {
+  stroke-width: 4;
+}
