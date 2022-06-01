@@ -24,6 +24,7 @@ import C4Edge from './edges/C4Edge'
 
 import AddNodeModal from './modal/AddNodeModal'
 import EdgeSelectionModal from './modal/EdgeSelectionModal'
+import ChangeNodeModal from './modal/ChangeNodeModal'
 
 import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
@@ -71,16 +72,28 @@ export default function DiagramEditor() {
     onOpen: onEdgeSelectionOpen,
     onClose: onEdgeSelectionClose
   } = useDisclosure()
+  const {
+    isOpen: isChangeNodeModalOpen,
+    onOpen: onChangeNodeModalOpen,
+    onClose: onChangeNodeModalClose
+  } = useDisclosure()
+
   const reactFlowWrapper = useRef(null)
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   const [reactFlowInstance, setReactFlowInstance] = useState(null)
-  const [diagramSelected, setDiagramSelected] = useState(undefined)
+  const [diagramSelected, setDiagramSelected] = useState(null)
   const [newNode, setNewNode] = useState(null)
   const [selectedEdge, setSelectedEdge] = useState(null)
+  const [selectedNode, setSelectedNode] = useState(null)
 
   const loadData = async (viewPoint) => {
-    const id = viewPoint.id || diagramSelected.id
+    let id
+    if (!isUndefined(viewPoint) && viewPoint.id) {
+      id = viewPoint.id
+    } else {
+      id = diagramSelected.id
+    }
     const result = await srvViewPoint.loadData(id)
     setNodes(result.nodes)
     setEdges(result.edges.map((e) => formatEdge(e)))
@@ -146,6 +159,11 @@ export default function DiagramEditor() {
     onEdgeSelectionOpen()
   }
 
+  const onNodeDoubleClick = (event, param) => {
+    setSelectedNode(param)
+    onChangeNodeModalOpen()
+  }
+
   return (
     <>
       <AddNodeModal
@@ -161,6 +179,12 @@ export default function DiagramEditor() {
         nodes={nodes}
         refresh={loadData}
       ></EdgeSelectionModal>
+      <ChangeNodeModal
+        isOpen={isChangeNodeModalOpen}
+        onClose={onChangeNodeModalClose}
+        node={selectedNode}
+        refresh={loadData}
+      ></ChangeNodeModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
           <Sidebar onDiagramSelect={loadData} diagramSelected={diagramSelected}></Sidebar>
@@ -178,9 +202,11 @@ export default function DiagramEditor() {
               onDragOver={onDragOver}
               onNodeDragStop={onNodeDragStop}
               onEdgeClick={onEdgesClick}
+              deleteKeyCode={null}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               connectionLineStyle={connectionLineStyle}
+              onNodeDoubleClick={onNodeDoubleClick}
               snapToGrid={true}
               snapGrid={snapGrid}
               defaultZoom={1.5}
