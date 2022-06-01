@@ -188,7 +188,7 @@ export default function EdgeSelectionModal(props) {
     const source = props.nodes.findIndex((e) => e.id === props.edge.source)
     const target = props.nodes.findIndex((e) => e.id === props.edge.target)
     if (source === -1 || target === -1) {
-      log(`Edge Node connection source: ${source} target: ${target}`)
+      log(`Edge Node connection source: ${source} target: ${target} isOpen: ${props.isOpen}`)
       return <></>
     }
     return (
@@ -229,6 +229,10 @@ export default function EdgeSelectionModal(props) {
         </Box>
       </Box>
     )
+  }
+
+  if (props.isOpen === false) {
+    return <></>
   }
 
   return (
