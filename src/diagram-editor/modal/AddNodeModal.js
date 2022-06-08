@@ -15,7 +15,6 @@ import {
   Text,
   Box
 } from '@chakra-ui/react'
-import { v4 } from 'uuid'
 import srvEntities from '../../services/entities'
 import SearchTable from '../SearchTable'
 
@@ -84,12 +83,13 @@ export default function AddNodeModal(props) {
   }
 
   const onOk = () => {
-    if (!isNewEntityNameValid || !isNewEntityDescriptionValid) return
+    if (!isNewEntityNameValid || !isNewEntityDescriptionValid) {
+      return
+    }
 
     newNode.data.name = newEntityName
     newNode.data.description = newEntityDescription
     newNode.data.entity = {
-      id: v4(),
       name: newEntityName,
       description: newEntityDescription,
       type: newNode.type

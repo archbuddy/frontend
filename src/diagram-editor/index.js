@@ -9,7 +9,6 @@ import ReactFlow, {
   Controls,
   MarkerType
 } from 'react-flow-renderer'
-import { v4 as uuidv4 } from 'uuid'
 
 import Sidebar from './Sidebar'
 import PersonNode from './nodes/PersonNode'
@@ -117,9 +116,9 @@ export default function DiagramEditor() {
   }, [])
 
   const insertNode = async (newNode) => {
-    setNodes(nodes.concat(newNode))
-    onAddNodeModalClose()
     await srvNodes.createNode(newNode, diagramSelected.id)
+    await loadData()
+    onAddNodeModalClose()
   }
 
   const onDrop = useCallback(
@@ -138,7 +137,6 @@ export default function DiagramEditor() {
         y: event.clientY - 50
       })
       const newNode = {
-        id: uuidv4(),
         position,
         type: data.type,
         data: { variant: data.data.variant }
