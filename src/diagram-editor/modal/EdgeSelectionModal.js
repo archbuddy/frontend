@@ -21,9 +21,9 @@ import {
 } from '@chakra-ui/react'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
-import srvEdges from '../services/edges'
-import srvRelations from '../services/relations'
-import { isUndefined, log } from '../util'
+import srvEdges from '../../services/edges'
+import srvRelations from '../../services/relations'
+import { isUndefined, log } from '../../util'
 
 export default function EdgeSelectionModal(props) {
   useEffect(() => {
@@ -187,6 +187,10 @@ export default function EdgeSelectionModal(props) {
     }
     const source = props.nodes.findIndex((e) => e.id === props.edge.source)
     const target = props.nodes.findIndex((e) => e.id === props.edge.target)
+    if (source === -1 || target === -1) {
+      log(`Edge Node connection source: ${source} target: ${target} isOpen: ${props.isOpen}`)
+      return <></>
+    }
     return (
       <Box
         style={{
@@ -225,6 +229,10 @@ export default function EdgeSelectionModal(props) {
         </Box>
       </Box>
     )
+  }
+
+  if (props.isOpen === false) {
+    return <></>
   }
 
   return (

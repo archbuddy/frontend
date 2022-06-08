@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { TableContainer, Table, Thead, Th, Tr, Tbody, Td, Tfoot, Input } from '@chakra-ui/react'
+import {
+  TableContainer,
+  Table,
+  Thead,
+  Th,
+  Tr,
+  Tbody,
+  Td,
+  Tfoot,
+  Input,
+  Box
+} from '@chakra-ui/react'
 
 export default function SearchTable(props) {
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -107,23 +118,25 @@ export default function SearchTable(props) {
         onKeyDown={onKeyDown}
         ref={initialRef}
       />
-      <TableContainer>
-        <Table className="searchTable" variant="simple">
-          <Thead>
-            <Tr>
-              {columns.map((c) => (
-                <Th key={`column-${c.header}-${getRandomInt()}`}>{c.header}</Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>{getLines(list)}</Tbody>
-          <Tfoot>
-            <Tr>
-              <Th></Th>
-            </Tr>
-          </Tfoot>
-        </Table>
-      </TableContainer>
+      <Box overflowY="auto" maxHeight={props.maxHeight ? props.maxHeight : '300px'}>
+        <TableContainer>
+          <Table className="searchTable" variant="simple">
+            <Thead>
+              <Tr>
+                {columns.map((c) => (
+                  <Th key={`column-${c.header}-${getRandomInt()}`}>{c.header}</Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>{getLines(list)}</Tbody>
+            <Tfoot>
+              <Tr>
+                <Th></Th>
+              </Tr>
+            </Tfoot>
+          </Table>
+        </TableContainer>
+      </Box>
     </>
   )
 }

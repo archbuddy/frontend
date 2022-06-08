@@ -2,7 +2,7 @@ import React from 'react'
 import { VStack, Box, IconButton, useDisclosure } from '@chakra-ui/react'
 import { AiFillFolderOpen } from 'react-icons/ai'
 import SidebarItem from './SidebarItem'
-import OpenDiagramModal from './OpenDiagramModal'
+import OpenDiagramModal from './modal/OpenDiagramModal'
 import { Shape as PersonShape, defaultData as personData } from './nodes/PersonNode'
 import { Shape as SystemShape, defaultData as systemData } from './nodes/SystemNode'
 // import { Shape as ContainerShape, defaultData as containerData } from './nodes/ContainerNode'
@@ -49,6 +49,7 @@ export default function Sidebar(props) {
       <OpenDiagramModal
         isOpen={isOpen}
         onClose={onClose}
+        diagramSelected={props.diagramSelected}
         onSelect={props.onDiagramSelect}
       ></OpenDiagramModal>
 
