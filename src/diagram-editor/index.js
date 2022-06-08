@@ -29,7 +29,7 @@ import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
 import srvNodes from '../services/nodes'
 
-import { isUndefined } from '../util'
+import { isUndefined, log } from '../util'
 
 const nodeTypes = {
   person: PersonNode,
@@ -164,6 +164,13 @@ export default function DiagramEditor() {
     onChangeNodeModalOpen()
   }
 
+  const onRemoveNodeFromView = async (nodeId) => {
+    log(`Remove node from view ${nodeId} diagram ${diagramSelected.id}`)
+    await srvNodes.deleteNode(nodeId)
+    await loadData()
+    onChangeNodeModalClose()
+  }
+
   return (
     <>
       <AddNodeModal
@@ -184,6 +191,7 @@ export default function DiagramEditor() {
         onClose={onChangeNodeModalClose}
         node={selectedNode}
         refresh={loadData}
+        onRemoveNodeFromView={onRemoveNodeFromView}
       ></ChangeNodeModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
