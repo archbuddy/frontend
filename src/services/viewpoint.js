@@ -36,6 +36,19 @@ const loadData = async (viewPointId) => {
   return data
 }
 
+const get = async (viewPointId) => {
+  log(`Getting data for viewpoint ${viewPointId}`)
+  const response = await fetch(`${endpoint}/diagrams/${viewPointId}`)
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`
+    throw new Error(message)
+  }
+  const data = await response.json()
+  // TODO check how to fix this and similar situations on the backend
+  data.id = data._id
+  return data
+}
+
 const create = async (name) => {
   log('Creating new view point')
   const response = await fetch(`${endpoint}/diagrams`, {
@@ -60,7 +73,8 @@ const create = async (name) => {
 const nodes = {
   list,
   loadData,
-  create
+  create,
+  get
 }
 
 export default nodes
