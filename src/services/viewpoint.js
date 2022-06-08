@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from 'uuid'
-
 const endpoint = 'http://localhost:3000'
+
 import { log, buildFiqlQuery } from '../util'
 
 const list = async (fiql = null, offset = 0, limit = 10) => {
@@ -39,14 +38,12 @@ const loadData = async (viewPointId) => {
 
 const create = async (name) => {
   log('Creating new view point')
-  const _id = uuidv4()
   const response = await fetch(`${endpoint}/diagrams`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      _id,
       name
     })
   })
@@ -56,7 +53,8 @@ const create = async (name) => {
     throw new Error(message)
   }
 
-  return _id
+  const data = await response.json()
+  return data.id
 }
 
 const nodes = {
