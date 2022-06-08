@@ -50,6 +50,7 @@ const connectionLineStyle = { stroke: '#ddddd' }
 const snapGrid = [20, 20]
 
 const formatEdge = (edge) => {
+  // TODO when we have tags for the edge we will add on the data.detail
   return {
     ...edge,
     style: { stroke: '#000' },
@@ -57,7 +58,7 @@ const formatEdge = (edge) => {
       type: MarkerType.ArrowClosed
     },
     type: 'c4',
-    data: { ...{ description: '', detail: '' }, ...edge.data }
+    data: { description: edge.data.description }
   }
 }
 
