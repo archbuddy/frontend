@@ -57,7 +57,7 @@ const formatEdge = (edge) => {
       type: MarkerType.ArrowClosed
     },
     type: 'c4',
-    data: { description: edge.data.description }
+    data: { description: edge.data ? edge.data.description : '' }
   }
 }
 

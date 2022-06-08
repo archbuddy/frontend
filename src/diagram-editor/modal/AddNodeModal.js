@@ -21,17 +21,17 @@ import SearchTable from '../SearchTable'
 export default function AddNodeModal(props) {
   const [newNode, setNewNode] = useState(props.newNode)
   const [isNewEntity, setIsNewEntity] = useState(false)
-  const [newEntityName, setNewEntityName] = useState(null)
+  const [newEntityName, setNewEntityName] = useState('')
   const [isNewEntityNameValid, setIsNewEntityNameValid] = useState(false)
-  const [newEntityDescription, setNewEntityDescription] = useState(null)
+  const [newEntityDescription, setNewEntityDescription] = useState('')
   const [isNewEntityDescriptionValid, setIsNewEntityDescriptionValid] = useState(false)
   const descriptionRef = React.useRef()
 
   useEffect(() => {
     setNewNode(props.newNode)
     setIsNewEntity(false)
-    setNewEntityName(null)
-    setIsNewEntityDescriptionValid(null)
+    setNewEntityName('')
+    setIsNewEntityDescriptionValid('')
   }, [props.newNode])
 
   useEffect(() => {
