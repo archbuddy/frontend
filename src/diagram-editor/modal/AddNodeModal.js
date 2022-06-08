@@ -75,9 +75,9 @@ export default function AddNodeModal(props) {
       setNewEntityDescription('')
       descriptionRef.current.focus()
     } else {
-      newNode.data.name = entity.name
-      newNode.data.description = entity.description
-      newNode.data.entity = entity.id
+      newNode.data.entity = {
+        id: entity.id
+      }
       props.onOk(newNode)
     }
   }
