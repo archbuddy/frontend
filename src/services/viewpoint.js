@@ -67,7 +67,7 @@ const create = async (name) => {
   }
 
   const data = await response.json()
-  return data.id
+  return data
 }
 
 const nodes = {
