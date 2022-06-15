@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+
 import {
   Modal,
   ModalOverlay,
@@ -12,6 +13,7 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
+  Textarea,
   Box
 } from '@chakra-ui/react'
 import { isUndefined } from '../../util'
@@ -77,11 +79,12 @@ export default function ChangeNodeModal(props) {
           </FormControl>
           <FormControl isInvalid={!isNewEntityDescriptionValid}>
             <FormLabel htmlFor="description">Description</FormLabel>
-            <Input
+            <Textarea
               id="description"
               type="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              resize="vertical"
             />
             {!isNewEntityDescriptionValid ? (
               <FormErrorMessage>Description is required.</FormErrorMessage>
