@@ -20,3 +20,17 @@ path.react-flow__edge-path:hover {
 path.react-flow__edge-path {
   stroke-width: 4;
 }
+
+#errorPage {
+  padding: 20px
+}
+
+.errorPageHeader {
+  font-weight: bold;
+  border-bottom: 1px solid #555 ;
+  padding-bottom: 5px;
+}
+
+.errorPageContent {
+  font-weight: lighter
+}
