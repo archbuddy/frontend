@@ -65,7 +65,7 @@ export default function ChangeNodeModal(props) {
         <ModalCloseButton />
         <ModalBody>
           <Box w="100%" p={2} bg="yellow.100" color="black" borderRadius="md">
-            Reminder: When changing this information you will change for all the database
+            Reminder: When changing Name and Description you will change for all the data storaded
           </Box>
           <br />
           <FormControl isInvalid={!isNewEntityNameValid()}>
@@ -95,13 +95,13 @@ export default function ChangeNodeModal(props) {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onSave}>
+          <Button colorScheme="blue" mr={1} onClick={onSave}>
             Save
           </Button>
-          <Button variant="ghost" onClick={props.onClose}>
+          <Button variant="ghost" mr={1} onClick={props.onClose}>
             Cancel
           </Button>
-          <Button colorScheme="gray" onClick={onRemove}>
+          <Button colorScheme="gray" mr={1} onClick={onRemove}>
             Delete from current view
           </Button>
         </ModalFooter>
