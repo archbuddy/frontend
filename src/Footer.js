@@ -13,7 +13,9 @@ function Footer() {
       borderColor={useColorModeValue('gray.200', 'gray.900')}
     >
       All rights reserved to Arch Buddy and team.{' '}
-      <a href="https://github.com/archbuddy">https://github.com/archbuddy</a>
+      <a href="https://github.com/archbuddy" target="_blank" rel="noreferrer">
+        https://github.com/archbuddy
+      </a>
     </Box>
   )
 }
