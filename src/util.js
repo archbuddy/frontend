@@ -28,8 +28,19 @@ const buildFiqlQuery = (fiql = null, offset = 0, limit = 10) => {
   return query
 }
 
+const prepareErrorToScreen = (err) => {
+  if (!err) return 'Oopss.. this is leak, there is no error to show'
+
+  if (err.toLowerCase().indexOf('failed to fetch') >= 0) {
+    return 'The backend system is down/offline'
+  }
+
+  return err
+}
+
 module.exports = {
   log,
   isUndefined,
-  buildFiqlQuery
+  buildFiqlQuery,
+  prepareErrorToScreen
 }

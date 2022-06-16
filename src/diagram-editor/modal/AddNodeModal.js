@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react'
 import srvEntities from '../../services/entities'
 import SearchTable from '../SearchTable'
+import { prepareErrorToScreen } from '../../util'
 
 export default function AddNodeModal(props) {
   const [error, setError] = useState(undefined)
@@ -52,22 +53,27 @@ export default function AddNodeModal(props) {
   }
 
   const listEntities = async (filter = '', offset = 0, limit = 10) => {
-    const filterWithType =
-      !filter || filter === ''
-        ? `type==${newNode.type}`
-        : `type==${newNode.type};name=re=('.*${filter}.*','i')`
+    try {
+      const filterWithType =
+        !filter || filter === ''
+          ? `type==${newNode.type}`
+          : `type==${newNode.type};name=re=('.*${filter}.*','i')`
 
-    const result = await srvEntities.list(filterWithType, offset, limit)
+      const result = await srvEntities.list(filterWithType, offset, limit)
 
-    if (filter && filter !== '') {
-      result.push({
-        id: 'new',
-        newEntityName: filter,
-        name: () => <Text as="i">{filter} (New Entity)</Text>
-      })
+      if (filter && filter !== '') {
+        result.push({
+          id: 'new',
+          newEntityName: filter,
+          name: () => <Text as="i">{filter} (New Entity)</Text>
+        })
+      }
+      setError(undefined)
+      return result
+    } catch (err) {
+      setError(prepareErrorToScreen(err.message))
     }
-
-    return result
+    return []
   }
 
   const onEntitySelect = (entity) => {
@@ -106,7 +112,7 @@ export default function AddNodeModal(props) {
 
       props.onOk(newNode)
     } catch (err) {
-      setError(err.message)
+      setError(prepareErrorToScreen(err.message))
     }
   }
 

@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import srvViewPoint from '../../services/viewpoint'
 import SearchTable from '../SearchTable'
-import { isUndefined } from '../../util'
+import { isUndefined, prepareErrorToScreen } from '../../util'
 
 export default function OpenDiagramModal(props) {
   const [error, setError] = useState(undefined)
@@ -31,7 +31,7 @@ export default function OpenDiagramModal(props) {
         props.onSelect(data)
         close()
       } catch (err) {
-        setError(err.message)
+        setError(prepareErrorToScreen(err.message))
       }
     } else {
       props.onSelect(diagram)
@@ -40,15 +40,22 @@ export default function OpenDiagramModal(props) {
   }
 
   const listDiagram = async (filter = '', offset = 0, limit = 10) => {
-    if (!filter || filter === '') {
-      return await srvViewPoint.list(null, offset, limit)
-    } else {
-      return (await srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)).concat({
-        id: 'new',
-        newDiagramName: filter,
-        name: () => <Text as="i">{filter} (New Diagram)</Text>
-      })
+    let result = []
+    try {
+      if (!filter || filter === '') {
+        result = await srvViewPoint.list(null, offset, limit)
+      } else {
+        result = (await srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)).concat({
+          id: 'new',
+          newDiagramName: filter,
+          name: () => <Text as="i">{filter} (New Diagram)</Text>
+        })
+      }
+      setError(undefined)
+    } catch (err) {
+      setError(prepareErrorToScreen(err.message))
     }
+    return result
   }
   const currentView = () => {
     const value = props.diagramSelected
