@@ -146,7 +146,7 @@ export default function EdgeSelectionModal(props) {
       <TableContainer>
         <Table colorScheme="gray" variant="striped">
           <TableCaption>
-            Showing all connections between the nodes of the selected edge
+            Showing all connections between the nodes of the selected edge available in this view
           </TableCaption>
           <Thead>
             <Tr>

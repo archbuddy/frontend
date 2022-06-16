@@ -15,24 +15,23 @@ import {
   Text,
   Box
 } from '@chakra-ui/react'
-import { v4 } from 'uuid'
 import srvEntities from '../../services/entities'
 import SearchTable from '../SearchTable'
 
 export default function AddNodeModal(props) {
   const [newNode, setNewNode] = useState(props.newNode)
   const [isNewEntity, setIsNewEntity] = useState(false)
-  const [newEntityName, setNewEntityName] = useState(null)
+  const [newEntityName, setNewEntityName] = useState('')
   const [isNewEntityNameValid, setIsNewEntityNameValid] = useState(false)
-  const [newEntityDescription, setNewEntityDescription] = useState(null)
+  const [newEntityDescription, setNewEntityDescription] = useState('')
   const [isNewEntityDescriptionValid, setIsNewEntityDescriptionValid] = useState(false)
   const descriptionRef = React.useRef()
 
   useEffect(() => {
     setNewNode(props.newNode)
     setIsNewEntity(false)
-    setNewEntityName(null)
-    setIsNewEntityDescriptionValid(null)
+    setNewEntityName('')
+    setIsNewEntityDescriptionValid('')
   }, [props.newNode])
 
   useEffect(() => {
@@ -76,20 +75,24 @@ export default function AddNodeModal(props) {
       setNewEntityDescription('')
       descriptionRef.current.focus()
     } else {
-      newNode.data.name = entity.name
-      newNode.data.description = entity.description
-      newNode.data.entity = entity.id
+      newNode.data.entity = {
+        id: entity.id,
+        name: entity.name,
+        description: entity.description,
+        type: entity.type
+      }
       props.onOk(newNode)
     }
   }
 
   const onOk = () => {
-    if (!isNewEntityNameValid || !isNewEntityDescriptionValid) return
+    if (!isNewEntityNameValid || !isNewEntityDescriptionValid) {
+      return
+    }
 
     newNode.data.name = newEntityName
     newNode.data.description = newEntityDescription
     newNode.data.entity = {
-      id: v4(),
       name: newEntityName,
       description: newEntityDescription,
       type: newNode.type

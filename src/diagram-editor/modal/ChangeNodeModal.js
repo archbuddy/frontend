@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+
 import {
   Modal,
   ModalOverlay,
@@ -12,6 +13,7 @@ import {
   FormLabel,
   FormErrorMessage,
   Input,
+  Textarea,
   Box
 } from '@chakra-ui/react'
 import { isUndefined } from '../../util'
@@ -51,6 +53,9 @@ export default function ChangeNodeModal(props) {
     const txt = value.type
     return txt.charAt(0).toUpperCase() + txt.substring(1)
   }
+  const onRemove = () => {
+    props.onRemoveNodeFromView(props.node.id)
+  }
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -74,11 +79,12 @@ export default function ChangeNodeModal(props) {
           </FormControl>
           <FormControl isInvalid={!isNewEntityDescriptionValid}>
             <FormLabel htmlFor="description">Description</FormLabel>
-            <Input
+            <Textarea
               id="description"
               type="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              resize="vertical"
             />
             {!isNewEntityDescriptionValid ? (
               <FormErrorMessage>Description is required.</FormErrorMessage>
@@ -94,6 +100,9 @@ export default function ChangeNodeModal(props) {
           </Button>
           <Button variant="ghost" onClick={props.onClose}>
             Cancel
+          </Button>
+          <Button colorScheme="gray" onClick={onRemove}>
+            Delete from current view
           </Button>
         </ModalFooter>
       </ModalContent>

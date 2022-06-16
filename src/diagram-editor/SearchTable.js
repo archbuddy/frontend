@@ -118,7 +118,21 @@ export default function SearchTable(props) {
         onKeyDown={onKeyDown}
         ref={initialRef}
       />
-      <Box overflowY="auto" maxHeight={props.maxHeight ? props.maxHeight : '300px'}>
+      <Box
+        overflowY="auto"
+        maxHeight={props.maxHeight ? props.maxHeight : '300px'}
+        css={{
+          '&::-webkit-scrollbar': {
+            width: '6px'
+          },
+          '&::-webkit-scrollbar-track': {
+            width: '6px'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'lightBlue'
+          }
+        }}
+      >
         <TableContainer>
           <Table className="searchTable" variant="simple">
             <Thead>

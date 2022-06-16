@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from 'uuid'
-
 const endpoint = 'http://localhost:3000'
+
 import { log, buildFiqlQuery } from '../util'
 
 const list = async (fiql = null, offset = 0, limit = 10) => {
@@ -37,16 +36,27 @@ const loadData = async (viewPointId) => {
   return data
 }
 
+const get = async (viewPointId) => {
+  log(`Getting data for viewpoint ${viewPointId}`)
+  const response = await fetch(`${endpoint}/diagrams/${viewPointId}`)
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`
+    throw new Error(message)
+  }
+  const data = await response.json()
+  // TODO check how to fix this and similar situations on the backend
+  data.id = data._id
+  return data
+}
+
 const create = async (name) => {
   log('Creating new view point')
-  const _id = uuidv4()
   const response = await fetch(`${endpoint}/diagrams`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      _id,
       name
     })
   })
@@ -56,13 +66,15 @@ const create = async (name) => {
     throw new Error(message)
   }
 
-  return _id
+  const data = await response.json()
+  return data
 }
 
 const nodes = {
   list,
   loadData,
-  create
+  create,
+  get
 }
 
 export default nodes

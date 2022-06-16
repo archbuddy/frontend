@@ -9,7 +9,6 @@ import ReactFlow, {
   Controls,
   MarkerType
 } from 'react-flow-renderer'
-import { v4 as uuidv4 } from 'uuid'
 
 import Sidebar from './Sidebar'
 import PersonNode from './nodes/PersonNode'
@@ -30,7 +29,7 @@ import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
 import srvNodes from '../services/nodes'
 
-import { isUndefined } from '../util'
+import { isUndefined, log } from '../util'
 
 const nodeTypes = {
   person: PersonNode,
@@ -50,6 +49,7 @@ const connectionLineStyle = { stroke: '#ddddd' }
 const snapGrid = [20, 20]
 
 const formatEdge = (edge) => {
+  // TODO when we have tags for the edge we will add on the data.detail
   return {
     ...edge,
     style: { stroke: '#000' },
@@ -57,7 +57,7 @@ const formatEdge = (edge) => {
       type: MarkerType.ArrowClosed
     },
     type: 'c4',
-    data: { ...{ description: '', detail: '' }, ...edge.data }
+    data: { description: edge.data ? edge.data.description : '' }
   }
 }
 
@@ -117,9 +117,10 @@ export default function DiagramEditor() {
   }, [])
 
   const insertNode = async (newNode) => {
-    setNodes(nodes.concat(newNode))
-    onAddNodeModalClose()
     await srvNodes.createNode(newNode, diagramSelected.id)
+    await loadData()
+    // setNodes(nodes.concat(newNode))
+    onAddNodeModalClose()
   }
 
   const onDrop = useCallback(
@@ -138,7 +139,6 @@ export default function DiagramEditor() {
         y: event.clientY - 50
       })
       const newNode = {
-        id: uuidv4(),
         position,
         type: data.type,
         data: { variant: data.data.variant }
@@ -164,6 +164,13 @@ export default function DiagramEditor() {
     onChangeNodeModalOpen()
   }
 
+  const onRemoveNodeFromView = async (nodeId) => {
+    log(`Remove node from view ${nodeId} diagram ${diagramSelected.id}`)
+    await srvNodes.deleteNode(nodeId)
+    await loadData()
+    onChangeNodeModalClose()
+  }
+
   return (
     <>
       <AddNodeModal
@@ -184,6 +191,7 @@ export default function DiagramEditor() {
         onClose={onChangeNodeModalClose}
         node={selectedNode}
         refresh={loadData}
+        onRemoveNodeFromView={onRemoveNodeFromView}
       ></ChangeNodeModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">

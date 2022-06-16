@@ -22,7 +22,15 @@ export default class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>
+      return (
+        <div id="errorPage">
+          <div className="errorPageHeader">Arch Buddy</div>
+          <div className="errorPageContent">
+            <p>Ooppsss... Something has happend</p>
+            <p>Try to refresh the page</p>
+          </div>
+        </div>
+      )
     }
 
     return this.props.children

@@ -19,7 +19,8 @@ import { isUndefined } from '../../util'
 export default function OpenDiagramModal(props) {
   const onDiagramSelect = async (diagram) => {
     if (diagram.id === 'new') {
-      props.onSelect(await srvViewPoint.create(diagram.newDiagramName))
+      const data = await srvViewPoint.create(diagram.newDiagramName)
+      props.onSelect(data)
     } else {
       props.onSelect(diagram)
     }
