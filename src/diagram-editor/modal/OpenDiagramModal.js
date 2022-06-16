@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import srvViewPoint from '../../services/viewpoint'
 import SearchTable from '../SearchTable'
-import { isUndefined, log } from '../../util'
+import { isUndefined } from '../../util'
 
 export default function OpenDiagramModal(props) {
   const [error, setError] = useState(undefined)
@@ -31,7 +31,6 @@ export default function OpenDiagramModal(props) {
         props.onSelect(data)
         close()
       } catch (err) {
-        log(err, error)
         setError(err.message)
       }
     } else {

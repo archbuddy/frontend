@@ -19,6 +19,8 @@ import srvEntities from '../../services/entities'
 import SearchTable from '../SearchTable'
 
 export default function AddNodeModal(props) {
+  const [error, setError] = useState(undefined)
+
   const [newNode, setNewNode] = useState(props.newNode)
   const [isNewEntity, setIsNewEntity] = useState(false)
   const [newEntityName, setNewEntityName] = useState('')
@@ -85,29 +87,56 @@ export default function AddNodeModal(props) {
     }
   }
 
-  const onOk = () => {
+  const onOk = async () => {
     if (!isNewEntityNameValid || !isNewEntityDescriptionValid) {
       return
     }
+    try {
+      const obj = await srvEntities.create({
+        name: newEntityName,
+        description: newEntityDescription,
+        type: newNode.type
+      })
 
-    newNode.data.name = newEntityName
-    newNode.data.description = newEntityDescription
-    newNode.data.entity = {
-      name: newEntityName,
-      description: newEntityDescription,
-      type: newNode.type
+      newNode.data.name = newEntityName
+      newNode.data.description = newEntityDescription
+      newNode.data.entity = obj.id
+
+      setIsNewEntity(false)
+
+      props.onOk(newNode)
+    } catch (err) {
+      setError(err.message)
     }
-    setIsNewEntity(false)
-    props.onOk(newNode)
+  }
+
+  const close = () => {
+    setError(undefined)
+    props.onClose()
+  }
+
+  const renderError = () => {
+    if (error === undefined) {
+      return <></>
+    }
+    return (
+      <>
+        <Box w="100%" p={2} bg="red.100" color="black" borderRadius="md">
+          {error}
+        </Box>
+        <br />
+      </>
+    )
   }
 
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose}>
+    <Modal isOpen={props.isOpen} onClose={close}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Add Node</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          {renderError()}
           <Box hidden={isNewEntity}>
             <SearchTable
               loadData={listEntities}
@@ -148,7 +177,7 @@ export default function AddNodeModal(props) {
           <Button colorScheme="blue" mr={3} onClick={onOk}>
             Ok
           </Button>
-          <Button variant="ghost" onClick={props.onClose}>
+          <Button variant="ghost" onClick={close}>
             Cancel
           </Button>
         </ModalFooter>

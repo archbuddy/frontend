@@ -40,9 +40,30 @@ const update = async (entity) => {
   }
 }
 
+const create = async (entity) => {
+  const url = `${endpoint}/entities`
+  const body = entity
+  delete body.entity
+  log(`Create a new entity ${JSON.stringify(body)}`)
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`
+    throw new Error(message)
+  }
+  const data = await response.json()
+  return data
+}
+
 const entities = {
   list,
-  update
+  update,
+  create
 }
 
 export default entities
