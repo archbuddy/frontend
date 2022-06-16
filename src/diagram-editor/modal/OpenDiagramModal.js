@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -14,17 +14,30 @@ import {
 } from '@chakra-ui/react'
 import srvViewPoint from '../../services/viewpoint'
 import SearchTable from '../SearchTable'
-import { isUndefined } from '../../util'
+import { isUndefined, log } from '../../util'
 
 export default function OpenDiagramModal(props) {
+  const [error, setError] = useState(undefined)
+
+  const close = () => {
+    setError(undefined)
+    props.onClose()
+  }
+
   const onDiagramSelect = async (diagram) => {
     if (diagram.id === 'new') {
-      const data = await srvViewPoint.create(diagram.newDiagramName)
-      props.onSelect(data)
+      try {
+        const data = await srvViewPoint.create(diagram.newDiagramName)
+        props.onSelect(data)
+        close()
+      } catch (err) {
+        log(err, error)
+        setError(err.message)
+      }
     } else {
       props.onSelect(diagram)
+      close()
     }
-    props.onClose()
   }
 
   const listDiagram = async (filter = '', offset = 0, limit = 10) => {
@@ -46,6 +59,19 @@ export default function OpenDiagramModal(props) {
     return undefined
   }
 
+  const renderError = () => {
+    if (error === undefined) {
+      return <></>
+    }
+    return (
+      <>
+        <Box w="100%" p={2} bg="red.100" color="black" borderRadius="md">
+          {error}
+        </Box>
+        <br />
+      </>
+    )
+  }
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <ModalOverlay />
@@ -53,6 +79,7 @@ export default function OpenDiagramModal(props) {
         <ModalHeader>Open Diagram</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          {renderError()}
           <Box
             w="100%"
             p={2}
