@@ -198,8 +198,6 @@ export default function DiagramEditor() {
           <Sidebar onDiagramSelect={loadData} diagramSelected={diagramSelected}></Sidebar>
           <Box height="100%" width="100%" bgColor="gray.50">
             <ReactFlow
-              minZoom={0.05}
-              maxZoom={2}
               nodes={nodes}
               edges={edges}
               onNodesChange={onNodesChange}
@@ -217,8 +215,7 @@ export default function DiagramEditor() {
               onNodeDoubleClick={onNodeDoubleClick}
               snapToGrid={true}
               snapGrid={snapGrid}
-              defaultZoom={1.5}
-              fitView
+              fitView={true}
               attributionPosition="bottom-left"
               connectionMode="loose"
             >
