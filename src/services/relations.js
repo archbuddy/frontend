@@ -1,15 +1,13 @@
-import { log } from '../util'
-
-const endpoint = 'http://localhost:3000'
+import util from '../util'
 
 const updateRelation = async (relation) => {
-  const url = `${endpoint}/relations/${relation.id}`
-  log(`Update relation ${url}`)
+  const url = `${util.getUrl()}/relations/${relation.id}`
+  util.log(`Update relation ${url}`)
   const response = await fetch(url, {
     method: 'PATCH',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    },
+    }),
     body: JSON.stringify({
       description: relation.description,
       detail: relation.detail
@@ -17,7 +15,7 @@ const updateRelation = async (relation) => {
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
-    log(await response.json())
+    util.log(await response.json())
     throw new Error(message)
   }
 }

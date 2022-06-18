@@ -1,14 +1,13 @@
-import { buildFiqlQuery, log } from '../util'
-const endpoint = 'http://localhost:3000'
+import util from '../util'
 
 const list = async (fiql = null, offset = 0, limit = 10) => {
-  let address = `${endpoint}/entities${buildFiqlQuery(fiql, offset, limit)}`
+  let address = `${util.getUrl()}/entities${util.buildFiqlQuery(fiql, offset, limit)}`
 
   const response = await fetch(address, {
     method: 'GET',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    }
+    })
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
@@ -22,34 +21,34 @@ const list = async (fiql = null, offset = 0, limit = 10) => {
 }
 
 const update = async (entity) => {
-  const url = `${endpoint}/entities/${entity.entity}`
+  const url = `${util.getUrl()}/entities/${entity.entity}`
   const body = entity
   delete body.entity
-  log(`Update entity with id ${entity.entity} ${JSON.stringify(body)}`)
+  util.log(`Update entity with id ${entity.entity} ${JSON.stringify(body)}`)
   const response = await fetch(url, {
     method: 'PUT',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    },
+    }),
     body: JSON.stringify(body)
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
-    log(await response.json())
+    util.log(await response.json())
     throw new Error(message)
   }
 }
 
 const create = async (entity) => {
-  const url = `${endpoint}/entities`
+  const url = `${util.getUrl()}/entities`
   const body = entity
   delete body.entity
-  log(`Create a new entity ${JSON.stringify(body)}`)
+  util.log(`Create a new entity ${JSON.stringify(body)}`)
   const response = await fetch(url, {
     method: 'POST',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    },
+    }),
     body: JSON.stringify(body)
   })
   if (!response.ok) {

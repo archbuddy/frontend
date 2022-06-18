@@ -35,12 +35,26 @@ const prepareErrorToScreen = (err) => {
     return 'The backend system is down/offline'
   }
 
+  if (err.toLowerCase().indexOf('401') >= 0) {
+    return 'Missing authentication'
+  }
+
   return err
+}
+
+const getUrl = () => {
+  return process.env.BACKEND_URL ?? 'http://localhost:3000'
+}
+
+const getAuth = (headers) => {
+  return { ...headers, authorization: 'Bearer mock' }
 }
 
 module.exports = {
   log,
   isUndefined,
   buildFiqlQuery,
-  prepareErrorToScreen
+  prepareErrorToScreen,
+  getUrl,
+  getAuth
 }

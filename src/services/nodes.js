@@ -1,5 +1,4 @@
-const endpoint = 'http://localhost:3000'
-const { log } = require('../util')
+const util = require('../util')
 
 const createNode = async (node, diagramId) => {
   const body = {
@@ -9,34 +8,34 @@ const createNode = async (node, diagramId) => {
     diagram: diagramId,
     entity: node.data.entity
   }
-  log(`Creating node ${JSON.stringify(body)}`)
-  const response = await fetch(`${endpoint}/nodes`, {
+  util.log(`Creating node ${JSON.stringify(body)}`)
+  const response = await fetch(`${util.getUrl()}/nodes`, {
     method: 'POST',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    },
+    }),
     body: JSON.stringify(body)
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
-    log(await response.json())
+    util.log(await response.json())
     throw new Error(message)
   }
 }
 
 const deleteNode = async (nodeId) => {
-  const url = `${endpoint}/nodes/${nodeId}`
-  log(`Deleting node ${url}`)
+  const url = `${util.getUrl()}/nodes/${nodeId}`
+  util.log(`Deleting node ${url}`)
   const response = await fetch(url, {
     method: 'DELETE',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    }
+    })
   })
 
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
-    log(await response.json())
+    util.log(await response.json())
     throw new Error(message)
   }
 }
@@ -44,18 +43,18 @@ const deleteNode = async (nodeId) => {
 const patchNode = async (node) => {
   const body = { ...node }
   delete body.id
-  log(body)
+  util.log(body)
 
-  const response = await fetch(`${endpoint}/nodes/${node.id}`, {
+  const response = await fetch(`${util.getUrl()}/nodes/${node.id}`, {
     method: 'PATCH',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    },
+    }),
     body: JSON.stringify(body)
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
-    log(await response.json())
+    util.log(await response.json())
     throw new Error(message)
   }
 }

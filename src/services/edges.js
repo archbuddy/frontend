@@ -1,18 +1,16 @@
-import { log } from '../util'
-
-const endpoint = 'http://localhost:3000'
+import util from '../util'
 
 const edgeCanConnect = (connection) => {
-  log(`Connect nodes ${connection.source} > ${connection.target} `)
+  util.log(`Connect nodes ${connection.source} > ${connection.target} `)
   const can = connection.source !== connection.target
   if (!can) {
-    log('Opps, source and target are the same')
+    util.log('Opps, source and target are the same')
   }
   return can
 }
 
 const createEdge = async (connection, diagram) => {
-  log(`Create edge on viewpoint ${diagram} values ${JSON.stringify(connection)}`)
+  util.log(`Create edge on viewpoint ${diagram} values ${JSON.stringify(connection)}`)
   const body = {
     source: {
       handle: connection.sourceHandle,
@@ -24,29 +22,29 @@ const createEdge = async (connection, diagram) => {
     },
     diagram
   }
-  log(body)
-  const response = await fetch(`${endpoint}/edges`, {
+  util.log(body)
+  const response = await fetch(`${util.getUrl()}/edges`, {
     method: 'POST',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    },
+    }),
     body: JSON.stringify(body)
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
-    log(await response.json())
+    util.log(await response.json())
     throw new Error(message)
   }
 }
 
 const deleteEdge = async (edgeId) => {
-  const url = `${endpoint}/edges/${edgeId}`
-  log(`Deleting edge ${url}`)
+  const url = `${util.getUrl()}/edges/${edgeId}`
+  util.log(`Deleting edge ${url}`)
   const response = await fetch(url, {
     method: 'DELETE',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    }
+    })
   })
 
   if (!response.ok) {
