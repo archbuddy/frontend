@@ -31,7 +31,7 @@ export default function OpenDiagramModal(props) {
         props.onSelect(data)
         close()
       } catch (err) {
-        setError(err.message)
+        setError(prepareErrorToScreen(err.message))
       }
     } else {
       props.onSelect(diagram)
