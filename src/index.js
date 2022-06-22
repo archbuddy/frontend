@@ -8,6 +8,7 @@ import App from './App'
 import Auth from './Auth'
 import PageNotFound from './PageNotFound'
 import ErrorBoundary from './ErrorBoundary'
+import Authenticate from './Authenticate'
 
 const rootElement = document.getElementById('root')
 ReactDOM.render(
@@ -16,6 +17,7 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Auth />} />
+          <Route path="/authenticate" element={<Authenticate />} />
           <Route path="/diagram" element={<App />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
