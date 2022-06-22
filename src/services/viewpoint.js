@@ -1,15 +1,13 @@
-const endpoint = 'http://localhost:3000'
-
-import { log, buildFiqlQuery } from '../util'
+import util from '../util'
 
 const list = async (fiql = null, offset = 0, limit = 10) => {
-  let address = `${endpoint}/diagrams${buildFiqlQuery(fiql, offset, limit)}`
+  let address = `${util.getUrl()}/diagrams${util.buildFiqlQuery(fiql, offset, limit)}`
 
   const response = await fetch(address, {
     method: 'GET',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    }
+    })
   })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
@@ -26,8 +24,14 @@ const loadData = async (viewPointId) => {
   if (!viewPointId || viewPointId === 0) {
     throw new Error('invalid view point id')
   }
-  log(`Getting data for viewpoint ${viewPointId}`)
-  const response = await fetch(`${endpoint}/diagrams/${viewPointId}/reactflow`)
+  const url = `${util.getUrl()}/diagrams/${viewPointId}/reactflow`
+  util.log(`Getting data for viewpoint ${url}`)
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: util.getAuth({
+      'Content-Type': 'application/json'
+    })
+  })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
@@ -37,8 +41,14 @@ const loadData = async (viewPointId) => {
 }
 
 const get = async (viewPointId) => {
-  log(`Getting data for viewpoint ${viewPointId}`)
-  const response = await fetch(`${endpoint}/diagrams/${viewPointId}`)
+  const url = `${util.getUrl()}/diagrams/${viewPointId}`
+  util.log(`Getting data for viewpoint ${url}`)
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: util.getAuth({
+      'Content-Type': 'application/json'
+    })
+  })
   if (!response.ok) {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
@@ -50,12 +60,12 @@ const get = async (viewPointId) => {
 }
 
 const create = async (name) => {
-  log('Creating new view point')
-  const response = await fetch(`${endpoint}/diagrams`, {
+  util.log('Creating new view point')
+  const response = await fetch(`${util.getUrl()}/diagrams`, {
     method: 'POST',
-    headers: {
+    headers: util.getAuth({
       'Content-Type': 'application/json'
-    },
+    }),
     body: JSON.stringify({
       name
     })

@@ -4,7 +4,7 @@
   "description": "Web interface to show the information, create new information and change it",
   "main": "/index.js",
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "PORT=3001 PUBLIC_URL=/ react-scripts start",
     "build": "react-scripts build",
     "prepare": "husky install",
     "test": "eslint .",
@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/archbuddy/frontend/issues"
   },
-  "homepage": "https://archbuddy.github.io/documentation",
+  "homepage": "https://archbuddy.github.io/frontend",
   "dependencies": {
     "@chakra-ui/react": "^1.8.8",
     "@emotion/react": "^11.9.0",
@@ -31,6 +31,7 @@
     "react-flow-renderer": "^10.3.5",
     "react-icons": "^4.4.0",
     "react-modal": "^3.15.1",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1"
   },
   "devDependencies": {

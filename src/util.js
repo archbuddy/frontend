@@ -28,8 +28,33 @@ const buildFiqlQuery = (fiql = null, offset = 0, limit = 10) => {
   return query
 }
 
+const prepareErrorToScreen = (err) => {
+  if (!err) return 'Oopss.. this is leak, there is no error to show'
+
+  if (err.toLowerCase().indexOf('failed to fetch') >= 0) {
+    return 'The backend system is down/offline'
+  }
+
+  if (err.toLowerCase().indexOf('401') >= 0) {
+    return 'Missing authentication'
+  }
+
+  return err
+}
+
+const getUrl = () => {
+  return process.env.BACKEND_URL ?? 'http://localhost:3000'
+}
+
+const getAuth = (headers) => {
+  return { ...headers, authorization: 'Bearer mock' }
+}
+
 module.exports = {
   log,
   isUndefined,
-  buildFiqlQuery
+  buildFiqlQuery,
+  prepareErrorToScreen,
+  getUrl,
+  getAuth
 }

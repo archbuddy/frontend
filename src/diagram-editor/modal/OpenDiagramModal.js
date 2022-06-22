@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -14,29 +14,48 @@ import {
 } from '@chakra-ui/react'
 import srvViewPoint from '../../services/viewpoint'
 import SearchTable from '../SearchTable'
-import { isUndefined } from '../../util'
+import { isUndefined, prepareErrorToScreen } from '../../util'
 
 export default function OpenDiagramModal(props) {
-  const onDiagramSelect = async (diagram) => {
-    if (diagram.id === 'new') {
-      const data = await srvViewPoint.create(diagram.newDiagramName)
-      props.onSelect(data)
-    } else {
-      props.onSelect(diagram)
-    }
+  const [error, setError] = useState(undefined)
+
+  const close = () => {
+    setError(undefined)
     props.onClose()
   }
 
-  const listDiagram = async (filter = '', offset = 0, limit = 10) => {
-    if (!filter || filter === '') {
-      return await srvViewPoint.list(null, offset, limit)
+  const onDiagramSelect = async (diagram) => {
+    if (diagram.id === 'new') {
+      try {
+        const data = await srvViewPoint.create(diagram.newDiagramName)
+        props.onSelect(data)
+        close()
+      } catch (err) {
+        setError(prepareErrorToScreen(err.message))
+      }
     } else {
-      return (await srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)).concat({
-        id: 'new',
-        newDiagramName: filter,
-        name: () => <Text as="i">{filter} (New Diagram)</Text>
-      })
+      props.onSelect(diagram)
+      close()
     }
+  }
+
+  const listDiagram = async (filter = '', offset = 0, limit = 10) => {
+    let result = []
+    try {
+      if (!filter || filter === '') {
+        result = await srvViewPoint.list(null, offset, limit)
+      } else {
+        result = (await srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)).concat({
+          id: 'new',
+          newDiagramName: filter,
+          name: () => <Text as="i">{filter} (New Diagram)</Text>
+        })
+      }
+      setError(undefined)
+    } catch (err) {
+      setError(prepareErrorToScreen(err.message))
+    }
+    return result
   }
   const currentView = () => {
     const value = props.diagramSelected
@@ -46,6 +65,19 @@ export default function OpenDiagramModal(props) {
     return undefined
   }
 
+  const renderError = () => {
+    if (error === undefined) {
+      return <></>
+    }
+    return (
+      <>
+        <Box w="100%" p={2} bg="red.100" color="black" borderRadius="md">
+          {error}
+        </Box>
+        <br />
+      </>
+    )
+  }
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose}>
       <ModalOverlay />
@@ -53,6 +85,7 @@ export default function OpenDiagramModal(props) {
         <ModalHeader>Open Diagram</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          {renderError()}
           <Box
             w="100%"
             p={2}

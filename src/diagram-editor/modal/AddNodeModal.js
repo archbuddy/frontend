@@ -17,8 +17,11 @@ import {
 } from '@chakra-ui/react'
 import srvEntities from '../../services/entities'
 import SearchTable from '../SearchTable'
+import { prepareErrorToScreen } from '../../util'
 
 export default function AddNodeModal(props) {
+  const [error, setError] = useState(undefined)
+
   const [newNode, setNewNode] = useState(props.newNode)
   const [isNewEntity, setIsNewEntity] = useState(false)
   const [newEntityName, setNewEntityName] = useState('')
@@ -50,22 +53,27 @@ export default function AddNodeModal(props) {
   }
 
   const listEntities = async (filter = '', offset = 0, limit = 10) => {
-    const filterWithType =
-      !filter || filter === ''
-        ? `type==${newNode.type}`
-        : `type==${newNode.type};name=re=('.*${filter}.*','i')`
+    try {
+      const filterWithType =
+        !filter || filter === ''
+          ? `type==${newNode.type}`
+          : `type==${newNode.type};name=re=('.*${filter}.*','i')`
 
-    const result = await srvEntities.list(filterWithType, offset, limit)
+      const result = await srvEntities.list(filterWithType, offset, limit)
 
-    if (filter && filter !== '') {
-      result.push({
-        id: 'new',
-        newEntityName: filter,
-        name: () => <Text as="i">{filter} (New Entity)</Text>
-      })
+      if (filter && filter !== '') {
+        result.push({
+          id: 'new',
+          newEntityName: filter,
+          name: () => <Text as="i">{filter} (New Entity)</Text>
+        })
+      }
+      setError(undefined)
+      return result
+    } catch (err) {
+      setError(prepareErrorToScreen(err.message))
     }
-
-    return result
+    return []
   }
 
   const onEntitySelect = (entity) => {
@@ -85,29 +93,56 @@ export default function AddNodeModal(props) {
     }
   }
 
-  const onOk = () => {
+  const onOk = async () => {
     if (!isNewEntityNameValid || !isNewEntityDescriptionValid) {
       return
     }
+    try {
+      const obj = await srvEntities.create({
+        name: newEntityName,
+        description: newEntityDescription,
+        type: newNode.type
+      })
 
-    newNode.data.name = newEntityName
-    newNode.data.description = newEntityDescription
-    newNode.data.entity = {
-      name: newEntityName,
-      description: newEntityDescription,
-      type: newNode.type
+      newNode.data.name = newEntityName
+      newNode.data.description = newEntityDescription
+      newNode.data.entity = obj.id
+
+      setIsNewEntity(false)
+
+      props.onOk(newNode)
+    } catch (err) {
+      setError(prepareErrorToScreen(err.message))
     }
-    setIsNewEntity(false)
-    props.onOk(newNode)
+  }
+
+  const close = () => {
+    setError(undefined)
+    props.onClose()
+  }
+
+  const renderError = () => {
+    if (error === undefined) {
+      return <></>
+    }
+    return (
+      <>
+        <Box w="100%" p={2} bg="red.100" color="black" borderRadius="md">
+          {error}
+        </Box>
+        <br />
+      </>
+    )
   }
 
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose}>
+    <Modal isOpen={props.isOpen} onClose={close}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Add Node</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          {renderError()}
           <Box hidden={isNewEntity}>
             <SearchTable
               loadData={listEntities}
@@ -148,7 +183,7 @@ export default function AddNodeModal(props) {
           <Button colorScheme="blue" mr={3} onClick={onOk}>
             Ok
           </Button>
-          <Button variant="ghost" onClick={props.onClose}>
+          <Button variant="ghost" onClick={close}>
             Cancel
           </Button>
         </ModalFooter>
