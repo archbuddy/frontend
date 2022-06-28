@@ -14,6 +14,7 @@ function Auth() {
   let navigate = useNavigate()
 
   const onClick = () => {
+    localStorage.setItem('jwt', 'fake token')
     navigate('/diagram')
   }
 
