@@ -2,21 +2,28 @@
 
 import React, { useEffect } from 'react'
 import { ChakraProvider, Flex, Spacer, Text, Spinner, Box } from '@chakra-ui/react'
+import { useLocation, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+
 import Header from './Header'
 import Footer from './Footer'
-import { useLocation } from 'react-router-dom'
 import Authentication from './services/auth'
 
 function PageNotFound() {
+  let navigate = useNavigate()
+
   let location = useLocation()
+  // eslint-disable-next-line no-unused-vars
+  let [search, setSearch] = useSearchParams()
 
   useEffect(() => {
-    process(location.hash)
-  }, [location])
+    process(search.get('type'), location.hash)
+  }, [search, location])
 
-  const process = async (params) => {
-    const data = await Authentication.authenticate('google', params)
-    console.log(data)
+  const process = async (type, params) => {
+    const data = await Authentication.authenticate(type, params)
+    localStorage.setItem('jwt', data.token)
+    navigate('/diagram')
   }
 
   return (

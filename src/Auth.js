@@ -7,6 +7,9 @@ import Footer from './Footer'
 
 import { useNavigate } from 'react-router-dom'
 
+import auth from './services/auth'
+import { log } from './util'
+
 function Auth() {
   let navigate = useNavigate()
 
@@ -17,20 +20,20 @@ function Auth() {
   /*
    * Create form to request access token from Google's OAuth 2.0 server.
    */
-  function oauthSignIn() {
-    // Google's OAuth 2.0 endpoint for requesting an access token
-    var oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth'
-
+  async function oauthSignIn() {
+    // TODO change later to understand what others options we have
+    const data = (await auth.providers())[0]
+    log(data)
     // Create <form> element to submit parameters to OAuth 2.0 endpoint.
     var form = document.createElement('form')
     form.setAttribute('method', 'GET') // Send as a GET request.
-    form.setAttribute('action', oauth2Endpoint)
+    form.setAttribute('action', data.config.endpoint)
 
     // Parameters to pass to OAuth 2.0 endpoint.
     // https://developers.google.com/people/v1/how-tos/authorizing#email
     var params = {
-      client_id: '407853460821-co2oqe6ph6k0pcc4h4nae31cb1vvi5bb.apps.googleusercontent.com',
-      redirect_uri: 'http://localhost:3001/authenticate',
+      client_id: data.config.id,
+      redirect_uri: data.config.redirectUrl,
       response_type: 'token',
       scope: 'openid email profile',
       include_granted_scopes: 'true',
