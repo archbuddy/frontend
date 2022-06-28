@@ -4,7 +4,7 @@ import React, { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
-import App from './App'
+import Diagram from './Diagram'
 import Auth from './Auth'
 import PageNotFound from './PageNotFound'
 import ErrorBoundary from './ErrorBoundary'
@@ -30,7 +30,10 @@ ReactDOM.render(
           />
           <Route path="/auth" element={<Auth />} />
           <Route path="/auth/callback" element={<Authenticate />} />
-          <Route path="/diagram" element={isAuthenticated() ? <App /> : <Navigate to="/auth" />} />
+          <Route
+            path="/diagram"
+            element={isAuthenticated() ? <Diagram /> : <Navigate to="/auth" />}
+          />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
