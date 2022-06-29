@@ -50,22 +50,11 @@ const getAuth = (headers) => {
   return { ...headers, authorization: `Bearer ${localStorage.getItem('jwt')}` }
 }
 
-const isAuthenticated = (path) => {
-  const jwt = localStorage.getItem('jwt')
-  log(`isAuthenticated ${jwt ? 'ok' : 'nok'} - ${path}`)
-  // TODO validate token
-  if (jwt) {
-    return true
-  }
-  return false
-}
-
 module.exports = {
   log,
   isUndefined,
   buildFiqlQuery,
   prepareErrorToScreen,
   getUrl,
-  getAuth,
-  isAuthenticated
+  getAuth
 }
