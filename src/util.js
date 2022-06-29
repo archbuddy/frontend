@@ -1,4 +1,5 @@
 const log = (param) => {
+  // eslint-disable-next-line no-console
   console.log(param)
 }
 
