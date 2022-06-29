@@ -8,7 +8,7 @@ import Diagram from './Diagram'
 import Auth from './Auth'
 import PageNotFound from './PageNotFound'
 import ErrorBoundary from './ErrorBoundary'
-import Authenticate from './Authenticate'
+import AuthCallback from './AuthCallback'
 import { isAuthenticated } from './util'
 
 const rootElement = document.getElementById('root')
@@ -23,7 +23,7 @@ ReactDOM.render(
             element={isAuthenticated() ? <Navigate to="/diagram" /> : <Navigate to="/auth" />}
           />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/auth/callback" element={<Authenticate />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route
             path="/diagram"
             element={isAuthenticated() ? <Diagram /> : <Navigate to="/auth" />}
