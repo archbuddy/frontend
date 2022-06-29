@@ -9,19 +9,9 @@ import Auth from './Auth'
 import PageNotFound from './PageNotFound'
 import ErrorBoundary from './ErrorBoundary'
 import Authenticate from './Authenticate'
-import { log } from './util'
+import { isAuthenticated } from './util'
 
 const rootElement = document.getElementById('root')
-
-const isAuthenticated = () => {
-  const jwt = localStorage.getItem('jwt')
-  log(`isAuthenticated ${jwt} - ${window.location}`)
-  // TODO validate token
-  if (jwt) {
-    return true
-  }
-  return false
-}
 
 ReactDOM.render(
   <StrictMode>

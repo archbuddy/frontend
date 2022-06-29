@@ -47,7 +47,17 @@ const getUrl = () => {
 }
 
 const getAuth = (headers) => {
-  return { ...headers, authorization: 'Bearer mock' }
+  return { ...headers, authorization: `Bearer ${localStorage.getItem('jwt')}` }
+}
+
+const isAuthenticated = () => {
+  const jwt = localStorage.getItem('jwt')
+  log(`isAuthenticated ${jwt} - ${window.location}`)
+  // TODO validate token
+  if (jwt) {
+    return true
+  }
+  return false
 }
 
 module.exports = {
@@ -56,5 +66,6 @@ module.exports = {
   buildFiqlQuery,
   prepareErrorToScreen,
   getUrl,
-  getAuth
+  getAuth,
+  isAuthenticated
 }
