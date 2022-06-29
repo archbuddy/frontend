@@ -50,9 +50,9 @@ const getAuth = (headers) => {
   return { ...headers, authorization: `Bearer ${localStorage.getItem('jwt')}` }
 }
 
-const isAuthenticated = () => {
+const isAuthenticated = (path) => {
   const jwt = localStorage.getItem('jwt')
-  log(`isAuthenticated ${jwt} - ${window.location}`)
+  log(`isAuthenticated ${jwt ? 'ok' : 'nok'} - ${path}`)
   // TODO validate token
   if (jwt) {
     return true
