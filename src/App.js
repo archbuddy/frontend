@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import useAuth from './AuthContext'
 
 import Diagram from './pages/Diagram'
@@ -10,8 +10,13 @@ import ErrorBoundary from './ErrorBoundary'
 
 function RequireAuth({ children }) {
   const { authed } = useAuth()
+  const location = useLocation()
 
-  return authed === true ? children : <Navigate to="/auth" replace />
+  return authed === true ? (
+    children
+  ) : (
+    <Navigate to="/auth" replace state={{ path: location.pathname }} />
+  )
 }
 
 function App() {

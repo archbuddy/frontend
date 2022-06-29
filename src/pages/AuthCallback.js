@@ -24,11 +24,11 @@ function AuthCallback() {
       log('setting jwt token' + data.token)
       log('ready to navigate authenticated, redirect')
       login(data.token).then(() => {
-        navigate('/diagram')
+        navigate(location?.path || '/diagram')
       })
     }
     load()
-  }, [location.hash, login, navigate, search])
+  }, [location, login, navigate, search])
 
   return (
     <ChakraProvider>
