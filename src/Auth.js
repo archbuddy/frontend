@@ -1,29 +1,32 @@
 // check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
 
-import React from 'react'
-import { ChakraProvider, Flex, Spacer, Button, Box, Text } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import { ChakraProvider, Flex, Spacer, Button, Box, Text, Spinner } from '@chakra-ui/react'
 import Header from './Header'
 import Footer from './Footer'
-
-import { useNavigate } from 'react-router-dom'
 
 import auth from './services/auth'
 import { log } from './util'
 
 function Auth() {
-  let navigate = useNavigate()
+  const [loaded, setLoaded] = useState(false)
+  const [providers, setProviders] = useState([])
 
-  const onClick = () => {
-    localStorage.setItem('jwt', 'fake token')
-    navigate('/diagram')
-  }
+  useEffect(() => {
+    async function load() {
+      const data = await auth.providers()
+      setProviders(data)
+      setLoaded(true)
+    }
+    load()
+  }, [])
 
   /*
    * Create form to request access token from Google's OAuth 2.0 server.
    */
-  async function oauthSignIn() {
-    // TODO change later to understand what others options we have
-    const data = (await auth.providers())[0]
+  async function googleOauthSignIn() {
+    const index = providers.findIndex((element) => element.providerId === 'google')
+    const data = providers[index]
     log(data)
     // Create <form> element to submit parameters to OAuth 2.0 endpoint.
     var form = document.createElement('form')
@@ -55,6 +58,21 @@ function Auth() {
     form.submit()
   }
 
+  function getGoogle() {
+    if (!loaded) {
+      return <></>
+    }
+    const index = providers.findIndex((element) => element.providerId === 'google')
+    if (index === -1) {
+      return <></>
+    }
+    return (
+      <Button colorScheme="blue" mr={1} onClick={googleOauthSignIn}>
+        Login With Google
+      </Button>
+    )
+  }
+
   return (
     <ChakraProvider>
       <Flex direction="column" h="100%">
@@ -79,12 +97,8 @@ function Auth() {
               }}
             >
               <Text>Authentication page</Text>
-              <Button colorScheme="blue" mr={1} onClick={oauthSignIn}>
-                Login With Google
-              </Button>
-              <Button colorScheme="red" mr={1} onClick={onClick}>
-                By pass Login
-              </Button>
+              {getGoogle()}
+              {!loaded ? <Spinner color="blue.500" /> : <></>}
             </Box>
           </Box>
         </Spacer>
