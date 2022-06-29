@@ -4,11 +4,12 @@ import React, { useEffect } from 'react'
 import { ChakraProvider, Flex, Spacer, Text, Spinner, Box } from '@chakra-ui/react'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import Header from './Header'
-import Footer from './Footer'
-import srvAuth from './services/auth'
-import { log } from './util'
-import useAuth from './AuthContext'
+
+import Header from './common/Header'
+import Footer from './common/Footer'
+import srvAuth from '../services/auth'
+import { log } from '../util'
+import useAuth from '../AuthContext'
 
 function AuthCallback() {
   let location = useLocation()

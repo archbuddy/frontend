@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import useAuth from './AuthContext'
 
-import Diagram from './Diagram'
-import Home from './Home'
-import Auth from './Auth'
-import AuthCallback from './AuthCallback'
-import PageNotFound from './PageNotFound'
+import Diagram from './pages/Diagram'
+import Home from './pages/Home'
+import Auth from './pages/Auth'
+import AuthCallback from './pages/AuthCallback'
+import PageNotFound from './pages/PageNotFound'
 import ErrorBoundary from './ErrorBoundary'
 
 function RequireAuth({ children }) {

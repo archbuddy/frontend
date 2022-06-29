@@ -2,10 +2,12 @@
 
 import React from 'react'
 import { ChakraProvider, Flex, Spacer } from '@chakra-ui/react'
-import Header from './Header'
-import Footer from './Footer'
-import DiagramEditor from './diagram-editor'
-function Flow() {
+
+import Header from './common/Header'
+import Footer from './common/Footer'
+import DiagramEditor from '../diagram-editor'
+
+function Diagram() {
   // connectionMode loose define that handles can connect with each other
   return (
     <ChakraProvider>
@@ -20,4 +22,4 @@ function Flow() {
   )
 }
 
-export default Flow
+export default Diagram

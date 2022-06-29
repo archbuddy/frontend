@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import { ChakraProvider, Flex, Spacer, Button, Box, Text, Spinner } from '@chakra-ui/react'
-import Header from './Header'
-import Footer from './Footer'
+import Header from './common/Header'
+import Footer from './common/Footer'
 
-import auth from './services/auth'
-import { log } from './util'
+import auth from '../services/auth'
+import { log } from '../util'
 
 function Auth() {
   const [loaded, setLoaded] = useState(false)
