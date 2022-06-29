@@ -39,9 +39,8 @@ const update = async (entity) => {
   }
 }
 
-const create = async (entity) => {
+const create = async (body) => {
   const url = `${util.getUrl()}/entities`
-  const body = entity
   delete body.entity
   util.log(`Create a new entity ${JSON.stringify(body)}`)
   const response = await fetch(url, {

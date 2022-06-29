@@ -1,26 +1,20 @@
 import './styles.css'
 
-import React, { StrictMode } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './AuthContext'
 import App from './App'
-import Auth from './Auth'
-import PageNotFound from './PageNotFound'
-import ErrorBoundary from './ErrorBoundary'
 
 const rootElement = document.getElementById('root')
+
 ReactDOM.render(
-  <StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Auth />} />
-          <Route path="/diagram" element={<App />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </ErrorBoundary>
-  </StrictMode>,
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
   rootElement
 )

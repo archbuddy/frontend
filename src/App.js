@@ -1,23 +1,43 @@
-// check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import useAuth from './AuthContext'
 
-import React from 'react'
-import { ChakraProvider, Flex, Spacer } from '@chakra-ui/react'
-import Header from './Header'
-import Footer from './Footer'
-import DiagramEditor from './diagram-editor'
-function Flow() {
-  // connectionMode loose define that handles can connect with each other
-  return (
-    <ChakraProvider>
-      <Flex direction="column" h="100%">
-        <Header />
-        <Spacer>
-          <DiagramEditor />
-        </Spacer>
-        <Footer />
-      </Flex>
-    </ChakraProvider>
+import Diagram from './pages/Diagram'
+import Home from './pages/Home'
+import Auth from './pages/Auth'
+import AuthCallback from './pages/AuthCallback'
+import PageNotFound from './pages/PageNotFound'
+import ErrorBoundary from './ErrorBoundary'
+
+function RequireAuth({ children }) {
+  const { authed } = useAuth()
+  const location = useLocation()
+
+  return authed === true ? (
+    children
+  ) : (
+    <Navigate to="/auth" replace state={{ path: location.pathname }} />
   )
 }
 
-export default Flow
+function App() {
+  return (
+    <ErrorBoundary>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/diagram"
+          element={
+            <RequireAuth>
+              <Diagram />
+            </RequireAuth>
+          }
+        />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </ErrorBoundary>
+  )
+}
+
+export default App

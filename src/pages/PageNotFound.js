@@ -1,9 +1,9 @@
 // check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
-
 import React from 'react'
 import { ChakraProvider, Flex, Spacer, Text } from '@chakra-ui/react'
-import Header from './Header'
-import Footer from './Footer'
+
+import Header from './common/Header'
+import Footer from './common/Footer'
 
 function PageNotFound() {
   return (

@@ -1,4 +1,5 @@
 const log = (param) => {
+  // eslint-disable-next-line no-console
   console.log(param)
 }
 
@@ -47,7 +48,7 @@ const getUrl = () => {
 }
 
 const getAuth = (headers) => {
-  return { ...headers, authorization: 'Bearer mock' }
+  return { ...headers, authorization: `Bearer ${localStorage.getItem('jwt')}` }
 }
 
 module.exports = {
