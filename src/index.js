@@ -9,11 +9,15 @@ import Auth from './Auth'
 import PageNotFound from './PageNotFound'
 import ErrorBoundary from './ErrorBoundary'
 import Authenticate from './Authenticate'
+import { log } from './util'
 
 const rootElement = document.getElementById('root')
+
 const isAuthenticated = () => {
+  const jwt = localStorage.getItem('jwt')
+  log(`isAuthenticated ${jwt} - ${window.location}`)
   // TODO validate token
-  if (localStorage.getItem('jwt')) {
+  if (jwt) {
     return true
   }
   return false
