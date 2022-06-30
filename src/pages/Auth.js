@@ -68,7 +68,7 @@ function Auth() {
     }
     return (
       <Button colorScheme="blue" mr={1} onClick={googleOauthSignIn}>
-        Login With Google
+        Login with Google
       </Button>
     )
   }
@@ -77,29 +77,32 @@ function Auth() {
     <ChakraProvider>
       <Flex direction="column" h="100%">
         <Header />
-        <Spacer>
+        <Spacer
+          style={{
+            paddingBottom: '10px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '25px',
+            justifyContent: 'center'
+          }}
+        >
           <Box
             style={{
-              paddingBottom: '10px',
+              backgroundColor: '#fcfcfc',
+              width: '75%',
+              border: '0px',
+              borderRadius: '10px',
+              padding: '15px',
+              height: '80%',
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
-              padding: '25px'
+              justifyContent: 'space-evenly'
             }}
           >
-            <Box
-              style={{
-                backgroundColor: '#fcfcfc',
-                width: '50%',
-                border: '0px',
-                borderRadius: '10px',
-                padding: '15px'
-              }}
-            >
-              <Text>Authentication page</Text>
-              {getGoogle()}
-              {!loaded ? <Spinner color="blue.500" /> : <></>}
-            </Box>
+            <Text>Use one of the options bellow to authenticate</Text>
+            {getGoogle()}
+            {!loaded ? <Spinner color="blue.500" /> : <></>}
           </Box>
         </Spacer>
         <Footer />
