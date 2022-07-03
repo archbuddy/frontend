@@ -1,11 +1,23 @@
 import * as React from 'react'
+import jwt_decode from 'jwt-decode'
 
 const authContext = React.createContext()
 
 function useAuth() {
   const isAuthenticated = () => {
     const jwt = localStorage.getItem('jwt')
-    return jwt && jwt.length > 0
+    if (!jwt) {
+      return false
+    }
+
+    const decode = jwt_decode(jwt)
+
+    if (decode.exp < Date.now() / 1000) {
+      localStorage.clear()
+      return false
+    }
+
+    return true
   }
   const [authed, setAuthed] = React.useState(isAuthenticated())
 
@@ -20,7 +32,7 @@ function useAuth() {
     },
     logout() {
       return new Promise((res) => {
-        localStorage.removeItem('jwt')
+        localStorage.clear()
         setAuthed(false)
         res()
       })
