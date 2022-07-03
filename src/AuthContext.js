@@ -32,7 +32,7 @@ function useAuth() {
     },
     logout() {
       return new Promise((res) => {
-        localStorage.removeItem('jwt')
+        localStorage.clear()
         setAuthed(false)
         res()
       })
