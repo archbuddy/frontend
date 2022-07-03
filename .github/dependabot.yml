@@ -11,3 +11,5 @@ updates:
         versions: ['18.x']
       - dependency-name: 'react-dom'
         versions: ['18.x']
+      - dependency-name: '@chakra-ui/react'
+        versions: ['2.x']
