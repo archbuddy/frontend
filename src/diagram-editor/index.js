@@ -1,5 +1,5 @@
-import { Box, Flex, useDisclosure } from '@chakra-ui/react'
-import React, { useCallback, useRef, useState } from 'react'
+import { Box, Flex, useDisclosure, useToast } from '@chakra-ui/react'
+import React, { useCallback, useRef, useState, useEffect } from 'react'
 import ReactFlow, {
   ReactFlowProvider,
   useNodesState,
@@ -9,6 +9,7 @@ import ReactFlow, {
   Controls,
   MarkerType
 } from 'react-flow-renderer'
+import { useSearchParams } from 'react-router-dom'
 
 import Sidebar from './Sidebar'
 import PersonNode from './nodes/PersonNode'
@@ -29,7 +30,7 @@ import srvViewPoint from '../services/viewpoint'
 import srvEdges from '../services/edges'
 import srvNodes from '../services/nodes'
 
-import { isUndefined, log } from '../util'
+import { isUndefined, log, prepareErrorToScreen } from '../util'
 
 const nodeTypes = {
   person: PersonNode,
@@ -62,6 +63,9 @@ const formatEdge = (edge) => {
 }
 
 export default function DiagramEditor() {
+  const toast = useToast()
+  // eslint-disable-next-line no-unused-vars
+  let [queryString, setQueryString] = useSearchParams()
   const {
     isOpen: isAddNodeModalOpen,
     onOpen: onAddNodeModalOpen,
@@ -87,18 +91,41 @@ export default function DiagramEditor() {
   const [selectedEdge, setSelectedEdge] = useState(null)
   const [selectedNode, setSelectedNode] = useState(null)
 
-  const loadData = async (viewPoint) => {
-    let id
-    if (!isUndefined(viewPoint) && viewPoint.id) {
-      id = viewPoint.id
-    } else {
-      id = diagramSelected.id
+  useEffect(() => {
+    async function load() {
+      const id = queryString.get('id')
+      if (id && id.length > 0) {
+        await loadData({ id })
+      }
     }
-    const result = await srvViewPoint.loadData(id)
-    setNodes(result.nodes)
-    setEdges(result.edges.map((e) => formatEdge(e)))
-    if (!isUndefined(viewPoint)) {
-      setDiagramSelected(viewPoint)
+    load()
+  }, [queryString])
+
+  const loadData = async (viewPoint) => {
+    try {
+      let id
+      if (!isUndefined(viewPoint) && viewPoint.id) {
+        id = viewPoint.id
+      } else {
+        id = diagramSelected.id
+      }
+      const result = await srvViewPoint.loadData(id)
+      setNodes(result.nodes)
+      setEdges(result.edges.map((e) => formatEdge(e)))
+      if (!isUndefined(viewPoint)) {
+        setDiagramSelected(viewPoint)
+        setQueryString({
+          id: viewPoint.id
+        })
+      }
+    } catch (err) {
+      toast({
+        title: 'Error loading diagram',
+        description: prepareErrorToScreen(err.message),
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      })
     }
   }
 

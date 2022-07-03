@@ -3,7 +3,11 @@ import * as React from 'react'
 const authContext = React.createContext()
 
 function useAuth() {
-  const [authed, setAuthed] = React.useState(false)
+  const isAuthenticated = () => {
+    const jwt = localStorage.getItem('jwt')
+    return jwt && jwt.length > 0
+  }
+  const [authed, setAuthed] = React.useState(isAuthenticated())
 
   return {
     authed,
