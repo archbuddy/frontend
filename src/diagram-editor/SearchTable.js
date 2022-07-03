@@ -76,7 +76,7 @@ export default function SearchTable(props) {
 
     list.forEach((i) => {
       lines.push(
-        <Tr key={`item-${count}`} className={count == selectedIndex ? 'selected' : ''}>
+        <Tr key={`item-${count}`} className={count === selectedIndex ? 'selected' : ''}>
           {columns.map((c) => (
             <Td
               key={`${c.prop}-${i._id}-${getRandomInt()}`}
@@ -107,6 +107,10 @@ export default function SearchTable(props) {
         if (props.onSelect) {
           props.onSelect(list[selectedIndex])
         }
+      // eslint-disable-next-line no-fallthrough
+      default: {
+        break
+      }
     }
   }
 
