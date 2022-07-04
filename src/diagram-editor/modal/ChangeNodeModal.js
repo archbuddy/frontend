@@ -37,7 +37,6 @@ export default function ChangeNodeModal(props) {
     return true
   }
   const onSave = async () => {
-    // TODO implement
     const newNode = props.node
     newNode.data.name = name
     newNode.data.description = description

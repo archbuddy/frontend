@@ -15,7 +15,9 @@ const authenticate = async (type, params) => {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
   }
-  return await response.json()
+
+  // An async function always wraps the return value in a Promise. Using return await is therefore redundant.
+  return response.json()
 }
 
 const providers = async () => {
@@ -32,7 +34,9 @@ const providers = async () => {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
   }
-  return await response.json()
+
+  // An async function always wraps the return value in a Promise. Using return await is therefore redundant.
+  return response.json()
 }
 const auth = {
   authenticate,

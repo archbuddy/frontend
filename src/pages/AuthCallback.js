@@ -2,8 +2,7 @@
 
 import React, { useEffect } from 'react'
 import { ChakraProvider, Flex, Spacer, Text, Spinner, Box } from '@chakra-ui/react'
-import { useLocation, useSearchParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom'
 
 import Header from './common/Header'
 import Footer from './common/Footer'
