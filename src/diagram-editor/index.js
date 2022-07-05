@@ -180,7 +180,7 @@ export default function DiagramEditor() {
     await srvNodes.patchNode({ id: node.id, x: node.position.x, y: node.position.y })
   }
 
-  const onEdgesClick = (event, param) => {
+  const onEdgesClick = (_event, param) => {
     const index = edges.findIndex((item) => item.id === param.id)
     setSelectedEdge(edges[index])
     onEdgeSelectionOpen()

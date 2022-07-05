@@ -54,8 +54,9 @@ const create = async (body) => {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
   }
-  const data = await response.json()
-  return data
+
+  // An async function always wraps the return value in a Promise. Using return await is therefore redundant.
+  return response.json()
 }
 
 const entities = {

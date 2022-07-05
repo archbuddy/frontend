@@ -29,13 +29,13 @@ function Auth() {
     const data = providers[index]
     log(data)
     // Create <form> element to submit parameters to OAuth 2.0 endpoint.
-    var form = document.createElement('form')
+    let form = document.createElement('form')
     form.setAttribute('method', 'GET') // Send as a GET request.
     form.setAttribute('action', data.config.endpoint)
 
     // Parameters to pass to OAuth 2.0 endpoint.
     // https://developers.google.com/people/v1/how-tos/authorizing#email
-    var params = {
+    let params = {
       client_id: data.config.id,
       redirect_uri: data.config.redirectUrl,
       response_type: 'token',
@@ -46,7 +46,7 @@ function Auth() {
 
     // Add form parameters as hidden input values.
     for (var p in params) {
-      var input = document.createElement('input')
+      let input = document.createElement('input')
       input.setAttribute('type', 'hidden')
       input.setAttribute('name', p)
       input.setAttribute('value', params[p])
