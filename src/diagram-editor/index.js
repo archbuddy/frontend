@@ -95,7 +95,8 @@ export default function DiagramEditor() {
     async function load() {
       const id = queryString.get('id')
       if (id && id.length > 0) {
-        await loadData({ id })
+        const viewPoint = await srvViewPoint.get(id)
+        await loadData(viewPoint)
       }
     }
     load()
@@ -222,7 +223,7 @@ export default function DiagramEditor() {
       ></ChangeNodeModal>
       <ReactFlowProvider>
         <Flex ref={reactFlowWrapper} height="100%">
-          <Sidebar onDiagramSelect={loadData} diagramSelected={diagramSelected}></Sidebar>
+          <Sidebar onDiagramSelect={loadData} diagramSelected={diagramSelected} />
           <Box height="100%" width="100%" bgColor="gray.50">
             <ReactFlow
               nodes={nodes}

@@ -36,7 +36,7 @@ function Home() {
           >
             <Text>
               Welcome to Arch Buddy, this is a open source software and you can check the
-              documentation in the following link
+              documentation in the following link:&nbsp;
               <a href="https://archbuddy.github.io/documentation/" target="_blank" rel="noreferrer">
                 https://archbuddy.github.io/documentation/
               </a>

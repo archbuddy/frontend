@@ -55,7 +55,7 @@ export default function OpenDiagramModal(props) {
     } catch (err) {
       setError(prepareErrorToScreen(err.message))
     }
-    return result
+    return result.data
   }
   const currentView = () => {
     const value = props.diagramSelected

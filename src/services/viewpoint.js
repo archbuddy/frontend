@@ -13,11 +13,7 @@ const list = async (fiql = null, offset = 0, limit = 10) => {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
   }
-  const data = await response.json()
-  for (const item of data.data) {
-    item.id = item._id
-  }
-  return data.data
+  return response.json()
 }
 
 const loadData = async (viewPointId) => {
@@ -33,11 +29,10 @@ const loadData = async (viewPointId) => {
     })
   })
   if (!response.ok) {
-    const message = `An error has occured: ${response.status}`
+    const message = `An error has occurred: ${response.status}`
     throw new Error(message)
   }
-  const data = await response.json()
-  return data
+  return await response.json()
 }
 
 const get = async (viewPointId) => {
@@ -50,13 +45,10 @@ const get = async (viewPointId) => {
     })
   })
   if (!response.ok) {
-    const message = `An error has occured: ${response.status}`
+    const message = `An error has occurred: ${response.status}`
     throw new Error(message)
   }
-  const data = await response.json()
-  // TODO check how to fix this and similar situations on the backend
-  data.id = data._id
-  return data
+  return await response.json()
 }
 
 const create = async (name) => {
@@ -72,12 +64,11 @@ const create = async (name) => {
   })
 
   if (!response.ok) {
-    const message = `An error has occured: ${response.status}`
+    const message = `An error has occurred: ${response.status}`
     throw new Error(message)
   }
 
-  const data = await response.json()
-  return data
+  return await response.json()
 }
 
 const nodes = {

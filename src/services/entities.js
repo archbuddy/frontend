@@ -13,11 +13,7 @@ const list = async (fiql = null, offset = 0, limit = 10) => {
     const message = `An error has occured: ${response.status}`
     throw new Error(message)
   }
-  const data = await response.json()
-  for (const item of data.data) {
-    item.id = item._id
-  }
-  return data.data
+  return response.json()
 }
 
 const update = async (entity) => {

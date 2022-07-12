@@ -79,7 +79,7 @@ export default function SearchTable(props) {
         <Tr key={`item-${count}`} className={count === selectedIndex ? 'selected' : ''}>
           {columns.map((c) => (
             <Td
-              key={`${c.prop}-${i._id}-${getRandomInt()}`}
+              key={`${c.prop}-${i.id}-${getRandomInt()}`}
               onClick={() => props.onSelect && props.onSelect(i)}
             >
               {getValue(i[c.prop])}
