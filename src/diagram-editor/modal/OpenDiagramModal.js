@@ -45,17 +45,19 @@ export default function OpenDiagramModal(props) {
       if (!filter || filter === '') {
         result = await srvViewPoint.list(null, offset, limit)
       } else {
-        result = (await srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)).concat({
+        result = await srvViewPoint.list(`name=re=('.*${filter}.*','i')`, offset, limit)
+        result.data.push({
           id: 'new',
           newDiagramName: filter,
           name: () => <Text as="i">{filter} (New Diagram)</Text>
         })
       }
       setError(undefined)
+      return result.data
     } catch (err) {
       setError(prepareErrorToScreen(err.message))
+      return []
     }
-    return result.data
   }
   const currentView = () => {
     const value = props.diagramSelected

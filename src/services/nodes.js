@@ -6,7 +6,7 @@ const createNode = async (node, diagramId) => {
     y: node.position.y,
     variant: node.data.variant,
     diagram: diagramId,
-    entity: node.data.entity
+    entity: node.data.entity.id
   }
   util.log(`Creating node ${JSON.stringify(body)}`)
   const response = await fetch(`${util.getUrl()}/nodes`, {
@@ -43,9 +43,10 @@ const deleteNode = async (nodeId) => {
 const patchNode = async (node) => {
   const body = { ...node }
   delete body.id
+  const url = `${util.getUrl()}/nodes/${node.id}`
   util.log(body)
-
-  const response = await fetch(`${util.getUrl()}/nodes/${node.id}`, {
+  util.log(`PATCH ${url}`)
+  const response = await fetch(url, {
     method: 'PATCH',
     headers: util.getAuth({
       'Content-Type': 'application/json'

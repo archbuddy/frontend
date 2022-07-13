@@ -59,8 +59,8 @@ export default function AddNodeModal(props) {
           ? `type==${newNode.type}`
           : `type==${newNode.type};name=re=('.*${filter}.*','i')`
 
-      const result = await srvEntities.list(filterWithType, offset, limit)
-
+      const response = await srvEntities.list(filterWithType, offset, limit)
+      const result = response.data
       if (filter && filter !== '') {
         result.push({
           id: 'new',
