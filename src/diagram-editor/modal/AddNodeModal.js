@@ -83,12 +83,7 @@ export default function AddNodeModal(props) {
       setNewEntityDescription('')
       descriptionRef.current.focus()
     } else {
-      newNode.data.entity = {
-        id: entity.id,
-        name: entity.name,
-        description: entity.description,
-        type: entity.type
-      }
+      newNode.data.entity = entity
       props.onOk(newNode)
     }
   }
@@ -101,12 +96,11 @@ export default function AddNodeModal(props) {
       const obj = await srvEntities.create({
         name: newEntityName,
         description: newEntityDescription,
-        type: newNode.type
+        type: newNode.type,
+        variant: newNode.data.variant
       })
 
-      newNode.data.name = newEntityName
-      newNode.data.description = newEntityDescription
-      newNode.data.entity = obj.id
+      newNode.data.entity = obj
 
       setIsNewEntity(false)
 
