@@ -1,4 +1,4 @@
-import { Box, useColorModeValue, Flex, Button } from '@chakra-ui/react'
+import { Box, useColorModeValue, Flex, Button, Image, Text } from '@chakra-ui/react'
 import { AiOutlineLogout, AiOutlineLogin } from 'react-icons/ai'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../../AuthContext'
@@ -49,19 +49,25 @@ function Header() {
   }
 
   return (
-    <Flex direction="row">
+    <Flex
+      direction="row"
+      style={{
+        borderBottom: '0.5px solid lightGrey'
+      }}
+    >
       <Box
-        w="150px"
         fontWeight="semibold"
         as="h4"
         lineHeight="tight"
         isTruncated
         p={3}
-        borderBottom={1}
-        borderStyle={'solid'}
-        borderColor={useColorModeValue('gray.200', 'gray.900')}
+        display="flex"
+        style={{
+          alignItems: 'center'
+        }}
       >
-        Arch Buddy
+        <Image src="/assets/logofull.png" alt="Logo" boxSize="40px" objectFit="cover" />
+        <Text>Arch Buddy</Text>
       </Box>
       <Box
         flex="1"
