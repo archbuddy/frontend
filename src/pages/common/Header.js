@@ -1,4 +1,4 @@
-import { Box, useColorModeValue, Flex, Button, Image, Text } from '@chakra-ui/react'
+import { Box, Flex, Button, Image, Text } from '@chakra-ui/react'
 import { AiOutlineLogout, AiOutlineLogin } from 'react-icons/ai'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../../AuthContext'

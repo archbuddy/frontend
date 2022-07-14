@@ -97,10 +97,11 @@ function Auth() {
               height: '80%',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-evenly'
+              justifyContent: 'space-evenly',
+              alignItems: 'center'
             }}
           >
-            <Text>Use one of the options bellow to authenticate</Text>
+            {loaded ? <Text>Use one of the options bellow to authenticate</Text> : <></>}
             {getGoogle()}
             {!loaded ? <Spinner color="blue.500" /> : <></>}
           </Box>

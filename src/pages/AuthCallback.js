@@ -33,11 +33,19 @@ function AuthCallback() {
     <ChakraProvider>
       <Flex direction="column" h="100%">
         <Header />
-        <Spacer>
-          <Box style={{ padding: '10px' }}>
-            <Spinner color="blue.500" />
-            <Text>Loading...</Text>
-          </Box>
+        <Spacer
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            textAlign: 'center'
+          }}
+        >
+          <Spinner color="blue.500" />
+          <br />
+          <Text>Loading...</Text>
         </Spacer>
         <Footer />
       </Flex>
