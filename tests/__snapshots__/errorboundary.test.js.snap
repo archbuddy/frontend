@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render ErrorBoundary - with children 1`] = `
+<h1>
+  text
+</h1>
+`;
+
+exports[`render ErrorBoundary 1`] = `
+<div
+  id="errorPage"
+>
+  <div
+    className="errorPageHeader"
+  >
+    Arch Buddy
+  </div>
+  <div
+    className="errorPageContent"
+  >
+    <p>
+      Ooppsss... Something has happened
+    </p>
+    <p>
+      This is a leak :(
+    </p>
+  </div>
+</div>
+`;

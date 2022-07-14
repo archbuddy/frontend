@@ -26,13 +26,23 @@ export default class ErrorBoundary extends React.Component {
         <div id="errorPage">
           <div className="errorPageHeader">Arch Buddy</div>
           <div className="errorPageContent">
-            <p>Ooppsss... Something has happend</p>
+            <p>Ooppsss... Something has happened</p>
             <p>Try to refresh the page</p>
           </div>
         </div>
       )
     }
-
-    return this.props.children
+    if (this.props.children) {
+      return this.props.children
+    }
+    return (
+      <div id="errorPage">
+        <div className="errorPageHeader">Arch Buddy</div>
+        <div className="errorPageContent">
+          <p>Ooppsss... Something has happened</p>
+          <p>This is a leak :(</p>
+        </div>
+      </div>
+    )
   }
 }
