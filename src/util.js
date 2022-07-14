@@ -32,6 +32,8 @@ const buildFiqlQuery = (fiql = null, offset = 0, limit = 10) => {
 const prepareErrorToScreen = (err) => {
   if (!err) return 'Oopss.. this is leak, there is no error to show'
 
+  if (typeof err !== 'string') return 'Invalid call, expected string'
+
   if (err.toLowerCase().indexOf('failed to fetch') >= 0) {
     return 'The backend system is down/offline'
   }

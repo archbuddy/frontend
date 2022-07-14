@@ -33,6 +33,7 @@ function Header() {
     }
     return <></>
   }
+
   const logoutButton = () => {
     if (isAuthPage()) {
       return <></>
@@ -46,6 +47,7 @@ function Header() {
     }
     return <></>
   }
+
   return (
     <Flex direction="row">
       <Box
