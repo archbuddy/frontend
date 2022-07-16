@@ -1,7 +1,7 @@
 // check this for default edges configs https://reactflow.dev/docs/api/edges/edge-types/
 
 import React, { useEffect } from 'react'
-import { ChakraProvider, Flex, Spacer, Text, Spinner, Box } from '@chakra-ui/react'
+import { ChakraProvider, Flex, Spacer, Text, Spinner } from '@chakra-ui/react'
 import { useLocation, useSearchParams, useNavigate } from 'react-router-dom'
 
 import Header from './common/Header'
@@ -33,11 +33,19 @@ function AuthCallback() {
     <ChakraProvider>
       <Flex direction="column" h="100%">
         <Header />
-        <Spacer>
-          <Box style={{ padding: '10px' }}>
-            <Spinner color="blue.500" />
-            <Text>Loading...</Text>
-          </Box>
+        <Spacer
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            textAlign: 'center'
+          }}
+        >
+          <Spinner color="blue.500" />
+          <br />
+          <Text>Loading...</Text>
         </Spacer>
         <Footer />
       </Flex>
