@@ -23,7 +23,7 @@ function RequireAuth({ children }) {
 
 function App() {
   useEffect(() => {
-    ReactGA.pageview(window.location.pathname + window.location.search)
+    ReactGA.send(window.location.pathname + window.location.search)
   }, [])
 
   return (
