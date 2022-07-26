@@ -17,10 +17,14 @@ import {
   TableContainer,
   TableCaption,
   Input,
-  Box
+  Box,
+  Flex,
+  VStack,
+  Text
 } from '@chakra-ui/react'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
+
 import srvEdges from '../../services/edges'
 import srvRelations from '../../services/relations'
 import { isUndefined, log } from '../../util'
@@ -30,6 +34,13 @@ export default function EdgeSelectionModal(props) {
     if (props.edge) {
       setEdgesList(props.edge.innerList)
     }
+    async function load() {
+      const source = getSourceEntity(props.edge.source)
+      const target = getTargetEntity(props.edge.target)
+      const data = await srvRelations.search(source.data.entity, target.data.entity)
+      setAllConnections(data)
+    }
+    load()
   }, [props.edge])
 
   const [selectedRowEdgeId, setSelectedRowEdgeId] = useState('')
@@ -37,6 +48,7 @@ export default function EdgeSelectionModal(props) {
   const [inputDetailEdge, setInputDetailEdge] = useState('')
   const [relationId, setRelationId] = useState('')
   const [edgesList, setEdgesList] = useState(undefined)
+  const [allConnections, setAllConnections] = useState([])
 
   const onSelectRow = (edge) => {
     log(`Selected edge ${edge.id}`)
@@ -180,13 +192,26 @@ export default function EdgeSelectionModal(props) {
     resetSelectedData()
     props.onClose()
   }
-
+  const getSourceEntity = (edgeId) => {
+    const source = props.nodes.findIndex((e) => e.id === props.edge.source)
+    if (source === -1) {
+      return -1
+    }
+    return props.nodes[source]
+  }
+  const getTargetEntity = (edgeId) => {
+    const target = props.nodes.findIndex((e) => e.id === props.edge.target)
+    if (target === -1) {
+      return -1
+    }
+    return props.nodes[target]
+  }
   const showNodesInfo = () => {
     if (isUndefined(props.edge)) {
       return ''
     }
-    const source = props.nodes.findIndex((e) => e.id === props.edge.source)
-    const target = props.nodes.findIndex((e) => e.id === props.edge.target)
+    const source = getSourceEntity(props.edge.source)
+    const target = getTargetEntity(props.edge.target)
     if (source === -1 || target === -1) {
       log(`Edge Node connection source: ${source} target: ${target} isOpen: ${props.isOpen}`)
       return <></>
@@ -202,7 +227,7 @@ export default function EdgeSelectionModal(props) {
         }}
       >
         <Box style={{ padding: '10px', borderRadius: 5, borderWidth: '2px' }}>
-          {props.nodes[source].data.name}
+          {source.data.name}
         </Box>
         <Box
           style={{ padding: '10px', display: 'flex', flexDirection: 'row', alignItems: 'center' }}
@@ -225,7 +250,7 @@ export default function EdgeSelectionModal(props) {
           />
         </Box>
         <Box style={{ padding: '10px', borderRadius: 5, borderWidth: '2px' }}>
-          {props.nodes[target].data.name}
+          {target.data.name}
         </Box>
       </Box>
     )
@@ -233,6 +258,46 @@ export default function EdgeSelectionModal(props) {
 
   if (props.isOpen === false) {
     return <></>
+  }
+  const renderConnectionLine = (item) => {
+    // TODO Remove all connections listed on the panel on the right
+    return (
+      <Tr key={item.id}>
+        <Td>Check</Td>
+        <Td>
+          {item.detail}&nbsp;|&nbsp;{item.description}
+        </Td>
+      </Tr>
+    )
+  }
+  const renderAllConnections = () => {
+    if (allConnections === undefined || allConnections.length === 0) {
+      return <></>
+    } else {
+      return (
+        <Flex>
+          <VStack>
+            <Text>Filter:</Text>
+            <Text>Input text here</Text>
+            <TableContainer>
+              <Table colorScheme="gray" variant="striped">
+                <Thead>
+                  <Tr>
+                    <Th></Th>
+                    <Th>Text</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {allConnections.map((item) => {
+                    return renderConnectionLine(item)
+                  })}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </VStack>
+        </Flex>
+      )
+    }
   }
 
   return (
@@ -243,7 +308,10 @@ export default function EdgeSelectionModal(props) {
         <ModalCloseButton />
         <ModalBody>
           {showNodesInfo()}
-          {renderDataTable()}
+          <Flex>
+            <Box bg="green.500">{renderAllConnections()}</Box>
+            <Box bg="tomato">{renderDataTable()}</Box>
+          </Flex>
         </ModalBody>
         <ModalFooter>
           <Button variant="ghost" onClick={closeModal}>
