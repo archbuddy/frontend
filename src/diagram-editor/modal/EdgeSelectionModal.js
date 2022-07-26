@@ -37,7 +37,15 @@ export default function EdgeSelectionModal(props) {
     async function load() {
       const source = getSourceEntity(props.edge.source)
       const target = getTargetEntity(props.edge.target)
-      const data = await srvRelations.search(source.data.entity, target.data.entity)
+      const currentRelations = props.edge.innerList.map((i) => {
+        return i.relation
+      })
+      const data = await srvRelations.search(
+        source.data.entity,
+        target.data.entity,
+        undefined,
+        currentRelations.toString()
+      )
       setAllConnections(data)
     }
     load()

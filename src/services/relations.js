@@ -27,10 +27,20 @@ const update = async (relation) => {
  * @param {String} text Text to filter
  * @returns array
  */
-const search = async (source, target, text) => {
+const search = async (source, target, text, excludeRelations) => {
   let url = `${util.getUrl()}/relations/${source}/${target}`
+  let queryString = false
   if (text) {
     url += `?name=${text}`
+    queryString = true
+  }
+  if (excludeRelations) {
+    if (queryString) {
+      url += '&'
+    } else {
+      url += '?'
+    }
+    url += `exclude=${excludeRelations}`
   }
   util.log(`Search relation ${url}`)
   const response = await fetch(url, {
