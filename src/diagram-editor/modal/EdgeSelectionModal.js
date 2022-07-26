@@ -15,8 +15,9 @@ import {
   Th,
   Td,
   TableContainer,
-  TableCaption,
-  Input
+  Input,
+  Box,
+  Text
 } from '@chakra-ui/react'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
@@ -33,21 +34,6 @@ export default function EdgeSelectionModal(props) {
     if (props.edge) {
       setEdgesList(props.edge.innerList)
     }
-    async function load() {
-      const source = getSourceEntity()
-      const target = getTargetEntity()
-      const currentRelations = props.edge.innerList.map((i) => {
-        return i.relation
-      })
-      const data = await srvRelations.search(
-        source.data.entity,
-        target.data.entity,
-        undefined,
-        currentRelations.toString()
-      )
-      setAllConnections(data)
-    }
-    load()
   }, [props.edge])
 
   const [selectedRowEdgeId, setSelectedRowEdgeId] = useState('')
@@ -56,6 +42,13 @@ export default function EdgeSelectionModal(props) {
   const [relationId, setRelationId] = useState('')
   const [edgesList, setEdgesList] = useState(undefined)
   const [allConnections, setAllConnections] = useState([])
+
+  const getExcludedList = () => {
+    const list = props.edge.innerList.map((i) => {
+      return i.relation
+    })
+    return list.toString()
+  }
 
   const onSelectRow = (edge) => {
     log(`Selected edge ${edge.id}`)
@@ -164,9 +157,6 @@ export default function EdgeSelectionModal(props) {
     return (
       <TableContainer>
         <Table colorScheme="gray" variant="striped">
-          <TableCaption>
-            Showing all connections between the nodes of the selected edge available in this view
-          </TableCaption>
           <Thead>
             <Tr>
               <Th style={{ width: '40%' }}>Description</Th>
@@ -225,8 +215,22 @@ export default function EdgeSelectionModal(props) {
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <ShowNodesInfo source={getSourceEntity()} target={getTargetEntity()} />
-          <ShowOtherRelations />
+          <ShowNodesInfo />
+          <ShowOtherRelations
+            source={getSourceEntity()}
+            target={getTargetEntity()}
+            exclude={getExcludedList()}
+          />
+          <Box
+            style={{
+              textAlign: 'center',
+              paddingTop: '10px'
+            }}
+          >
+            <Text>
+              Showing all connections between the nodes of the selected edge available in this view
+            </Text>
+          </Box>
           {renderDataTable()}
         </ModalBody>
         <ModalFooter>

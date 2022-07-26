@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Accordion,
   AccordionItem,
@@ -6,8 +6,6 @@ import {
   AccordionIcon,
   AccordionPanel,
   Box,
-  Flex,
-  VStack,
   HStack,
   Tbody,
   TableContainer,
@@ -15,12 +13,39 @@ import {
   Thead,
   Tr,
   Th,
+  Td,
   Text,
   Input
 } from '@chakra-ui/react'
 
+import srvRelations from '../../../services/relations'
+
 export default function ShowOtherRelations(props) {
   const [inputFilter, setInputFilter] = useState('')
+  const [list, setList] = useState([])
+
+  useEffect(() => {
+    async function load() {
+      const data = await srvRelations.search(
+        props.source.data.entity,
+        props.target.data.entity,
+        undefined,
+        props.exclude
+      )
+      setList(data)
+    }
+    load()
+  }, [props.exclude, props.source, props.target])
+
+  const renderLine = (item) => {
+    return (
+      <Tr key={item.id}>
+        <Td>{item.description}</Td>
+        <Td>{item.detail}</Td>
+        <Td>here is a button</Td>
+      </Tr>
+    )
+  }
 
   return (
     <Accordion allowToggle>
@@ -58,7 +83,11 @@ export default function ShowOtherRelations(props) {
                     <Th style={{ width: '20%' }}>Action</Th>
                   </Tr>
                 </Thead>
-                <Tbody></Tbody>
+                <Tbody>
+                  {list.forEach((item) => {
+                    return renderLine(item)
+                  })}
+                </Tbody>
               </Table>
             </TableContainer>
           </Box>
