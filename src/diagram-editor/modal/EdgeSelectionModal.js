@@ -16,14 +16,13 @@ import {
   Td,
   TableContainer,
   TableCaption,
-  Input,
-  Box,
-  Flex,
-  VStack,
-  Text
+  Input
 } from '@chakra-ui/react'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
+
+import ShowOtherRelations from './edgemodal/ShowOtherRelations'
+import ShowNodesInfo from './edgemodal/ShowNodesInfo'
 
 import srvEdges from '../../services/edges'
 import srvRelations from '../../services/relations'
@@ -214,98 +213,9 @@ export default function EdgeSelectionModal(props) {
     }
     return props.nodes[target]
   }
-  const showNodesInfo = () => {
-    if (isUndefined(props.edge)) {
-      return ''
-    }
-    const source = getSourceEntity(props.edge.source)
-    const target = getTargetEntity(props.edge.target)
-    if (source === -1 || target === -1) {
-      log(`Edge Node connection source: ${source} target: ${target} isOpen: ${props.isOpen}`)
-      return <></>
-    }
-    return (
-      <Box
-        style={{
-          paddingBottom: '10px',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Box style={{ padding: '10px', borderRadius: 5, borderWidth: '2px' }}>
-          {source.data.name}
-        </Box>
-        <Box
-          style={{ padding: '10px', display: 'flex', flexDirection: 'row', alignItems: 'center' }}
-        >
-          <Box
-            style={{
-              width: '75px',
-              height: '2px',
-              backgroundColor: 'black'
-            }}
-          />
-          <Box
-            style={{
-              border: 'solid black',
-              borderWidth: '0 3px 3px 0',
-              display: 'inline-block',
-              padding: '3px',
-              transform: 'rotate(-45deg)'
-            }}
-          />
-        </Box>
-        <Box style={{ padding: '10px', borderRadius: 5, borderWidth: '2px' }}>
-          {target.data.name}
-        </Box>
-      </Box>
-    )
-  }
 
   if (props.isOpen === false) {
     return <></>
-  }
-  const renderConnectionLine = (item) => {
-    // TODO Remove all connections listed on the panel on the right
-    return (
-      <Tr key={item.id}>
-        <Td>Check</Td>
-        <Td>
-          {item.detail}&nbsp;|&nbsp;{item.description}
-        </Td>
-      </Tr>
-    )
-  }
-  const renderAllConnections = () => {
-    if (allConnections === undefined || allConnections.length === 0) {
-      return <></>
-    } else {
-      return (
-        <Flex>
-          <VStack>
-            <Text>Filter:</Text>
-            <Text>Input text here</Text>
-            <TableContainer>
-              <Table colorScheme="gray" variant="striped">
-                <Thead>
-                  <Tr>
-                    <Th></Th>
-                    <Th>Text</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {allConnections.map((item) => {
-                    return renderConnectionLine(item)
-                  })}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </VStack>
-        </Flex>
-      )
-    }
   }
 
   return (
@@ -315,11 +225,12 @@ export default function EdgeSelectionModal(props) {
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {showNodesInfo()}
-          <Flex>
-            <Box bg="green.500">{renderAllConnections()}</Box>
-            <Box bg="tomato">{renderDataTable()}</Box>
-          </Flex>
+          <ShowNodesInfo
+            source={getSourceEntity(props.edge.source)}
+            target={getSourceEntity(props.edge.target)}
+          />
+          <ShowOtherRelations />
+          {renderDataTable()}
         </ModalBody>
         <ModalFooter>
           <Button variant="ghost" onClick={closeModal}>
