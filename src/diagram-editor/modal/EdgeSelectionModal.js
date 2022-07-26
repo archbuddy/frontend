@@ -34,8 +34,8 @@ export default function EdgeSelectionModal(props) {
       setEdgesList(props.edge.innerList)
     }
     async function load() {
-      const source = getSourceEntity(props.edge.source)
-      const target = getTargetEntity(props.edge.target)
+      const source = getSourceEntity()
+      const target = getTargetEntity()
       const currentRelations = props.edge.innerList.map((i) => {
         return i.relation
       })
@@ -199,14 +199,14 @@ export default function EdgeSelectionModal(props) {
     resetSelectedData()
     props.onClose()
   }
-  const getSourceEntity = (edgeId) => {
+  const getSourceEntity = () => {
     const source = props.nodes.findIndex((e) => e.id === props.edge.source)
     if (source === -1) {
       return -1
     }
     return props.nodes[source]
   }
-  const getTargetEntity = (edgeId) => {
+  const getTargetEntity = () => {
     const target = props.nodes.findIndex((e) => e.id === props.edge.target)
     if (target === -1) {
       return -1
@@ -225,10 +225,7 @@ export default function EdgeSelectionModal(props) {
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <ShowNodesInfo
-            source={getSourceEntity(props.edge.source)}
-            target={getSourceEntity(props.edge.target)}
-          />
+          <ShowNodesInfo source={getSourceEntity()} target={getTargetEntity()} />
           <ShowOtherRelations />
           {renderDataTable()}
         </ModalBody>

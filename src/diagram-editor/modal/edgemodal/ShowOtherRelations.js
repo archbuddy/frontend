@@ -1,14 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
-  Box
+  Box,
+  Flex,
+  VStack,
+  HStack,
+  Tbody,
+  TableContainer,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Text,
+  Input
 } from '@chakra-ui/react'
 
 export default function ShowOtherRelations(props) {
+  const [inputFilter, setInputFilter] = useState('')
+
   return (
     <Accordion allowToggle>
       <AccordionItem>
@@ -20,8 +33,35 @@ export default function ShowOtherRelations(props) {
             <AccordionIcon />
           </AccordionButton>
         </h2>
-        <AccordionPanel pb={4}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        <AccordionPanel>
+          <Box>
+            <HStack>
+              <Text>Filter:</Text>
+              <Text>
+                <Input
+                  type="text"
+                  onChange={(e) => setInputFilter(e.target.value)}
+                  value={inputFilter}
+                  placeholder="Filter"
+                  size="sm"
+                  variant="outline"
+                  borderColor="blue.400"
+                />
+              </Text>
+            </HStack>
+            <TableContainer>
+              <Table colorScheme="gray" variant="striped">
+                <Thead>
+                  <Tr>
+                    <Th style={{ width: '40%' }}>Description</Th>
+                    <Th style={{ width: '40%' }}>Detail</Th>
+                    <Th style={{ width: '20%' }}>Action</Th>
+                  </Tr>
+                </Thead>
+                <Tbody></Tbody>
+              </Table>
+            </TableContainer>
+          </Box>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
