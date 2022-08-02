@@ -215,7 +215,7 @@ export default function EdgeSelectionModal(props) {
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <ShowNodesInfo />
+          <ShowNodesInfo source={getSourceEntity()} target={getTargetEntity()} />
           <ShowOtherRelations
             source={getSourceEntity()}
             target={getTargetEntity()}
