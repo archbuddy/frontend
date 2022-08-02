@@ -15,7 +15,8 @@ import {
   Th,
   Td,
   Text,
-  Input
+  Input,
+  Button
 } from '@chakra-ui/react'
 
 import srvRelations from '../../../services/relations'
@@ -24,8 +25,30 @@ export default function ShowOtherRelations(props) {
   const [inputFilter, setInputFilter] = useState('')
   const [list, setList] = useState([])
 
-  useEffect(() => {
-    async function load() {
+  const renderLine = (item) => {
+    return (
+      <Tr key={item.id}>
+        <Td>{item.description}</Td>
+        <Td>{item.detail}</Td>
+        <Td>
+          <Button
+            onClick={() => {
+              addToDiagram(item.id)
+            }}
+          >
+            Add to View
+          </Button>
+        </Td>
+      </Tr>
+    )
+  }
+
+  const addToDiagram = async (relationId) => {
+    console.log(relationId)
+  }
+
+  const onToogle = async (evt) => {
+    if (evt >= 0) {
       const data = await srvRelations.search(
         props.source.data.entity,
         props.target.data.entity,
@@ -34,21 +57,10 @@ export default function ShowOtherRelations(props) {
       )
       setList(data)
     }
-    load()
-  }, [props.exclude, props.source, props.target])
-
-  const renderLine = (item) => {
-    return (
-      <Tr key={item.id}>
-        <Td>{item.description}</Td>
-        <Td>{item.detail}</Td>
-        <Td>here is a button</Td>
-      </Tr>
-    )
   }
 
   return (
-    <Accordion allowToggle>
+    <Accordion allowToggle onChange={onToogle}>
       <AccordionItem>
         <h2>
           <AccordionButton>
@@ -84,7 +96,7 @@ export default function ShowOtherRelations(props) {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {list.forEach((item) => {
+                  {list.map((item) => {
                     return renderLine(item)
                   })}
                 </Tbody>
