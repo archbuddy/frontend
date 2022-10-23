@@ -213,6 +213,7 @@ export default function DiagramEditor() {
         edge={selectedEdge}
         nodes={nodes}
         refresh={loadData}
+        diagramSelected={diagramSelected}
       ></EdgeSelectionModal>
       <ChangeNodeModal
         isOpen={isChangeNodeModalOpen}

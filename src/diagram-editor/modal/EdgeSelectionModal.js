@@ -220,6 +220,10 @@ export default function EdgeSelectionModal(props) {
             source={getSourceEntity()}
             target={getTargetEntity()}
             exclude={getExcludedList()}
+            diagramSelected={props.diagramSelected}
+            sourceHandle={props.edge.sourceHandle}
+            targetHandle={props.edge.targetHandle}
+            refresh={props.refresh}
           />
           <Box
             style={{

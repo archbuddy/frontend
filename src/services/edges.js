@@ -8,7 +8,11 @@ const edgeCanConnect = (connection) => {
   }
   return can
 }
-
+/**
+ * Create an edge on the diagram
+ * @param {Object} connection Object
+ * @param {String} diagram Diagram ID guid
+ */
 const createEdge = async (connection, diagram) => {
   util.log(`Create edge on viewpoint ${diagram} values ${JSON.stringify(connection)}`)
   const body = {

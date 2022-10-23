@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react'
 
 import srvRelations from '../../../services/relations'
+import srvEdges from '../../../services/edges'
 
 export default function ShowOtherRelations(props) {
   const [inputFilter, setInputFilter] = useState('')
@@ -44,7 +45,19 @@ export default function ShowOtherRelations(props) {
   }
 
   const addToDiagram = async (relationId) => {
-    console.log(relationId)
+    const index = list.findIndex((i) => i.id === relationId)
+    if (index === -1) {
+      // TODO show error to screen
+      console.log('Ooppss, index -1 ShowOtherRelations')
+    }
+    const conn = {
+      source: list[index].source,
+      sourceHandle: props.sourceHandle,
+      target: list[index].target,
+      targetHandle: props.targetHandle
+    }
+    await srvEdges.createEdge(conn, props.diagramSelected.id)
+    await props.refresh()
   }
 
   const onToogle = async (evt) => {
