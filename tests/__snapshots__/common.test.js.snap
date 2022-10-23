@@ -5,13 +5,14 @@ exports[`render footer 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
-        "__html": ".css-71vd7t{font-size:small;font-weight:semibold;color:gray.500;line-height:tight;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:2px;border-top:1px;border-style:solid;border-color:gray.200;}",
+        "__html": ".css-muj3z1{font-size:small;font-weight:semibold;color:gray.500;line-height:tight;padding:2px;border-top:1px;border-style:solid;border-color:gray.200;}",
       }
     }
-    data-emotion="css 71vd7t"
+    data-emotion="css muj3z1"
   />,
   <div
-    className="css-71vd7t"
+    className="css-muj3z1"
+    isTruncated={true}
   >
     All rights reserved to Arch Buddy and team.
      
