@@ -15,12 +15,16 @@ import {
   Th,
   Td,
   TableContainer,
-  TableCaption,
   Input,
-  Box
+  Box,
+  Text
 } from '@chakra-ui/react'
 import { FaPen as EditIcon, FaTrashAlt as TrashIcon, FaSave as SaveIcon } from 'react-icons/fa'
 import { MdCancel as Cancel } from 'react-icons/md'
+
+import ShowOtherRelations from './edgemodal/ShowOtherRelations'
+import ShowNodesInfo from './edgemodal/ShowNodesInfo'
+
 import srvEdges from '../../services/edges'
 import srvRelations from '../../services/relations'
 import { isUndefined, log } from '../../util'
@@ -37,6 +41,14 @@ export default function EdgeSelectionModal(props) {
   const [inputDetailEdge, setInputDetailEdge] = useState('')
   const [relationId, setRelationId] = useState('')
   const [edgesList, setEdgesList] = useState(undefined)
+  const [allConnections, setAllConnections] = useState([])
+
+  const getExcludedList = () => {
+    const list = props.edge.innerList.map((i) => {
+      return i.relation
+    })
+    return list.toString()
+  }
 
   const onSelectRow = (edge) => {
     log(`Selected edge ${edge.id}`)
@@ -145,9 +157,6 @@ export default function EdgeSelectionModal(props) {
     return (
       <TableContainer>
         <Table colorScheme="gray" variant="striped">
-          <TableCaption>
-            Showing all connections between the nodes of the selected edge available in this view
-          </TableCaption>
           <Thead>
             <Tr>
               <Th style={{ width: '40%' }}>Description</Th>
@@ -180,55 +189,19 @@ export default function EdgeSelectionModal(props) {
     resetSelectedData()
     props.onClose()
   }
-
-  const showNodesInfo = () => {
-    if (isUndefined(props.edge)) {
-      return ''
-    }
+  const getSourceEntity = () => {
     const source = props.nodes.findIndex((e) => e.id === props.edge.source)
-    const target = props.nodes.findIndex((e) => e.id === props.edge.target)
-    if (source === -1 || target === -1) {
-      log(`Edge Node connection source: ${source} target: ${target} isOpen: ${props.isOpen}`)
-      return <></>
+    if (source === -1) {
+      return -1
     }
-    return (
-      <Box
-        style={{
-          paddingBottom: '10px',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Box style={{ padding: '10px', borderRadius: 5, borderWidth: '2px' }}>
-          {props.nodes[source].data.name}
-        </Box>
-        <Box
-          style={{ padding: '10px', display: 'flex', flexDirection: 'row', alignItems: 'center' }}
-        >
-          <Box
-            style={{
-              width: '75px',
-              height: '2px',
-              backgroundColor: 'black'
-            }}
-          />
-          <Box
-            style={{
-              border: 'solid black',
-              borderWidth: '0 3px 3px 0',
-              display: 'inline-block',
-              padding: '3px',
-              transform: 'rotate(-45deg)'
-            }}
-          />
-        </Box>
-        <Box style={{ padding: '10px', borderRadius: 5, borderWidth: '2px' }}>
-          {props.nodes[target].data.name}
-        </Box>
-      </Box>
-    )
+    return props.nodes[source]
+  }
+  const getTargetEntity = () => {
+    const target = props.nodes.findIndex((e) => e.id === props.edge.target)
+    if (target === -1) {
+      return -1
+    }
+    return props.nodes[target]
   }
 
   if (props.isOpen === false) {
@@ -242,7 +215,26 @@ export default function EdgeSelectionModal(props) {
         <ModalHeader>Edge(s) selected data</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {showNodesInfo()}
+          <ShowNodesInfo source={getSourceEntity()} target={getTargetEntity()} />
+          <ShowOtherRelations
+            source={getSourceEntity()}
+            target={getTargetEntity()}
+            exclude={getExcludedList()}
+            diagramSelected={props.diagramSelected}
+            sourceHandle={props.edge.sourceHandle}
+            targetHandle={props.edge.targetHandle}
+            refresh={props.refresh}
+          />
+          <Box
+            style={{
+              textAlign: 'center',
+              paddingTop: '10px'
+            }}
+          >
+            <Text>
+              Showing all connections between the nodes of the selected edge available in this view
+            </Text>
+          </Box>
           {renderDataTable()}
         </ModalBody>
         <ModalFooter>

@@ -1,6 +1,8 @@
+import React, { useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import useAuth from './AuthContext'
+import ReactGA from 'react-ga4'
 
+import useAuth from './AuthContext'
 import Diagram from './pages/Diagram'
 import Home from './pages/Home'
 import Auth from './pages/Auth'
@@ -20,6 +22,10 @@ function RequireAuth({ children }) {
 }
 
 function App() {
+  useEffect(() => {
+    ReactGA.send(window.location.pathname + window.location.search)
+  }, [])
+
   return (
     <ErrorBoundary>
       <Routes>
