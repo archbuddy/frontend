@@ -24,7 +24,7 @@
   "homepage": "https://archbuddy.github.io/frontend",
   "dependencies": {
     "@chakra-ui/react": "^2.3.6",
-    "@emotion/react": "^11.10.4",
+    "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.4",
     "framer-motion": "^7.6.1",
     "jwt-decode": "^3.1.2",
